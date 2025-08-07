@@ -1,18 +1,18 @@
-import { acceptTransferRequest } from "@lib/data/orders"
-import { Heading, Text } from "@medusajs/ui"
-import TransferImage from "@modules/order/components/transfer-image"
+import { acceptTransferRequest } from '@lib/data/orders';
+import { Heading, Text } from '@medusajs/ui';
+import TransferImage from '@modules/order/components/transfer-image';
 
 export default async function TransferPage({
   params,
 }: {
-  params: { id: string; token: string }
+  params: { id: string; token: string };
 }) {
-  const { id, token } = params
+  const { id, token } = params;
 
-  const { success, error } = await acceptTransferRequest(id, token)
+  const { success, error } = await acceptTransferRequest(id, token);
 
   return (
-    <div className="flex flex-col gap-y-4 items-start w-2/5 mx-auto mt-10 mb-20">
+    <div className="mx-auto mb-20 mt-10 flex w-2/5 flex-col items-start gap-y-4">
       <TransferImage />
       <div className="flex flex-col gap-y-6">
         {success && (
@@ -37,5 +37,5 @@ export default async function TransferPage({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,55 +1,55 @@
-"use client"
+'use client';
 
-import { Plus } from "@medusajs/icons"
-import { Button, Heading } from "@medusajs/ui"
-import { useEffect, useState, useActionState } from "react"
+import { useActionState, useEffect, useState } from 'react';
 
-import useToggleState from "@lib/hooks/use-toggle-state"
-import CountrySelect from "@modules/checkout/components/country-select"
-import Input from "@modules/common/components/input"
-import Modal from "@modules/common/components/modal"
-import { SubmitButton } from "@modules/checkout/components/submit-button"
-import { HttpTypes } from "@medusajs/types"
-import { addCustomerAddress } from "@lib/data/customer"
+import { addCustomerAddress } from '@lib/data/customer';
+import useToggleState from '@lib/hooks/use-toggle-state';
+import { Plus } from '@medusajs/icons';
+import { HttpTypes } from '@medusajs/types';
+import { Button, Heading } from '@medusajs/ui';
+import CountrySelect from '@modules/checkout/components/country-select';
+import { SubmitButton } from '@modules/checkout/components/submit-button';
+import Input from '@modules/common/components/input';
+import Modal from '@modules/common/components/modal';
 
 const AddAddress = ({
   region,
   addresses,
 }: {
-  region: HttpTypes.StoreRegion
-  addresses: HttpTypes.StoreCustomerAddress[]
+  region: HttpTypes.StoreRegion;
+  addresses: HttpTypes.StoreCustomerAddress[];
 }) => {
-  const [successState, setSuccessState] = useState(false)
-  const { state, open, close: closeModal } = useToggleState(false)
+  const [successState, setSuccessState] = useState(false);
+  const { state, open, close: closeModal } = useToggleState(false);
 
   const [formState, formAction] = useActionState(addCustomerAddress, {
     isDefaultShipping: addresses.length === 0,
     success: false,
     error: null,
-  })
+  });
 
   const close = () => {
-    setSuccessState(false)
-    closeModal()
-  }
+    setSuccessState(false);
+    closeModal();
+  };
 
   useEffect(() => {
     if (successState) {
-      close()
+      close();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successState])
+  }, [successState]);
 
   useEffect(() => {
     if (formState.success) {
-      setSuccessState(true)
+      setSuccessState(true);
     }
-  }, [formState])
+  }, [formState]);
 
   return (
     <>
       <button
-        className="border border-ui-border-base rounded-rounded p-5 min-h-[220px] h-full w-full flex flex-col justify-between"
+        className="flex h-full min-h-[220px] w-full flex-col justify-between rounded-rounded border border-ui-border-base p-5"
         onClick={open}
         data-testid="add-address-button"
       >
@@ -137,7 +137,7 @@ const AddAddress = ({
             </div>
             {formState.error && (
               <div
-                className="text-rose-500 text-small-regular py-2"
+                className="text-small-regular py-2 text-rose-500"
                 data-testid="address-error"
               >
                 {formState.error}
@@ -145,7 +145,7 @@ const AddAddress = ({
             )}
           </Modal.Body>
           <Modal.Footer>
-            <div className="flex gap-3 mt-6">
+            <div className="mt-6 flex gap-3">
               <Button
                 type="reset"
                 variant="secondary"
@@ -161,7 +161,7 @@ const AddAddress = ({
         </form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default AddAddress
+export default AddAddress;

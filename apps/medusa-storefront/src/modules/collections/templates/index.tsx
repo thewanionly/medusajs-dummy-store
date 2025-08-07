@@ -1,10 +1,10 @@
-import { Suspense } from "react"
+import { Suspense } from 'react';
 
-import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
-import RefinementList from "@modules/store/components/refinement-list"
-import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import PaginatedProducts from "@modules/store/templates/paginated-products"
-import { HttpTypes } from "@medusajs/types"
+import { HttpTypes } from '@medusajs/types';
+import SkeletonProductGrid from '@modules/skeletons/templates/skeleton-product-grid';
+import RefinementList from '@modules/store/components/refinement-list';
+import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
+import PaginatedProducts from '@modules/store/templates/paginated-products';
 
 export default function CollectionTemplate({
   sortBy,
@@ -12,19 +12,19 @@ export default function CollectionTemplate({
   page,
   countryCode,
 }: {
-  sortBy?: SortOptions
-  collection: HttpTypes.StoreCollection
-  page?: string
-  countryCode: string
+  sortBy?: SortOptions;
+  collection: HttpTypes.StoreCollection;
+  page?: string;
+  countryCode: string;
 }) {
-  const pageNumber = page ? parseInt(page) : 1
-  const sort = sortBy || "created_at"
+  const pageNumber = page ? parseInt(page) : 1;
+  const sort = sortBy || 'created_at';
 
   return (
-    <div className="flex flex-col small:flex-row small:items-start py-6 content-container">
+    <div className="content-container flex flex-col py-6 small:flex-row small:items-start">
       <RefinementList sortBy={sort} />
       <div className="w-full">
-        <div className="mb-8 text-2xl-semi">
+        <div className="text-2xl-semi mb-8">
           <h1>{collection.title}</h1>
         </div>
         <Suspense
@@ -43,5 +43,5 @@ export default function CollectionTemplate({
         </Suspense>
       </div>
     </div>
-  )
+  );
 }

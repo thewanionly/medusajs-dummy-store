@@ -1,13 +1,14 @@
-import { Heading } from "@medusajs/ui"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import React from "react"
+import React from 'react';
+
+import { Heading } from '@medusajs/ui';
+import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
 const Help = () => {
   return (
     <div className="mt-6">
       <Heading className="text-base-semi">Need help?</Heading>
       <div className="text-base-regular my-2">
-        <ul className="gap-y-2 flex flex-col">
+        <ul className="flex flex-col gap-y-2">
           <li>
             <LocalizedClientLink href="/contact">Contact</LocalizedClientLink>
           </li>
@@ -19,7 +20,7 @@ const Help = () => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Help
+export default Help;

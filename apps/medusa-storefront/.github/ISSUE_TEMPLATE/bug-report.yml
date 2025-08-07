@@ -1,11 +1,11 @@
 name: Bug report for the Medusa Next.js Starter
 description: File a bug report.
-title: "[Bug]: "
-labels: ["status: needs triaging", "bug"]
+title: '[Bug]: '
+labels: ['status: needs triaging', 'bug']
 body:
   - type: markdown
     attributes:
-      value: "## System information"
+      value: '## System information'
   - type: markdown
     attributes:
       value: |
@@ -35,7 +35,7 @@ body:
       label: Browser name
   - type: markdown
     attributes:
-      value: "## Describe the issue"
+      value: '## Describe the issue'
   - type: markdown
     attributes:
       value: |
@@ -58,7 +58,7 @@ body:
       required: true
   - type: markdown
     attributes:
-      value: "## Reproduction"
+      value: '## Reproduction'
   - type: markdown
     attributes:
       value: |

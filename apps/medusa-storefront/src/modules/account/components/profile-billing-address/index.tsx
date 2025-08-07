@@ -1,18 +1,18 @@
-"use client"
+'use client';
 
-import React, { useEffect, useMemo, useActionState } from "react"
+import React, { useActionState, useEffect, useMemo } from 'react';
 
-import Input from "@modules/common/components/input"
-import NativeSelect from "@modules/common/components/native-select"
+import { addCustomerAddress, updateCustomerAddress } from '@lib/data/customer';
+import { HttpTypes } from '@medusajs/types';
+import Input from '@modules/common/components/input';
+import NativeSelect from '@modules/common/components/native-select';
 
-import AccountInfo from "../account-info"
-import { HttpTypes } from "@medusajs/types"
-import { addCustomerAddress, updateCustomerAddress } from "@lib/data/customer"
+import AccountInfo from '../account-info';
 
 type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer
-  regions: HttpTypes.StoreRegion[]
-}
+  customer: HttpTypes.StoreCustomer;
+  regions: HttpTypes.StoreRegion[];
+};
 
 const ProfileBillingAddress: React.FC<MyInformationProps> = ({
   customer,
@@ -25,51 +25,51 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
           return region.countries?.map((country) => ({
             value: country.iso_2,
             label: country.display_name,
-          }))
+          }));
         })
         .flat() || []
-    )
-  }, [regions])
+    );
+  }, [regions]);
 
-  const [successState, setSuccessState] = React.useState(false)
+  const [successState, setSuccessState] = React.useState(false);
 
   const billingAddress = customer.addresses?.find(
     (addr) => addr.is_default_billing
-  )
+  );
 
   const initialState: Record<string, any> = {
     isDefaultBilling: true,
     isDefaultShipping: false,
     error: false,
     success: false,
-  }
+  };
 
   if (billingAddress) {
-    initialState.addressId = billingAddress.id
+    initialState.addressId = billingAddress.id;
   }
 
   const [state, formAction] = useActionState(
     billingAddress ? updateCustomerAddress : addCustomerAddress,
     initialState
-  )
+  );
 
   const clearState = () => {
-    setSuccessState(false)
-  }
+    setSuccessState(false);
+  };
 
   useEffect(() => {
-    setSuccessState(state.success)
-  }, [state])
+    setSuccessState(state.success);
+  }, [state]);
 
   const currentInfo = useMemo(() => {
     if (!billingAddress) {
-      return "No billing address"
+      return 'No billing address';
     }
 
     const country =
       regionOptions?.find(
         (country) => country?.value === billingAddress.country_code
-      )?.label || billingAddress.country_code?.toUpperCase()
+      )?.label || billingAddress.country_code?.toUpperCase();
 
     return (
       <div className="flex flex-col font-semibold" data-testid="current-info">
@@ -79,15 +79,15 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
         <span>{billingAddress.company}</span>
         <span>
           {billingAddress.address_1}
-          {billingAddress.address_2 ? `, ${billingAddress.address_2}` : ""}
+          {billingAddress.address_2 ? `, ${billingAddress.address_2}` : ''}
         </span>
         <span>
           {billingAddress.postal_code}, {billingAddress.city}
         </span>
         <span>{country}</span>
       </div>
-    )
-  }, [billingAddress, regionOptions])
+    );
+  }, [billingAddress, regionOptions]);
 
   return (
     <form action={formAction} onReset={() => clearState()} className="w-full">
@@ -170,13 +170,13 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
                 <option key={i} value={option?.value}>
                   {option?.label}
                 </option>
-              )
+              );
             })}
           </NativeSelect>
         </div>
       </AccountInfo>
     </form>
-  )
-}
+  );
+};
 
-export default ProfileBillingAddress
+export default ProfileBillingAddress;

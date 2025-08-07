@@ -1,10 +1,10 @@
-import React from "react"
+import React from 'react';
 
-import { IconProps } from "types/icon"
+import { IconProps } from 'types/icon';
 
 const User: React.FC<IconProps> = ({
-  size = "16",
-  color = "currentColor",
+  size = '16',
+  color = 'currentColor',
   ...attributes
 }) => {
   return (
@@ -31,7 +31,7 @@ const User: React.FC<IconProps> = ({
         strokeLinejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default User
+export default User;

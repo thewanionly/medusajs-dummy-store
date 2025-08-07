@@ -1,15 +1,16 @@
-import { HttpTypes } from "@medusajs/types"
-import { Container } from "@medusajs/ui"
-import Image from "next/image"
+import Image from 'next/image';
+
+import { HttpTypes } from '@medusajs/types';
+import { Container } from '@medusajs/ui';
 
 type ImageGalleryProps = {
-  images: HttpTypes.StoreProductImage[]
-}
+  images: HttpTypes.StoreProductImage[];
+};
 
 const ImageGallery = ({ images }: ImageGalleryProps) => {
   return (
-    <div className="flex items-start relative">
-      <div className="flex flex-col flex-1 small:mx-16 gap-y-4">
+    <div className="relative flex items-start">
+      <div className="flex flex-1 flex-col gap-y-4 small:mx-16">
         {images.map((image, index) => {
           return (
             <Container
@@ -26,16 +27,16 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
                   fill
                   sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
                   style={{
-                    objectFit: "cover",
+                    objectFit: 'cover',
                   }}
                 />
               )}
             </Container>
-          )
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ImageGallery
+export default ImageGallery;
