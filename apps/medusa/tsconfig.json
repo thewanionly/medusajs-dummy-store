@@ -1,6 +1,25 @@
 {
-  "extends": "@mds/typescript-config/base.json",
+  // TODO: Remove usage of @mds packages for now due to build error when deploying in Render.
+  // This error is due to --ignore-workspace flag in pnpm install in Render's Build command.
+  // The flag is necessary for Build command to work inside .medusa/server which is not part of the workspace.
+  // However, also because of this flag, pnpm can't find @mds packages in Render env as they are part of the workspace.
+  // As a quick resolution, remove these packages for now in apps/medusa. We can find a solution for this later.
+  // "extends": "@mds/typescript-config/base.json",
   "compilerOptions": {
+    // "declaration": true,
+    // "declarationMap": true,
+    "esModuleInterop": true,
+    "incremental": false,
+    "isolatedModules": true,
+    "lib": ["es2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleDetection": "force",
+    "moduleResolution": "NodeNext",
+    // "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipDefaultLibCheck": true,
