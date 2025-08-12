@@ -32,18 +32,20 @@ export const createCustomFromCartWorkflow = createWorkflow(
       custom_name: customName,
     });
 
-    when({ custom }, ({ custom }) => custom !== undefined).then(() => {
-      createRemoteLinkStep([
-        {
-          [Modules.CART]: {
-            cart_id: input.cart.id,
+    when({ custom }, ({ custom }) => custom.custom_name !== undefined).then(
+      () => {
+        createRemoteLinkStep([
+          {
+            [Modules.CART]: {
+              cart_id: input.cart.id,
+            },
+            [HELLO_MODULE]: {
+              custom_id: custom.id,
+            },
           },
-          [HELLO_MODULE]: {
-            custom_id: custom.id,
-          },
-        },
-      ]);
-    });
+        ]);
+      }
+    );
 
     return new WorkflowResponse({
       custom,
