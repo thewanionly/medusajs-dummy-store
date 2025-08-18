@@ -68,6 +68,9 @@ importers:
       '@tanstack/react-query':
         specifier: 5.64.2
         version: 5.64.2(react@19.0.0-rc-66855b96-20241106)
+      algoliasearch:
+        specifier: ^5.35.0
+        version: 5.35.0
       awilix:
         specifier: ^8.0.1
         version: 8.0.1
