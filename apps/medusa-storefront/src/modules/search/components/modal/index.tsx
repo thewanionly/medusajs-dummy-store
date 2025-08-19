@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { Hits, InstantSearch, SearchBox } from 'react-instantsearch';
+import {
+  Hits,
+  InstantSearch,
+  SearchBox,
+  SearchBoxProps,
+} from 'react-instantsearch';
 
 import { Button } from '@medusajs/ui';
 
@@ -22,9 +27,23 @@ type Hit = {
   thumbnail: string;
 };
 
+const DEBOUNCE_TIME = 250;
+
+type QueryHook = NonNullable<SearchBoxProps['queryHook']>;
+
 export default function SearchModal() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  const timerId = useRef<NodeJS.Timeout | null>(null);
+
+  const queryHook = useCallback<QueryHook>((query, search) => {
+    if (timerId.current) {
+      clearTimeout(timerId.current);
+    }
+
+    timerId.current = setTimeout(() => search(query), DEBOUNCE_TIME);
+  }, []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -46,7 +65,10 @@ export default function SearchModal() {
           searchClient={searchClient}
           indexName={process.env.NEXT_PUBLIC_ALGOLIA_PRODUCT_INDEX_NAME}
         >
-          <SearchBox className="w-full [&_button]:w-[3%] [&_input]:w-[94%] [&_input]:outline-none" />
+          <SearchBox
+            className="w-full [&_button]:w-[3%] [&_input]:w-[94%] [&_input]:outline-none"
+            queryHook={queryHook}
+          />
           <Hits hitComponent={Hit} />
         </InstantSearch>
       </Modal>
