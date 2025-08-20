@@ -27,6 +27,7 @@
     "@medusajs/js-sdk": "2.10.3",
     "@medusajs/ui": "4.0.23",
     "@radix-ui/react-accordion": "^1.2.1",
+    "@sanity/client": "^7.8.2",
     "@stripe/react-stripe-js": "^1.7.2",
     "@stripe/stripe-js": "^1.29.0",
     "algoliasearch": "^5.35.0",
