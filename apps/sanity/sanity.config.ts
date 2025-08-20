@@ -11,7 +11,7 @@ export default defineConfig({
   projectId: '3cxc3sms',
   dataset: 'production',
 
-  plugins: [structureTool(), visionTool(),
+  plugins: [structureTool(), 
  visionTool({ defaultApiVersion: '2023-10-20' }),media()
   ],
 

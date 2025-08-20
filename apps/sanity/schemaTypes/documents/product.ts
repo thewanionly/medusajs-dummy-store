@@ -80,6 +80,48 @@ export const productType = defineType({
       description: 'Product thumbnail URL from Medusa',
       readOnly: true
     }),
+    defineField({
+      name: 'images',
+      title: 'Product Images',
+      type: 'array',
+      group: 'medusa',
+      of: [{type: 'string'}],
+      description: 'Product image URLs from Medusa',
+      readOnly: true
+    }),
+    defineField({
+      name: 'variants',
+      title: 'Product Variants',
+      type: 'array',
+      group: 'medusa',
+      of: [{
+        type: 'object',
+        fields: [
+          {name: 'id', type: 'string', title: 'Variant ID'},
+          {name: 'title', type: 'string', title: 'Variant Title'},
+          {name: 'sku', type: 'string', title: 'SKU'},
+          {name: 'options', type: 'array', of: [{type: 'string'}], title: 'Options'}
+        ]
+      }],
+      description: 'Product variants from Medusa',
+      readOnly: true
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Product Categories',
+      type: 'array',
+      group: 'medusa',
+      of: [{
+        type: 'object',
+        fields: [
+          {name: 'id', type: 'string', title: 'Category ID'},
+          {name: 'name', type: 'string', title: 'Category Name'},
+          {name: 'handle', type: 'string', title: 'Category Handle'}
+        ]
+      }],
+      description: 'Product categories from Medusa',
+      readOnly: true
+    }),
 
     // SEO fields
     defineField({
