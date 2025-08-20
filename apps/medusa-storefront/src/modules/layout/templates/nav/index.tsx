@@ -5,6 +5,7 @@ import { StoreRegion } from '@medusajs/types';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import CartButton from '@modules/layout/components/cart-button';
 import SideMenu from '@modules/layout/components/side-menu';
+import SearchModal from '@modules/search/components/modal';
 
 export default async function Nav() {
   const regions = await listRegions().then((regions: StoreRegion[]) => regions);
@@ -30,6 +31,7 @@ export default async function Nav() {
           </div>
 
           <div className="flex h-full flex-1 basis-0 items-center justify-end gap-x-6">
+            <SearchModal />
             <div className="hidden h-full items-center gap-x-6 small:flex">
               <LocalizedClientLink
                 className="hover:text-ui-fg-base"
