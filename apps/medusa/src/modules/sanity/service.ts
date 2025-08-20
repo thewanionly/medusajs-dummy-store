@@ -80,26 +80,114 @@ class SanityModuleService {
   }
 
   private transformProductForCreate = (product: ProductDTO) => {
-    return {
+    const data: Record<string, unknown> = {
       _type: this.typeMap[SyncDocumentTypes.PRODUCT],
       _id: product.id,
+      medusaId: product.id,
       title: product.title,
-      specs: [
-        {
-          _key: product.id,
-          _type: "spec",
-          title: product.title,
-          lang: "en",
-        },
-      ],
-    } as const
+      handle: product.handle ? {
+        _type: 'slug',
+        current: product.handle
+      } : undefined,
+      description: product.description || undefined,
+      status: product.status || 'draft',
+      thumbnail: product.thumbnail || undefined,
+    }
+
+    // Handle images
+    if (product.images && Array.isArray(product.images)) {
+      data.images = product.images.map((image: { url?: string } | string) => 
+        typeof image === 'string' ? image : image.url || ''
+      )
+    }
+
+    // Handle variants
+    if (product.variants && Array.isArray(product.variants)) {
+      data.variants = product.variants.map((variant) => ({
+        id: variant.id,
+        title: variant.title || undefined,
+        sku: variant.sku || undefined,
+        options: variant.options?.map((opt) => 
+          typeof opt === 'string' ? opt : (opt as { value?: string }).value || ''
+        ) || []
+      }))
+    }
+
+    // Handle categories
+    if (product.categories && Array.isArray(product.categories)) {
+      data.categories = product.categories.map((category: {
+        id: string;
+        name?: string;
+        handle?: string;
+      }) => ({
+        id: category.id,
+        name: category.name,
+        handle: category.handle
+      }))
+    }
+
+    return data
   }
 
-  private transformProductForUpdate = (product: ProductDTO) => {
+  private readonly transformProductForUpdate = (product: ProductDTO) => {
+    const updateData: Record<string, unknown> = {
+      title: product.title,
+      medusaId: product.id,
+    }
+
+    if (product.handle) {
+      updateData.handle = {
+        _type: 'slug',
+        current: product.handle
+      }
+    }
+
+    if (product.description !== undefined) {
+      updateData.description = product.description
+    }
+
+    if (product.status) {
+      updateData.status = product.status
+    }
+
+    if (product.thumbnail !== undefined) {
+      updateData.thumbnail = product.thumbnail
+    }
+
+    // Handle images
+    if (product.images && Array.isArray(product.images)) {
+      updateData.images = product.images.map((image: { url?: string } | string) => 
+        typeof image === 'string' ? image : image.url || ''
+      )
+    }
+
+    // Handle variants
+    if (product.variants && Array.isArray(product.variants)) {
+      updateData.variants = product.variants.map((variant) => ({
+        id: variant.id,
+        title: variant.title || undefined,
+        sku: variant.sku || undefined,
+        options: variant.options?.map((opt) => 
+          typeof opt === 'string' ? opt : (opt as { value?: string }).value || ''
+        ) || []
+      }))
+    }
+
+    // Handle categories
+    if (product.categories && Array.isArray(product.categories)) {
+      updateData.categories = product.categories.map((category: {
+        id: string;
+        name?: string;
+        handle?: string;
+      }) => ({
+        id: category.id,
+        name: category.name,
+        handle: category.handle
+      }))
+    }
+
     return {
-      set: {
-        title: product.title,
-      },
+      set: updateData,
     }
   }
 
