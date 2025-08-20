@@ -21,4 +21,12 @@ module.exports = defineConfig({
     backendUrl: process.env.MEDUSA_BACKEND_URL,
     disable: process.env.DISABLE_MEDUSA_ADMIN === 'true',
   },
+  modules: [
+    {
+      resolve: './src/modules/shopify',
+      options: {
+        baseUrl: process.env.SHOPIFY_APP_URL!,
+      },
+    },
+  ],
 });
