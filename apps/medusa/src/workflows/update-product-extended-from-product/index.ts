@@ -1,0 +1,114 @@
+import { InferTypeOf } from '@medusajs/framework/types';
+import { Modules } from '@medusajs/framework/utils';
+import {
+  WorkflowResponse,
+  createWorkflow,
+  when,
+} from '@medusajs/framework/workflows-sdk';
+import {
+  createRemoteLinkStep,
+  dismissRemoteLinkStep,
+  useQueryGraphStep,
+} from '@medusajs/medusa/core-flows';
+
+import { PRODUCT_EXTENDED_MODULE } from '../../modules/productExtended';
+import ProductExtended from '../../modules/productExtended/models/productExtended';
+import { createProductExtendedStep } from '../create-product-extended-from-product/steps/create-product-extended';
+import { deleteProductExtendedStep } from './steps/delete-product-extended';
+import { updateProductExtendedStep } from './steps/update-product-extended';
+
+export type UpdateProductExtendedFromProductStepInput = {
+  productId: string;
+  vendor: string;
+};
+
+export const updateProductExtendedFromProductWorkflow = createWorkflow(
+  'update-product-extended-from-product',
+  (input: UpdateProductExtendedFromProductStepInput) => {
+    const { data: products } = useQueryGraphStep({
+      entity: 'product',
+      fields: ['product_extended.*'],
+      filters: {
+        id: input.productId,
+      },
+    });
+
+    const created = when(
+      'create-product-product-extended-link',
+      {
+        input,
+        products,
+      },
+      (data) =>
+        Boolean(
+          !data.products[0].product_extended && data.input.vendor?.length > 0
+        )
+    ).then(() => {
+      const productExtended = createProductExtendedStep({
+        vendor: input.vendor,
+      });
+
+      createRemoteLinkStep([
+        {
+          [Modules.PRODUCT]: {
+            product_id: input.productId,
+          },
+          [PRODUCT_EXTENDED_MODULE]: {
+            product_extended_id: productExtended.id,
+          },
+        },
+      ]);
+
+      return productExtended;
+    });
+
+    const deleted = when(
+      'delete-product-product-extended-link',
+      {
+        input,
+        products,
+      },
+      (data) =>
+        Boolean(
+          data.products[0].product_extended &&
+            (data.input.vendor === null || data.input.vendor.length === 0)
+        )
+    ).then(() => {
+      deleteProductExtendedStep({
+        productExtended: products[0].product_extended as InferTypeOf<
+          typeof ProductExtended
+        >,
+      });
+
+      dismissRemoteLinkStep({
+        [PRODUCT_EXTENDED_MODULE]: {
+          product_extended: products[0].product_extended!.id,
+        },
+      });
+
+      return products[0].product_extended!.id;
+    });
+
+    const updated = when(
+      {
+        input,
+        products,
+      },
+      (data) =>
+        Boolean(
+          data.products[0].product_extended && data.input.vendor?.length > 0
+        )
+    ).then(() => {
+      return updateProductExtendedStep({
+        id: products[0].product_extended!.id,
+        vendor: input.vendor,
+      });
+    });
+
+    return new WorkflowResponse({
+      created,
+      updated,
+      deleted,
+    });
+  }
+);
