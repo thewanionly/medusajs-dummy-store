@@ -28,5 +28,8 @@ module.exports = defineConfig({
         baseUrl: process.env.SHOPIFY_APP_URL!,
       },
     },
+    {
+      resolve: './src/modules/productExtended',
+    },
   ],
 });

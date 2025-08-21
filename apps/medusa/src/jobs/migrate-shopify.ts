@@ -8,7 +8,7 @@ export default async function migrateShopifyJob(container: MedusaContainer) {
 
   let currentPage = 0;
   const pageSize = 10;
-  const totalCount = 30; // only migrate 30 products for now
+  const totalCount = 50; // only migrate 30 products for now
 
   do {
     currentPage++;

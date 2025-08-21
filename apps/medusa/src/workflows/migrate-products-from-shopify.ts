@@ -68,7 +68,12 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
       },
     }).config({ name: 'get-existing-products' });
 
-    const { productsToCreate, productsToUpdate } = transform(
+    const {
+      productsToCreate,
+      productsToUpdate,
+      productsToCreateAdditionalData,
+      productsToUpdateAdditionalData,
+    } = transform(
       {
         products,
         stores,
@@ -80,7 +85,15 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
           string,
           CreateProductWorkflowInputDTO
         >();
+        const productsToCreateAdditionalData = new Map<
+          string,
+          Record<string, unknown>
+        >();
         const productsToUpdate = new Map<string, UpsertProductDTO>();
+        const productsToUpdateAdditionalData = new Map<
+          string,
+          Record<string, unknown>
+        >();
 
         data.products.forEach((shopifyProduct) => {
           const productData: CreateProductWorkflowInputDTO | UpsertProductDTO =
@@ -98,6 +111,9 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
               ],
               shipping_profile_id: data.shippingProfiles[0].id,
             };
+          const additionalData = {
+            vendor: shopifyProduct.vendor,
+          };
           const existingProduct = data.existingProducts.find(
             (p) => p.external_id === productData.external_id
           );
@@ -152,14 +168,28 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
 
           if (productData.id) {
             productsToUpdate.set(existingProduct!.id, productData);
+            productsToUpdateAdditionalData.set(
+              existingProduct!.id,
+              additionalData
+            );
           } else {
             productsToCreate.set(productData.external_id!, productData);
+            productsToCreateAdditionalData.set(
+              productData.external_id!,
+              additionalData
+            );
           }
         });
 
         return {
           productsToCreate: Array.from(productsToCreate.values()),
           productsToUpdate: Array.from(productsToUpdate.values()),
+          productsToCreateAdditionalData: Array.from(
+            productsToCreateAdditionalData.values()
+          ),
+          productsToUpdateAdditionalData: Array.from(
+            productsToUpdateAdditionalData.values()
+          ),
         };
       }
     );
@@ -167,12 +197,16 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
     createProductsWorkflow.runAsStep({
       input: {
         products: productsToCreate,
+        // @ts-ignore TODO: resolve this
+        additional_data: productsToCreateAdditionalData,
       },
     });
 
     updateProductsWorkflow.runAsStep({
       input: {
         products: productsToUpdate,
+        // @ts-ignore TODO: resolve this
+        additional_data: productsToUpdateAdditionalData,
       },
     });
 
