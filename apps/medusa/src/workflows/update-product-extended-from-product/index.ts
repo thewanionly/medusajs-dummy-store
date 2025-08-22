@@ -1,4 +1,4 @@
-import { InferTypeOf } from '@medusajs/framework/types';
+import { InferTypeOf, ProductDTO } from '@medusajs/framework/types';
 import { Modules } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
@@ -18,8 +18,10 @@ import { deleteProductExtendedStep } from './steps/delete-product-extended';
 import { updateProductExtendedStep } from './steps/update-product-extended';
 
 export type UpdateProductExtendedFromProductStepInput = {
-  productId: string;
-  vendor: string;
+  product: ProductDTO;
+  additional_data?: {
+    vendor?: string;
+  };
 };
 
 export const updateProductExtendedFromProductWorkflow = createWorkflow(
@@ -29,7 +31,7 @@ export const updateProductExtendedFromProductWorkflow = createWorkflow(
       entity: 'product',
       fields: ['product_extended.*'],
       filters: {
-        id: input.productId,
+        id: input.product.id,
       },
     });
 
@@ -41,17 +43,18 @@ export const updateProductExtendedFromProductWorkflow = createWorkflow(
       },
       (data) =>
         Boolean(
-          !data.products[0].product_extended && data.input.vendor?.length > 0
+          !data.products[0].product_extended &&
+            (data.input.additional_data?.vendor?.length ?? 0) > 0
         )
     ).then(() => {
       const productExtended = createProductExtendedStep({
-        vendor: input.vendor,
+        vendor: input.additional_data!.vendor,
       });
 
       createRemoteLinkStep([
         {
           [Modules.PRODUCT]: {
-            product_id: input.productId,
+            product_id: input.product.id,
           },
           [PRODUCT_EXTENDED_MODULE]: {
             product_extended_id: productExtended.id,
@@ -71,7 +74,8 @@ export const updateProductExtendedFromProductWorkflow = createWorkflow(
       (data) =>
         Boolean(
           data.products[0].product_extended &&
-            (data.input.vendor === null || data.input.vendor.length === 0)
+            (data.input.additional_data?.vendor === null ||
+              data.input.additional_data?.vendor?.length === 0)
         )
     ).then(() => {
       deleteProductExtendedStep({
@@ -96,12 +100,13 @@ export const updateProductExtendedFromProductWorkflow = createWorkflow(
       },
       (data) =>
         Boolean(
-          data.products[0].product_extended && data.input.vendor?.length > 0
+          data.products[0].product_extended &&
+            (data.input?.additional_data?.vendor?.length ?? 0) > 0
         )
     ).then(() => {
       return updateProductExtendedStep({
         id: products[0].product_extended!.id,
-        vendor: input.vendor,
+        vendor: input.additional_data!.vendor as string,
       });
     });
 

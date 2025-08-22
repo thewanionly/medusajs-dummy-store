@@ -8,16 +8,17 @@ import {
 createProductsWorkflow.hooks.productsCreated(
   async ({ products, additional_data }, { container }) => {
     const workflow = createProductExtendedFromProductWorkflow(container);
-    console.log('### createProductsWorkflow additional_data', additional_data);
+
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
-      const vendor =
-        (additional_data?.[i] as unknown as Record<string, string>)?.vendor ??
-        '';
+      const additionalDataValue = Array.isArray(additional_data)
+        ? additional_data?.[i]
+        : additional_data;
+
       await workflow.run({
         input: {
-          productId: product.id,
-          vendor,
+          product,
+          additional_data: additionalDataValue,
         } as CreateProductExtendedFromProductWorkflowInput,
       });
     }
