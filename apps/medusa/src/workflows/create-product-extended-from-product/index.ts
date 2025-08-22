@@ -1,3 +1,4 @@
+import { ProductDTO } from '@medusajs/framework/types';
 import { Modules } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
@@ -11,8 +12,10 @@ import { PRODUCT_EXTENDED_MODULE } from '../../modules/productExtended';
 import { createProductExtendedStep } from './steps/create-product-extended';
 
 export type CreateProductExtendedFromProductWorkflowInput = {
-  productId: string;
-  vendor: string;
+  product: ProductDTO;
+  additional_data?: {
+    vendor?: string;
+  };
 };
 
 export const createProductExtendedFromProductWorkflow = createWorkflow(
@@ -22,7 +25,7 @@ export const createProductExtendedFromProductWorkflow = createWorkflow(
       {
         input,
       },
-      (data) => data.input.vendor || ''
+      (data) => data.input.additional_data!.vendor || ''
     );
 
     const productExtended = createProductExtendedStep({
@@ -36,7 +39,7 @@ export const createProductExtendedFromProductWorkflow = createWorkflow(
       createRemoteLinkStep([
         {
           [Modules.PRODUCT]: {
-            product_id: input.productId,
+            product_id: input.product.id,
           },
           [PRODUCT_EXTENDED_MODULE]: {
             product_extended_id: productExtended.id,

@@ -10,7 +10,7 @@ type CreateProductExtendedStepInput = {
 export const createProductExtendedStep = createStep(
   'create-product-extended',
   async (data: CreateProductExtendedStepInput, { container }) => {
-    if (!data) {
+    if (!data.vendor) {
       return;
     }
 
