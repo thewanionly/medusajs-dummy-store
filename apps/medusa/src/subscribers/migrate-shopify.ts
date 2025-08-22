@@ -1,8 +1,10 @@
-import { MedusaContainer } from '@medusajs/framework/types';
+import { SubscriberArgs, type SubscriberConfig } from '@medusajs/framework';
 
 import { migrateProductsFromShopifyWorkflow } from '../workflows/migrate-products-from-shopify';
 
-export default async function migrateShopifyJob(container: MedusaContainer) {
+export default async function migrateShopifyHandler({
+  container,
+}: SubscriberArgs) {
   const logger = container.resolve('logger');
   logger.info('Migrating products from Shopify...');
 
@@ -13,9 +15,7 @@ export default async function migrateShopifyJob(container: MedusaContainer) {
   do {
     currentPage++;
 
-    const { result: pagination } = await migrateProductsFromShopifyWorkflow(
-      container
-    ).run({
+    await migrateProductsFromShopifyWorkflow(container).run({
       input: {
         page: currentPage,
         limit: pageSize,
@@ -26,8 +26,6 @@ export default async function migrateShopifyJob(container: MedusaContainer) {
   logger.info('Finished migrating products from Shopify');
 }
 
-export const config = {
-  name: 'migrate-shopify-job',
-  schedule: '0 0 * * *',
-  // schedule: '* * * * *', // runs every minute for testing purposes
+export const config: SubscriberConfig = {
+  event: 'migrate-products.shopify',
 };
