@@ -12,37 +12,21 @@ interface DetailWidgetProps {
 }
 
 const ProductWidget = ({ data }: DetailWidgetProps) => {
-  const { triggerSync } = useTriggerSanityProductSync(data.id)
-  const { fetchDocument } = useSanityDocument(data.id)
-  const [sanityDocument, setSanityDocument] = useState<Record<string, unknown> | null>(null)
-  const [studioUrl, setStudioUrl] = useState<string>("")
-  const [isLoading, setIsLoading] = useState(true)
+  const { mutateAsync } = useTriggerSanityProductSync(data.id)
+  const { sanity_document, studio_url, isLoading, fetchDocument } = useSanityDocument(data.id)
   const [isSyncing, setIsSyncing] = useState(false)
 
   useEffect(() => {
-    const loadDocument = async () => {
-      try {
-        const result = await fetchDocument()
-        setSanityDocument(result.sanity_document)
-        setStudioUrl(result.studio_url)
-      } catch (error) {
-        console.error("Failed to load Sanity document:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadDocument()
+    fetchDocument()
   }, [fetchDocument])
 
   const handleSync = async () => {
     setIsSyncing(true)
     try {
-      await triggerSync()
-      // Reload the document after sync
-      const result = await fetchDocument()
-      setSanityDocument(result.sanity_document)
-      setStudioUrl(result.studio_url)
+      await mutateAsync()
+      setTimeout(() => {
+        fetchDocument()
+      }, 1000)
     } catch (error) {
       console.error("Sync failed:", error)
     } finally {
@@ -55,7 +39,7 @@ const ProductWidget = ({ data }: DetailWidgetProps) => {
       return "Loading..."
     }
     
-    if (sanityDocument?.title === data.title) {
+    if (sanity_document?.title === data.title) {
       return <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Synced</span>
     } else {
       return <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">Not Synced</span>
@@ -79,31 +63,20 @@ const ProductWidget = ({ data }: DetailWidgetProps) => {
           >
             {isSyncing ? "Syncing..." : "Sync"}
           </button>
-          {studioUrl && (
+          {studio_url && (
             <button
               className="px-3 py-1 text-sm border rounded"
-              onClick={() => window.open(studioUrl, "_blank")}
+              onClick={() => window.open(studio_url, "_blank")}
             >
               Open Studio
             </button>
           )}
         </div>
       </div>
-      {sanityDocument && (
-        <div className="mt-4">
-          <h3 className="text-sm font-medium mb-2">Document Details:</h3>
-          <div className="text-xs bg-ui-bg-base p-2 rounded">
-            <div>ID: {sanityDocument._id as string}</div>
-            <div>Type: {sanityDocument._type as string}</div>
-            <div>Title: {sanityDocument.title as string}</div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
 
-// The widget's configurations
 export const config = defineWidgetConfig({
   zone: "product.details.after",
 })

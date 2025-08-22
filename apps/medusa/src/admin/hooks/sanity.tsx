@@ -1,43 +1,99 @@
+import { useState, useCallback } from "react"
 import { sdk } from "../lib/sdk"
 
 export const useTriggerSanityProductSync = (id: string) => {
-  const triggerSync = async () => {
-    return await sdk.client.fetch(`/admin/sanity/documents/${id}/sync`, {
-      method: "post",
-    })
-  }
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const mutateAsync = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const result = await sdk.client.fetch(`/admin/sanity/documents/${id}/sync`, {
+        method: "post",
+      })
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [id])
 
-  return { triggerSync }
+  return { mutateAsync, isPending: isLoading }
 }
 
 export const useSanityDocument = (id: string) => {
-  const fetchDocument = async () => {
-    return await sdk.client.fetch<{
-      sanity_document: Record<string, unknown>;
-      studio_url: string;
-    }>(`/admin/sanity/documents/${id}`)
-  }
+  const [data, setData] = useState<{
+    sanity_document?: Record<string, unknown>;
+    studio_url?: string;
+  } | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const fetchDocument = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const result = await sdk.client.fetch<{
+        sanity_document: Record<string, unknown>;
+        studio_url: string;
+      }>(`/admin/sanity/documents/${id}`)
+      setData(result)
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [id])
 
-  return { fetchDocument }
+  return { 
+    sanity_document: data?.sanity_document, 
+    studio_url: data?.studio_url, 
+    isLoading,
+    fetchDocument 
+  }
 }
 
 export const useTriggerSanitySync = () => {
-  const triggerSync = async () => {
-    return await sdk.client.fetch(`/admin/sanity/syncs`, {
-      method: "post",
-    })
-  }
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const mutateAsync = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const result = await sdk.client.fetch(`/admin/sanity/syncs`, {
+        method: "post",
+      })
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
-  return { triggerSync }
+  return { mutateAsync, isPending: isLoading }
 }
 
 export const useSanitySyncs = () => {
-  const fetchSyncs = async () => {
-    return await sdk.client.fetch<{
-      workflow_executions: Record<string, unknown>[];
-      count: number;
-    }>(`/admin/sanity/syncs`)
-  }
+  const [data, setData] = useState<{
+    workflow_executions?: Record<string, unknown>[];
+    count?: number;
+  } | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const fetchSyncs = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const result = await sdk.client.fetch<{
+        workflow_executions: Record<string, unknown>[];
+        count: number;
+      }>(`/admin/sanity/syncs`)
+      setData(result)
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
-  return { fetchSyncs }
+  const refetch = fetchSyncs
+
+  return { 
+    workflow_executions: data?.workflow_executions, 
+    count: data?.count,
+    isLoading,
+    fetchSyncs,
+    refetch
+  }
 }
