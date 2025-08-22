@@ -2,13 +2,21 @@
 
 import { Fragment } from 'react';
 
+
+
 import { Popover, PopoverPanel, Transition } from '@headlessui/react';
 import { ArrowRightMini, XMark } from '@medusajs/icons';
 import { HttpTypes } from '@medusajs/types';
 import { Text, clx, useToggleState } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
+
+
 import CountrySelect from '../country-select';
+
+
+
+
 
 const SideMenuItems = {
   Home: '/',
@@ -17,7 +25,11 @@ const SideMenuItems = {
   Cart: '/cart',
 };
 
-const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
+const SideMenu = ({
+  regions,
+}: {
+  regions: HttpTypes.StoreRegion[] | null;
+}) => {
   const toggleState = useToggleState();
 
   return (

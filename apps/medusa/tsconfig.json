@@ -33,6 +33,10 @@
     "forceConsistentCasingInFileNames": true,
     "checkJs": false,
     "strictNullChecks": true,
+"baseUrl": ".",
+ "paths": {
+      "@/*": ["src/*"]
+    },
     "noUncheckedIndexedAccess": false
   },
   "ts-node": {
