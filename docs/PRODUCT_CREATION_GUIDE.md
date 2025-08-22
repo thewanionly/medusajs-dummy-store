@@ -15,10 +15,10 @@ Your integration automatically syncs product data between:
 
 ### 1. **Environment Setup**
 ```bash
-# Ensure all services are running
 
 # Start all apps in development mode
 pnpm dev
+turbo dev
 
 # Services should be available at:
 # - Medusa Admin: http://localhost:9000/app
@@ -204,29 +204,7 @@ For each combination of options:
    - Navigate to **Products** document type
    - Verify product appears with correct data
    - Check Medusa product ID in document
-
-### **Via API Endpoints**
-
-```bash
-# Check sync status for specific product
-curl http://localhost:9000/admin/sanity/documents/prod_XXXXXXXXXX
-
-# Get all synced documents
-curl http://localhost:9000/admin/sanity/documents
-
-# Manual sync trigger
-curl -X POST http://localhost:9000/admin/sanity/sync/prod_XXXXXXXXXX
-```
-
 ---
-
-## 🛠️ **Manual Sync Operations**
-
-### **When to Manual Sync:**
-- Automatic sync failed
-- Data discrepancies between systems
-- After Sanity schema changes
-- Bulk product updates
 
 ### **How to Manual Sync:**
 
@@ -236,10 +214,6 @@ curl -X POST http://localhost:9000/admin/sanity/sync/prod_XXXXXXXXXX
 1. Go to product detail page
 2. Click "Sync to Sanity" button in widget
 3. Monitor status updates
-
-# Via API
-curl -X POST http://localhost:9000/admin/sanity/sync/prod_XXXXXXXXXX
-```
 
 #### **2. Bulk Product Sync**
 ```bash
@@ -303,69 +277,7 @@ After products sync to Sanity, enhance them with CMS-specific content:
    - Enhanced descriptions from Sanity
    - Images from both systems
 
-### **Verify Sync Integration**
-
-```bash
-# Check if product appears in storefront
-curl http://localhost:8000/api/products/premium-cotton-tshirt
-
-# Verify Sanity CMS data
-curl "https://YOUR_PROJECT_ID.api.sanity.io/v2021-10-21/data/query/production?query=*[_type=='product' && medusaProductId=='prod_XXXXXXXXXX']"
-```
-
 ---
-
-## 🚨 **Troubleshooting Common Issues**
-
-### **1. Sync Not Triggering**
-
-```bash
-# Check if subscriber is registered
-curl http://localhost:9000/admin/subscribers
-
-# Verify workflow exists
-curl http://localhost:9000/admin/workflows
-
-# Check logs
-tail -f apps/medusa/logs/medusa.log
-```
-
-### **2. Permission Errors**
-
-```
-Error: Insufficient permissions; permission "create" required
-```
-
-**Solution:**
-1. Check Sanity token permissions
-2. Ensure token has Editor/Admin role
-3. Verify SANITY_API_TOKEN in .env
-
-### **3. Schema Validation Errors**
-
-```
-Error: Document failed validation
-```
-
-**Solution:**
-1. Check Sanity schema matches expected structure
-2. Verify required fields are present
-3. Update transformation logic if needed
-
-### **4. Network/Connection Issues**
-
-```
-Error: Failed to connect to Sanity
-```
-
-**Solution:**
-1. Verify SANITY_PROJECT_ID and SANITY_DATASET
-2. Check internet connection
-3. Validate API token format
-
----
-
-## 📊 **Best Practices**
 
 ### **1. Product Creation Workflow**
 ```
@@ -396,75 +308,3 @@ Error: Failed to connect to Sanity
 ├── Monitor sync workflow execution times
 └── Regular cleanup of failed sync attempts
 ```
-
----
-
-## 🔄 **Sync Workflow Reference**
-
-### **Event Flow Diagram**
-```
-Medusa Product Event → Subscriber → Workflow → Sanity Update
-        ↓                ↓           ↓            ↓
-    Create/Update → Listen Event → Transform → Create Document
-        ↓                ↓           ↓            ↓
-      Save Product → Trigger Sync → API Call → Link Creation
-```
-
-### **Key Components**
-- **Subscriber**: `apps/medusa/src/subscribers/product-sanity-sync.ts`
-- **Workflow**: `apps/medusa/src/workflows/sanity-sync-products/`
-- **Module**: `apps/medusa/src/modules/sanity/`
-- **API Routes**: `apps/medusa/src/api/admin/sanity/`
-
----
-
-## 📞 **Support & Resources**
-
-### **Logs & Debugging**
-```bash
-# Medusa logs
-tail -f apps/medusa/logs/medusa.log
-
-# Workflow execution logs
-curl http://localhost:9000/admin/workflows/executions
-
-# Sync status logs
-curl http://localhost:9000/admin/sanity/sync-status
-```
-
-### **Documentation Links**
-- [Medusa Admin Guide](https://docs.medusajs.com/admin/manage-products)
-- [Sanity Studio Guide](https://www.sanity.io/docs/studio)
-- [Product Sync Architecture](./ARCHITECTURE.md)
-
----
-
-## ✅ **Quick Checklist**
-
-Use this checklist when creating new products:
-
-### **Pre-Creation**
-- [ ] All services running (Medusa, Sanity, Storefront)
-- [ ] Database seeded with categories
-- [ ] Sanity permissions configured
-- [ ] Environment variables set
-
-### **During Creation**
-- [ ] Product title and description added
-- [ ] Handle is SEO-friendly
-- [ ] Categories selected
-- [ ] Options and variants configured
-- [ ] Images uploaded and optimized
-- [ ] Prices set for all regions
-- [ ] Inventory quantities set
-- [ ] Shipping profile assigned
-
-### **Post-Creation**
-- [ ] Sync status verified (green checkmark)
-- [ ] Product appears in Sanity Studio
-- [ ] Enhanced content added in Sanity
-- [ ] Product displays correctly in storefront
-- [ ] All variants and pricing work
-- [ ] Images load properly
-
----

@@ -1,3 +1,12 @@
-import {productType} from './documents/product'
+// Documents - Content
+import {productType} from './documents/content/product'
 
-export const schemaTypes = [productType]
+// Documents - Settings
+import {siteSettingsType, navigationSettingsType} from './documents/settings'
+
+export const schemaTypes = [
+  // Documents
+  productType,
+  siteSettingsType,
+  navigationSettingsType
+]

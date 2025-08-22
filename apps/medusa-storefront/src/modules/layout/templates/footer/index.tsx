@@ -1,12 +1,16 @@
 import { listCategories } from '@lib/data/categories';
 import { listCollections } from '@lib/data/collections';
+import { getSiteSettings, urlFor } from '@lib/sanity-client';
 import { Text, clx } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import MedusaCTA from '@modules/layout/components/medusa-cta';
+import Image from 'next/image';
 
 export default async function Footer() {
   const { collections } = await listCollections();
   const productCategories = await listCategories();
+  
+  const siteSettings = await getSiteSettings();
 
   return (
     <footer className="w-full border-t border-ui-border-base">
@@ -17,10 +21,15 @@ export default async function Footer() {
               href="/"
               className="txt-compact-xlarge-plus uppercase text-ui-fg-subtle hover:text-ui-fg-base"
             >
-              Medusa Store
+              {siteSettings?.title || 'Medusa Store'}
             </LocalizedClientLink>
+            {siteSettings?.description && (
+              <Text className="txt-small mt-2 text-ui-fg-subtle max-w-xs">
+                {siteSettings.description}
+              </Text>
+            )}
           </div>
-          <div className="text-small-regular grid grid-cols-2 gap-10 sm:grid-cols-3 md:gap-x-16">
+          <div className="text-small-regular grid grid-cols-2 gap-10 sm:grid-cols-4 md:gap-x-16">
             {productCategories && productCategories?.length > 0 && (
               <div className="flex flex-col gap-y-2">
                 <span className="txt-ui-fg-base txt-small-plus">
@@ -59,18 +68,17 @@ export default async function Footer() {
                         </LocalizedClientLink>
                         {children && (
                           <ul className="ml-3 grid grid-cols-1 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
+                            {children?.map((child) => (
+                              <li key={child.id}>
+                                <LocalizedClientLink
+                                  className="hover:text-ui-fg-base"
+                                  href={`/categories/${child.handle}`}
+                                  data-testid="category-link"
+                                >
+                                  {child.name}
+                                </LocalizedClientLink>
+                              </li>
+                            ))}
                           </ul>
                         )}
                       </li>
@@ -105,38 +113,71 @@ export default async function Footer() {
                 </ul>
               </div>
             )}
+            
+            {/* Sanity Social Media Links */}
+            {siteSettings?.socialMedia && siteSettings.socialMedia.length > 0 && (
+              <div className="flex flex-col gap-y-2">
+                <span className="txt-ui-fg-base txt-small-plus">Follow Us</span>
+                <ul className="txt-small grid grid-cols-1 gap-y-2 text-ui-fg-subtle">
+                  {siteSettings.socialMedia.slice(0, 5).map((social) => (
+                    <li key={social.platform} className="flex items-center gap-2">
+                      {social.logo && (
+                        <Image
+                          src={urlFor(social.logo).width(16).height(16).url()}
+                          alt={social.platform}
+                          width={16}
+                          height={16}
+                          className="opacity-70"
+                        />
+                      )}
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-ui-fg-base"
+                      >
+                        {social.platform}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
             <div className="flex flex-col gap-y-2">
-              <span className="txt-ui-fg-base txt-small-plus">Medusa</span>
+              <span className="txt-ui-fg-base txt-small-plus">Help</span>
               <ul className="txt-small grid grid-cols-1 gap-y-2 text-ui-fg-subtle">
                 <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
+                  <LocalizedClientLink
+                    href="/about"
                     className="hover:text-ui-fg-base"
                   >
-                    GitHub
-                  </a>
+                    About Us
+                  </LocalizedClientLink>
                 </li>
                 <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
+                  <LocalizedClientLink
+                    href="/contact"
                     className="hover:text-ui-fg-base"
                   >
-                    Documentation
-                  </a>
+                    Contact
+                  </LocalizedClientLink>
                 </li>
                 <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
+                  <LocalizedClientLink
+                    href="/privacy"
                     className="hover:text-ui-fg-base"
                   >
-                    Source code
-                  </a>
+                    Privacy Policy
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/terms"
+                    className="hover:text-ui-fg-base"
+                  >
+                    Terms of Service
+                  </LocalizedClientLink>
                 </li>
               </ul>
             </div>
@@ -144,7 +185,7 @@ export default async function Footer() {
         </div>
         <div className="mb-16 flex w-full justify-between text-ui-fg-muted">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
+            © {new Date().getFullYear()} {siteSettings?.title || 'Medusa Store'}. All rights reserved.
           </Text>
           <MedusaCTA />
         </div>

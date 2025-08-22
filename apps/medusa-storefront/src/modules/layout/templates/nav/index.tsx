@@ -6,10 +6,12 @@ import LocalizedClientLink from '@modules/common/components/localized-client-lin
 import CartButton from '@modules/layout/components/cart-button';
 import SideMenu from '@modules/layout/components/side-menu';
 import SearchModal from '@modules/search/components/modal';
+import { getSiteSettings } from '@lib/sanity-client';
 
 export default async function Nav() {
   const regions = await listRegions().then((regions: StoreRegion[]) => regions);
 
+  const siteSettings = await getSiteSettings();
   return (
     <div className="group sticky inset-x-0 top-0 z-50">
       <header className="relative mx-auto h-16 border-b border-ui-border-base bg-white duration-200">
@@ -26,7 +28,7 @@ export default async function Nav() {
               className="txt-compact-xlarge-plus uppercase hover:text-ui-fg-base"
               data-testid="nav-store-link"
             >
-              Medusa Store
+{siteSettings?.title || 'Medusa Store'}
             </LocalizedClientLink>
           </div>
 

@@ -16,14 +16,12 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       })
     }
 
-    console.log(`Initiating sync for product: ${id}`)
 
     const { transaction } = await sanitySyncProductsWorkflow(req.scope)
       .run({
         input: { product_ids: [id] },
       })
 
-    console.log(`Sync workflow started with transaction ID: ${transaction.transactionId}`)
 
     res.json({ 
       transaction_id: transaction.transactionId,
