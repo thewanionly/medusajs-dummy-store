@@ -25,7 +25,7 @@ export const createProductExtendedFromProductWorkflow = createWorkflow(
       {
         input,
       },
-      (data) => data.input.additional_data!.vendor || ''
+      (data) => data.input.additional_data?.vendor || ''
     );
 
     const productExtended = createProductExtendedStep({
