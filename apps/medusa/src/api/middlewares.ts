@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
-import { defineMiddlewares } from '@medusajs/framework/http';
+import {
+  defineMiddlewares,
+  validateAndTransformQuery,
+} from '@medusajs/framework/http';
+
+import { GetProductsWithCustomSchema } from './store/products-with-custom/route';
 
 export default defineMiddlewares({
   routes: [
@@ -17,6 +22,15 @@ export default defineMiddlewares({
       additionalDataValidator: {
         vendor: z.string().nullish(),
       },
+    },
+    {
+      matcher: '/store/products-with-custom',
+      method: ['GET'],
+      middlewares: [
+        validateAndTransformQuery(GetProductsWithCustomSchema, {
+          isList: true,
+        }),
+      ],
     },
   ],
 });
