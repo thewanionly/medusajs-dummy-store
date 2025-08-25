@@ -139,10 +139,6 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
             return {
               title: variant.title,
               sku: variant.sku || undefined,
-              // TODO: fix error
-              // options: [variant.option1, variant.option2, variant.option3]
-              //   .filter((v) => v)
-              //   .map((opt) => ({ id: opt, value: opt })),
               prices: (data.stores[0].supported_currencies ?? [])
                 .map((entry) => entry?.currency_code)
                 .filter((code): code is string => Boolean(code))
@@ -150,6 +146,7 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
                   amount: variant.price,
                   currency_code,
                 })),
+              weight: variant.grams,
               metadata: {
                 external_id: variantExternalId,
               },
