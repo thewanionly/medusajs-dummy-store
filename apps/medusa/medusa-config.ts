@@ -31,5 +31,8 @@ module.exports = defineConfig({
     {
       resolve: './src/modules/productExtended',
     },
+    {
+      resolve: './src/modules/productVariantExtended',
+    },
   ],
 });
