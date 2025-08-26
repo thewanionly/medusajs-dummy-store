@@ -169,6 +169,7 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
               weight: variant.grams,
               metadata: {
                 external_id: variantExternalId,
+                taxable: variant.taxable,
               },
               id: existingVariant?.id,
             };
