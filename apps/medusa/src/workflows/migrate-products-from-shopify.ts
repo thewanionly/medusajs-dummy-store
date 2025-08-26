@@ -136,9 +136,29 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
               (v) => v.metadata!.external_id === variantExternalId
             );
 
+            const variantOptionsValues = [
+              variant.option1,
+              variant.option2,
+              variant.option3,
+            ].filter((vo) => vo);
+            const variantOptionsArray =
+              variantOptionsValues.length > 0 &&
+              productData.options &&
+              productData.options.length > 0
+                ? variantOptionsValues.map((value, index) => [
+                    productData.options![index].title,
+                    value,
+                  ])
+                : [];
+            const variantOptions =
+              variantOptionsArray.length > 0
+                ? Object.fromEntries(variantOptionsArray)
+                : undefined;
+
             return {
               title: variant.title,
               sku: variant.sku || undefined,
+              ...(variantOptions ? { options: variantOptions } : {}),
               prices: (data.stores[0].supported_currencies ?? [])
                 .map((entry) => entry?.currency_code)
                 .filter((code): code is string => Boolean(code))
