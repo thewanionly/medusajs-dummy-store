@@ -2,6 +2,7 @@ import {
   CreateProductVariantWorkflowInputDTO,
   CreateProductWorkflowInputDTO,
   UpsertProductDTO,
+  UpsertProductVariantDTO,
 } from '@medusajs/framework/types';
 import {
   WorkflowResponse,
@@ -73,6 +74,8 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
       productsToUpdate,
       productsToCreateAdditionalData,
       productsToUpdateAdditionalData,
+      variantsToCreateAdditionalData,
+      variantsToUpdateAdditionalData,
     } = transform(
       {
         products,
@@ -89,8 +92,16 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
           string,
           Record<string, unknown>
         >();
+        const variantsToCreateAdditionalData = new Map<
+          string,
+          Record<string, unknown>
+        >();
         const productsToUpdate = new Map<string, UpsertProductDTO>();
         const productsToUpdateAdditionalData = new Map<
+          string,
+          Record<string, unknown>
+        >();
+        const variantsToUpdateAdditionalData = new Map<
           string,
           Record<string, unknown>
         >();
@@ -130,12 +141,15 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
               };
             }) || [];
 
-          productData.variants = shopifyProduct.variants?.map((variant) => {
+          productData.variants = [];
+
+          shopifyProduct.variants?.forEach((variant) => {
             const variantExternalId = variant.id.toString();
             const existingVariant = existingProduct?.variants?.find(
               (v) => v.metadata!.external_id === variantExternalId
             );
 
+            // variant options
             const variantOptionsValues = [
               variant.option1,
               variant.option2,
@@ -155,7 +169,28 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
                 ? Object.fromEntries(variantOptionsArray)
                 : undefined;
 
-            return {
+            // variant additional data
+            const variantAdditionalData = {
+              requires_shipping: variant.requires_shipping,
+            };
+
+            if (existingVariant) {
+              variantsToUpdateAdditionalData.set(
+                existingVariant.id,
+                variantAdditionalData
+              );
+            } else {
+              variantsToCreateAdditionalData.set(
+                variantExternalId,
+                variantAdditionalData
+              );
+            }
+
+            (
+              productData.variants as unknown as
+                | CreateProductVariantWorkflowInputDTO[]
+                | UpsertProductVariantDTO[]
+            )?.push({
               title: variant.title,
               sku: variant.sku || undefined,
               ...(variantOptions ? { options: variantOptions } : {}),
@@ -172,8 +207,8 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
                 taxable: variant.taxable,
               },
               id: existingVariant?.id,
-            };
-          }) as unknown as CreateProductVariantWorkflowInputDTO[];
+            });
+          });
 
           productData.images = shopifyProduct.images.map((entry) => {
             return {
@@ -208,6 +243,12 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
           productsToUpdateAdditionalData: Array.from(
             productsToUpdateAdditionalData.values()
           ),
+          variantsToCreateAdditionalData: Object.fromEntries(
+            variantsToCreateAdditionalData
+          ),
+          variantsToUpdateAdditionalData: Object.fromEntries(
+            variantsToUpdateAdditionalData
+          ),
         };
       }
     );
@@ -216,7 +257,11 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
       input: {
         products: productsToCreate,
         // @ts-ignore TODO: resolve this
-        additional_data: productsToCreateAdditionalData,
+        additional_data: {
+          isFromMigration: true,
+          product: productsToCreateAdditionalData,
+          variant: variantsToCreateAdditionalData,
+        },
       },
     });
 
@@ -224,7 +269,11 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
       input: {
         products: productsToUpdate,
         // @ts-ignore TODO: resolve this
-        additional_data: productsToUpdateAdditionalData,
+        additional_data: {
+          isFromMigration: true,
+          product: productsToUpdateAdditionalData,
+          variant: variantsToUpdateAdditionalData,
+        },
       },
     });
 
