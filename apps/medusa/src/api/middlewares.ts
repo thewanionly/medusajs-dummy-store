@@ -5,6 +5,7 @@ import {
   validateAndTransformQuery,
 } from '@medusajs/framework/http';
 
+import { GetProductVariantsWithCustomSchema } from './store/product-variants-with-custom/route';
 import { GetProductsWithCustomSchema } from './store/products-with-custom/route';
 
 export default defineMiddlewares({
@@ -45,6 +46,15 @@ export default defineMiddlewares({
       additionalDataValidator: {
         requires_shipping: z.boolean().nullish(),
       },
+    },
+    {
+      matcher: '/store/product-variants-with-custom',
+      method: ['GET'],
+      middlewares: [
+        validateAndTransformQuery(GetProductVariantsWithCustomSchema, {
+          isList: true,
+        }),
+      ],
     },
   ],
 });
