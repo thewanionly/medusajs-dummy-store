@@ -15,6 +15,11 @@ createProductsWorkflow.hooks.productsCreated(
     const variantWorkflow =
       createProductVariantExtendedFromProductWorkflow(container);
 
+    console.log('### createProductsWorkflow.hooks.productsCreated', {
+      products,
+      additional_data,
+    });
+
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
       const additionalDataValue = additional_data?.isFromMigration

@@ -256,7 +256,6 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
     createProductsWorkflow.runAsStep({
       input: {
         products: productsToCreate,
-        // @ts-ignore TODO: resolve this
         additional_data: {
           isFromMigration: true,
           product: productsToCreateAdditionalData,
@@ -268,7 +267,6 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
     updateProductsWorkflow.runAsStep({
       input: {
         products: productsToUpdate,
-        // @ts-ignore TODO: resolve this
         additional_data: {
           isFromMigration: true,
           product: productsToUpdateAdditionalData,
