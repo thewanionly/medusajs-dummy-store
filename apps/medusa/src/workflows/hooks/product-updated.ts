@@ -15,7 +15,10 @@ updateProductsWorkflow.hooks.productsUpdated(
     const variantWorkflow =
       updateProductVariantExtendedFromProductWorkflow(container);
 
-    console.log('### productsUpdated hook additional data', additional_data);
+    console.log('### updateProductsWorkflow.hooks.productsUpdated', {
+      products,
+      additional_data,
+    });
 
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
