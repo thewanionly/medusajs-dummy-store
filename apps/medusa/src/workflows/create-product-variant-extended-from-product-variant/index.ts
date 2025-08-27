@@ -25,7 +25,7 @@ export const createProductVariantExtendedFromProductWorkflow = createWorkflow(
       {
         input,
       },
-      (data) => data.input.additional_data?.requires_shipping || undefined
+      (data) => data.input.additional_data?.requires_shipping ?? undefined
     );
 
     const productVariantExtended = createProductVariantExtendedStep({
