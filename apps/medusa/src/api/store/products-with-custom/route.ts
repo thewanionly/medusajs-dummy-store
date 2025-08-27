@@ -6,11 +6,11 @@ import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 import ProductProductExtendedLink from '../../../links/product-productExtended';
 
-// Define  custom filterable fields in a separate schema
+// Define custom filterable fields in a separate schema
 const CustomProductFilters = z.object({
   id: z.union([z.string(), z.array(z.string())]).optional(),
-  vendor: z.string().optional(),
   title: z.string().optional(),
+  vendor: z.string().optional(),
 });
 
 // Create the base schema with standard list parameters
@@ -22,8 +22,6 @@ export const GetProductsWithCustomSchema =
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
-
-  console.log('### req.query', req.query);
 
   const vendor = req.query?.vendor;
 
@@ -50,11 +48,19 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       },
     });
 
-    const productIds = productAndProductExtendedLinkData.map(
-      ({ product }) => product.id
-    );
+    const productIds = productAndProductExtendedLinkData
+      .map(({ product }) => product.id)
+      .filter((pid) =>
+        req.validatedQuery.id ? pid === req.validatedQuery.id : true
+      );
 
     // Step 3: Get all products that have the specified productIds
+    const vqVendor = req.validatedQuery as { title?: string };
+    const vendorFilters: Partial<{ title: string }> = {};
+    if (vqVendor?.title) {
+      vendorFilters.title = vqVendor.title;
+    }
+
     const { data: products, metadata: { count, take, skip } = {} } =
       await query.graph({
         entity: 'product',
@@ -71,7 +77,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
                 'sales_channels.*',
                 'product_extended.*',
               ],
-        filters: { id: productIds },
+        filters: { id: productIds, ...vendorFilters },
       });
 
     res.json({
@@ -82,6 +88,15 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     });
 
     return;
+  }
+
+  const vq = req.validatedQuery as { id?: string | string[]; title?: string };
+  const baseFilters: Partial<{ id: string | string[]; title: string }> = {};
+  if (vq?.id) {
+    baseFilters.id = vq.id;
+  }
+  if (vq?.title) {
+    baseFilters.title = vq.title;
   }
 
   const { data: products, metadata: { count, take, skip } = {} } =
@@ -99,6 +114,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
               'variants.*',
               'sales_channels.*',
             ],
+      filters: baseFilters,
     });
 
   res.json({

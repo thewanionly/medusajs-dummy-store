@@ -26,7 +26,7 @@ export default defineMiddlewares({
     },
     {
       matcher: '/store/products-with-custom',
-      method: ['GET'],
+      method: 'GET',
       middlewares: [
         validateAndTransformQuery(GetProductsWithCustomSchema, {
           isList: true,
@@ -49,7 +49,7 @@ export default defineMiddlewares({
     },
     {
       matcher: '/store/product-variants-with-custom',
-      method: ['GET'],
+      method: 'GET',
       middlewares: [
         validateAndTransformQuery(GetProductVariantsWithCustomSchema, {
           isList: true,

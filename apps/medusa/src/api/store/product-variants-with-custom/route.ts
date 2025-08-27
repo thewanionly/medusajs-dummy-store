@@ -6,9 +6,10 @@ import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 import ProductVariantProductVariantExtendedLink from '../../../links/productVariant-productVariantExtended';
 
-// Define  custom filterable fields in a separate schema
+// Define custom filterable fields in a separate schema
 const CustomProductVariantFilters = z.object({
   id: z.union([z.string(), z.array(z.string())]).optional(),
+  title: z.string().optional(),
   requires_shipping: z.coerce.boolean().optional(),
 });
 
@@ -22,8 +23,6 @@ export const GetProductVariantsWithCustomSchema = BaseFindParams.merge(
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
-
-  console.log('### req.query', req.query);
 
   const rawRequiresShipping = req.query?.requires_shipping;
   let requiresShipping;
@@ -62,9 +61,18 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
     const productVariantIds = productVariantAndProductVariantExtendedLinkData
       .filter(({ product_variant }) => product_variant)
-      .map(({ product_variant }) => product_variant.id);
+      .map(({ product_variant }) => product_variant.id)
+      .filter((pvid) =>
+        req.validatedQuery.id ? pvid === req.validatedQuery.id : true
+      );
 
     // Step 3: Get all product variants that have the specified productVariantIds
+    const vQReqShipping = req.validatedQuery as { title?: string };
+    const reqShippingFilters: Partial<{ title: string }> = {};
+    if (vQReqShipping?.title) {
+      reqShippingFilters.title = vQReqShipping.title;
+    }
+
     const { data: productVariants, metadata: { count, take, skip } = {} } =
       await query.graph({
         entity: 'product_variant',
@@ -79,7 +87,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
                 'metadata.*',
                 'product_variant_extended.*',
               ],
-        filters: { id: productVariantIds },
+        filters: { id: productVariantIds, ...reqShippingFilters },
       });
 
     res.json({
@@ -92,6 +100,15 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     return;
   }
 
+  const vq = req.validatedQuery as { id?: string | string[]; title?: string };
+  const baseFilters: Partial<{ id: string | string[]; title: string }> = {};
+  if (vq?.id) {
+    baseFilters.id = vq.id;
+  }
+  if (vq?.title) {
+    baseFilters.title = vq.title;
+  }
+
   const { data: productVariants, metadata: { count, take, skip } = {} } =
     await query.graph({
       entity: 'product_variant',
@@ -100,6 +117,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         req.queryConfig.fields.length > 0
           ? [...req.queryConfig.fields, 'id']
           : ['*', 'options.*', 'product.*', 'metadata.*', 'sales_channels.*'],
+      filters: baseFilters,
     });
 
   res.json({
