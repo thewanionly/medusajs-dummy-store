@@ -12,6 +12,7 @@ import {
   updateCollectionsWorkflow,
 } from '@medusajs/medusa/core-flows';
 
+import { sanitizeHandle } from '../lib/utils';
 import { getExistingCollectionsStep } from './steps/get-existing-collections';
 import { getShopifyCollectionsStep } from './steps/get-shopify-collections';
 
@@ -33,7 +34,11 @@ export const migrateCollectionsFromShopifyWorkflow = createWorkflow(
     const { collections, page } = getShopifyCollectionsStep(input);
 
     const { collectionHandles } = transform({ collections }, (data) => {
-      return { collectionHandles: data.collections?.map((c) => c.handle) };
+      return {
+        collectionHandles: data.collections?.map((c) =>
+          sanitizeHandle(c.handle)
+        ),
+      };
     });
 
     const { collections: existingCollections } = getExistingCollectionsStep({
@@ -58,13 +63,15 @@ export const migrateCollectionsFromShopifyWorkflow = createWorkflow(
         >();
 
         data.collections.forEach((shopifyCollection) => {
+          const collectionHandle = sanitizeHandle(shopifyCollection.handle);
+
           const collectionData: CreateProductCollectionDTO = {
             title: shopifyCollection.title,
-            handle: shopifyCollection.handle,
+            handle: collectionHandle,
           };
 
           const existingCollection = data.existingCollections?.find(
-            (eC) => eC.handle === shopifyCollection.handle
+            (eC) => eC.handle === collectionHandle
           );
 
           if (existingCollection?.id || existingCollection?.handle) {
@@ -90,7 +97,7 @@ export const migrateCollectionsFromShopifyWorkflow = createWorkflow(
       },
     });
 
-    const results = transform({ collectionsToUpdate }, (data) => {
+    transform({ collectionsToUpdate }, (data) => {
       data.collectionsToUpdate.map((collectionToUpdate) => {
         if (collectionToUpdate) {
           updateCollectionsWorkflow.runAsStep({

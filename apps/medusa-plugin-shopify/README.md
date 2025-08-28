@@ -77,11 +77,27 @@ Send a `POST` request to `http://localhost:9000/auth/user/emailpass` to get the 
 }
 ```
 
-Send a `GET` request to `http://localhost:9000/store/migrate-shopify` with headers:
+```cURL
+curl --location 'http://localhost:9000/admin/auth/token' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "admin@email.com",
+    "password": "1pass2word3"
+}'
+```
+
+Send a `GET` request to `http://localhost:9000/admin/migrate-shopify` with headers:
 
 ```plaintext
 Authorization: Bearer ${token}
 X-Publishable-API-Key: ${apiKey}
+```
+
+```cURL
+curl --location 'http://localhost:9000/admin/migrate-shopify' \
+--header 'X-Publishable-API-Key: YOUR_PUBLISHABLE_API_KEY' \
+--header 'Authorization: Bearer YOUR_BEARER_TOKEN' \
+--data ''
 ```
 
 ## Development Mode

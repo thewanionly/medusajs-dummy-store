@@ -13,6 +13,7 @@ import {
   useQueryGraphStep,
 } from '@medusajs/medusa/core-flows';
 
+import { sanitizeHandle } from '../lib/utils';
 import { getShopifyProductsStep } from './steps/get-shopify-products';
 
 type MigrateProductsFromShopifyWorkflowInput = {
@@ -91,9 +92,9 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
           const productData: CreateProductWorkflowInputDTO | UpsertProductDTO =
             {
               title: shopifyProduct.title,
-              description: shopifyProduct.bodyHtml,
+              description: shopifyProduct.body_html,
               status: 'published',
-              handle: shopifyProduct.handle,
+              handle: sanitizeHandle(shopifyProduct.handle),
               external_id: shopifyProduct.id.toString(),
               thumbnail: shopifyProduct.images?.[0]?.src,
               sales_channels: [
@@ -101,6 +102,7 @@ export const migrateProductsFromShopifyWorkflow = createWorkflow(
                   id: data.stores[0].default_sales_channel_id,
                 },
               ],
+              shipping_profile_id: data.shippingProfiles[0].id,
             };
 
           const existingProduct =

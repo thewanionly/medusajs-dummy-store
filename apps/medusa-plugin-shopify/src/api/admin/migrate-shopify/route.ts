@@ -1,5 +1,6 @@
 import { logger } from '@medusajs/framework';
 import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http';
+import type { ProductCollectionDTO } from '@medusajs/framework/types';
 
 import { linkProductToCollectionWorkflow } from '../../../workflows/link-product-to-collection';
 import { migrateCollectionsFromShopifyWorkflow } from '../../../workflows/migrate-collections-from-shopify';
@@ -55,7 +56,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
     const linkingLimit = 250;
     let linkingPage = 0;
-    let currentCollection: any = {};
+    let currentCollection: ProductCollectionDTO | undefined = undefined;
 
     do {
       const {
