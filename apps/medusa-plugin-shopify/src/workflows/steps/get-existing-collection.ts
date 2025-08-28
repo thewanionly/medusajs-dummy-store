@@ -1,8 +1,9 @@
 import { logger } from '@medusajs/framework';
+import type { FilterableProductCollectionProps } from '@medusajs/framework/types';
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 type GetExistingCollectionInput = {
-  filters?: Record<string, any>;
+  filters?: FilterableProductCollectionProps;
   page: number;
 };
 

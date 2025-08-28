@@ -58,7 +58,7 @@ export const linkProductToCollectionWorkflow = createWorkflow(
 
     // logResultStep({ message: 'Product IDs in collection: ', result: productsInCollectionIds }).config({ name: "log-product-ids-in-collection" });
 
-    const linkResult = batchLinkProductsToCollectionWorkflow.runAsStep({
+    batchLinkProductsToCollectionWorkflow.runAsStep({
       input: {
         id: existingCollection.id,
         add: productsInCollectionIds,

@@ -11,9 +11,9 @@ export type ShopifyProduct = {
   id: number;
   title: string;
   handle: string;
-  bodyHtml: string;
+  body_html: string;
   vendor: string;
-  productType: string;
+  product_type: string;
   tags: string[];
   variants: ShopifyVariant[];
   images: ShopifyImage[];
@@ -27,23 +27,23 @@ export type ShopifyVariant = {
   option2: string;
   option3: string;
   sku: string;
-  requiresShipping: boolean;
+  requires_shipping: boolean;
   taxable: boolean;
-  featuredImage: ShopifyImage;
+  featured_image: ShopifyImage;
   available: boolean;
   price: string;
   grams: number;
-  compareAtPrice: string;
+  compare_at_price: string;
   position: number;
-  productId: number;
+  product_id: number;
 };
 
 export type ShopifyImage = {
   id: number;
   position: number;
   alt: string;
-  productId: number; // Reference to product
-  variantIds: number[];
+  product_id: number;
+  variant_ids: number[];
   src: string;
   width: number;
   height: number;
