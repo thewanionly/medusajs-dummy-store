@@ -29,7 +29,12 @@ export class ProductService {
         headers: this.getHeaders(),
       });
       return response.data.products || [];
-    } catch (error) {
+    } catch (error: any) {
+      console.error(
+        'Error fetching products:',
+        error.response?.status,
+        error.response?.data || error.message
+      );
       return [];
     }
   }
@@ -40,7 +45,12 @@ export class ProductService {
         headers: this.getHeaders(),
       });
       return response.data.product || null;
-    } catch (error) {
+    } catch (error: any) {
+      console.error(
+        'Error fetching product:',
+        error.response?.status,
+        error.response?.data || error.message
+      );
       return null;
     }
   }
