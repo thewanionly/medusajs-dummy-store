@@ -3,9 +3,41 @@ import { MedusaError } from '@medusajs/framework/utils';
 
 import { ShopifyCollection, ShopifyProduct } from './types';
 
+const DELAY_MS = 500;
+
 type Options = {
   baseUrl: string;
 };
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  delayMs: number = 1000
+): Promise<T> {
+  let lastError: Error | undefined;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error as Error;
+      if (attempt === maxRetries) break;
+
+      logger.warn(
+        `Attempt ${attempt} failed. Retrying in ${delayMs}ms... Error: ${error.message}`
+      );
+
+      await sleep(delayMs);
+      delayMs *= 2;
+    }
+  }
+
+  throw lastError;
+}
 
 export default class ShopifyModuleService {
   private options: Options;
@@ -14,101 +46,131 @@ export default class ShopifyModuleService {
     this.options = { ...options };
   }
 
-  async getProducts(options?: {
-    page?: number;
-    limit?: number;
-  }): Promise<{ products: ShopifyProduct[]; page?: number }> {
-    const { page, limit } = { ...options };
-    const searchQuery = new URLSearchParams();
-
-    if (page) searchQuery.append('page', page?.toString());
-    if (limit) searchQuery.append('limit', limit.toString());
-
-    const { products } = await fetch(
-      `${this.options.baseUrl}/products.json?${searchQuery}`
-    )
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-        throw new MedusaError(
-          MedusaError.Types.INVALID_DATA,
-          `Failed to get products from Shopify: ${err.message}`
-        );
-      });
-
-    return { products, page };
-  }
-
-  async getCollections(options?: {
-    page?: number;
-    limit?: number;
-  }): Promise<{ collections: ShopifyCollection[]; page?: number }> {
-    const { page, limit } = { ...options };
-    const searchQuery = new URLSearchParams();
-
-    if (page) searchQuery.append('page', page?.toString());
-    if (limit) searchQuery.append('limit', limit.toString());
-
-    const { collections } = await fetch(
-      `${this.options.baseUrl}/collections.json?${searchQuery}`
-    )
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-        throw new MedusaError(
-          MedusaError.Types.INVALID_DATA,
-          `Failed to get collections from Shopify: ${err.message}`
-        );
-      });
-
-    return { collections, page };
-  }
-
-  async getProductsInCollection(options?: {
-    collectionHandle: string;
-    page?: number;
-    limit?: number;
-  }): Promise<{
-    collectionProductsSet: {
-      collectionHandle?: string;
-      products: ShopifyProduct[];
-    };
-    page?: number;
-  }> {
+  async extractShopifyProducts() {
     try {
-      const { collectionHandle, page, limit } = { ...options };
+      const products: ShopifyProduct[] = [];
+      const hardLimit = 2000;
+      const limit = 250;
+      let page = 1;
+      let hasMore = true;
 
-      const searchQuery = new URLSearchParams();
-
-      if (page) searchQuery.append('page', page?.toString());
-      if (limit) searchQuery.append('limit', limit.toString());
-
-      const { products: productsInCollection } = await fetch(
-        `${this.options.baseUrl}/collections/${collectionHandle}/products.json?${searchQuery}`
-      )
-        .then((res) => res.json())
-        .catch((err) => {
-          console.log(err);
-          throw new MedusaError(
-            MedusaError.Types.INVALID_DATA,
-            `Failed to get products from collection ${collectionHandle} from Shopify: ${err.message}`
+      while (hasMore) {
+        const { products: productsResult } = await withRetry(async () => {
+          const response = await fetch(
+            `${this.options.baseUrl}/products.json?limit=${limit}&page=${page}`
           );
+          return response.json();
         });
 
-      logger.info(
-        `Retrieved ${productsInCollection.length} products in collection ${collectionHandle}`
-      );
+        if (Array.isArray(productsResult) && productsResult.length > 0) {
+          products.push(...productsResult);
+        }
 
-      return {
-        collectionProductsSet: {
-          collectionHandle,
-          products: productsInCollection,
-        },
-        page,
-      };
+        hasMore =
+          productsResult.length === limit && products.length < hardLimit;
+        page++;
+
+        // Wait to avoid being rate limited
+        await sleep(DELAY_MS);
+      }
+
+      return products;
     } catch (e) {
-      logger.error('ERROR: Failed to get list of products in collection', e);
-      return { collectionProductsSet: { products: [] } };
+      console.error('ERROR on extractShopifyProducts', e);
+
+      throw new MedusaError(
+        MedusaError.Types.UNEXPECTED_STATE,
+        'Failed to extract products from Shopify',
+        '500',
+        e
+      );
+    }
+  }
+
+  async extractShopifyCollections() {
+    try {
+      const collections: ShopifyCollection[] = [];
+      const hardLimit = 2000;
+      const limit = 250;
+      let page = 1;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { collections: collectionsResult } = await withRetry(async () => {
+          const response = await fetch(
+            `${this.options.baseUrl}/collections.json?limit=${limit}&page=${page}`
+          );
+          return response.json();
+        });
+
+        if (Array.isArray(collectionsResult) && collectionsResult.length > 0) {
+          collections.push(...collectionsResult);
+        }
+
+        hasMore =
+          collectionsResult.length === limit && collections.length < hardLimit;
+        page++;
+
+        // Wait to avoid being rate limited
+        await sleep(DELAY_MS);
+      }
+
+      return collections;
+    } catch (e) {
+      console.error('ERROR on extractShopifyCollections', e);
+
+      throw new MedusaError(
+        MedusaError.Types.UNEXPECTED_STATE,
+        'Failed to extract collections from Shopify',
+        '500',
+        e
+      );
+    }
+  }
+
+  async extractShopifyProductsInCollection({
+    collectionHandle,
+  }: {
+    collectionHandle: string;
+  }) {
+    try {
+      const products: ShopifyProduct[] = [];
+      const limit = 250;
+      let page = 1;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { products: productsInCollection } = await withRetry(async () => {
+          const response = await fetch(
+            `${this.options.baseUrl}/collections/${collectionHandle}/products.json?limit=${limit}&page=${page}`
+          );
+          return response.json();
+        });
+
+        if (
+          Array.isArray(productsInCollection) &&
+          productsInCollection.length > 0
+        ) {
+          products.push(...productsInCollection);
+        }
+
+        hasMore = productsInCollection.length === limit;
+        page++;
+
+        // Wait to avoid being rate limited
+        await sleep(DELAY_MS);
+      }
+
+      return products;
+    } catch (e) {
+      console.error('ERROR on extractShopifyProductsInCollection', e);
+
+      throw new MedusaError(
+        MedusaError.Types.UNEXPECTED_STATE,
+        `Failed to extract products in collection ${collectionHandle} from Shopify`,
+        '500',
+        e
+      );
     }
   }
 }

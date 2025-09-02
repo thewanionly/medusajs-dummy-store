@@ -46,57 +46,42 @@ SHOPIFY_BASE_URL=https://www.my-store.com
 
 ## How it Works
 
-This plugin exposes an API route (`/store/migrate-shopify`) to migrate Shopify products and collections from the provided base URL. The full flow is as follows:
+This plugin exposes an API route (`/admin/shopify-plugin/migrate`) to migrate Shopify products, collections, tags, and types from the provided base URL. The full flow is as follows:
 
-1. Migrate products from Shopify
-   - Fetches 250 products at a time, paginated
-   - Stops when the retrieved products in the request is less than 250 (assume it is on the last page)
-   - Check if any of the Shopify products already exist in the Medusa database, if not then create
-   - If product already exists in Medusa database, then update the product
-2. Migrate collections from Shopify
-   - Fetches 250 collections at a time, paginated
-   - Stops when the retrieved collections in the request is less than 250 (assume it is on the last page)
-   - Check if any of the Shopify collections already exist in the Medusa database, if not then create
-   - If collection already exists in Medusa database, then update the collection
-3. Link products to collections
-   - Traverse through existing collections in the Medusa database
-     - For each collection, retrieve list of products from Shopify
-     - Retrieve the Medusa product equivalent to each Shopify product
-     - Build the list of product IDs
-     - Link the products to the collection using the IDs
-   - Stops after 250 collections (hard limit)
+1. Extract all Products from Shopify
+2. Extract all Product Collections from Shopify
+3. Build the unique list of Product Types then import them to Medusa
+4. Build the unique list of Product Tags then import them to Medusa
+5. Import all Product Collections to Medusa, update existing ones if necessary
+6. Import all Products to Medusa, update existing ones if necessary
+
+> **Note**: There is a hard limit of 2000 Products and 2000 Product Collections to be extracted from Shopify to prevent a heap out of memory error.
 
 ### How to use the API
 
-Send a `POST` request to `http://localhost:9000/auth/user/emailpass` to get the authorization tokens, sample request body should be the admin credentials you use for your Medusa admin dashboard:
+#### Authentication
 
-```json
-{
-  "email": "admin@email.com",
-  "password": "1pass2word3"
-}
-```
+Send a `POST` request to `http://localhost:9000/auth/user/emailpass` to get the authorization tokens, sample request body should contain the admin credentials you use for your Medusa admin dashboard:
 
 ```cURL
-curl --location 'http://localhost:9000/admin/auth/token' \
+curl --location 'http://localhost:9000/auth/user/emailpass' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "email": "admin@email.com",
-    "password": "1pass2word3"
+    "email": "YOUR_EMAIL",
+    "password": "YOUR_PASSWORD"
 }'
 ```
 
-Send a `GET` request to `http://localhost:9000/admin/migrate-shopify` with headers:
+The above request should give you an authorization token.
 
-```plaintext
-Authorization: Bearer ${token}
-X-Publishable-API-Key: ${apiKey}
-```
+#### Migrate
+
+Send a `GET` request to `http://localhost:9000/admin/shopify-plugin/migrate`:
 
 ```cURL
-curl --location 'http://localhost:9000/admin/migrate-shopify' \
---header 'X-Publishable-API-Key: YOUR_PUBLISHABLE_API_KEY' \
---header 'Authorization: Bearer YOUR_BEARER_TOKEN' \
+curl --location 'http://localhost:9000/admin/shopify-plugin/migrate' \
+--header 'X-Publishable-API-Key: YOUR_PUBLISHABLE_KEY' \
+--header 'Authorization: Bearer AUTHORIZATION_TOKEN' \
 --data ''
 ```
 
