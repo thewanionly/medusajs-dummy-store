@@ -1,5 +1,5 @@
-import { MedusaAPI } from '@/services/medusa';
+import { ProductService } from '../../services/medusa/product';
 
 export interface GraphQLContext {
-  medusaAPI: MedusaAPI;
+  productService: ProductService;
 }

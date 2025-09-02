@@ -9,7 +9,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 
 import { resolvers } from './graphql/resolvers';
 import { typeDefs } from './graphql/schemas';
-import { MedusaAPI } from './services';
+import { createServices } from './services';
 
 async function startServer() {
   const app = express();
@@ -24,6 +24,8 @@ async function startServer() {
 
   await server.start();
 
+  const services = createServices();
+
   app.use(
     '/graphql',
     cors<cors.CorsRequest>(),
@@ -31,7 +33,7 @@ async function startServer() {
     expressMiddleware(server, {
       context: async () => {
         return {
-          medusaAPI: new MedusaAPI(),
+          ...services,
         };
       },
     })

@@ -1,56 +1,32 @@
-import axios from 'axios';
-
-import { Product } from '@/types/products';
+import Medusa from '@medusajs/js-sdk';
+import type { HttpTypes } from '@medusajs/types';
 
 export class ProductService {
-  private baseURL: string;
-  private publishableKey?: string;
+  private medusa: Medusa;
 
   constructor(baseURL: string, publishableKey?: string) {
-    this.baseURL = baseURL;
-    this.publishableKey = publishableKey;
+    this.medusa = new Medusa({
+      baseUrl: baseURL,
+      publishableKey,
+    });
   }
 
-  private getHeaders() {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    if (this.publishableKey) {
-      headers['x-publishable-api-key'] = this.publishableKey;
-    }
-
-    return headers;
-  }
-
-  async getProducts(): Promise<Product[]> {
+  async getProducts(): Promise<HttpTypes.StoreProduct[]> {
     try {
-      const response = await axios.get(`${this.baseURL}/store/products`, {
-        headers: this.getHeaders(),
-      });
-      return response.data.products || [];
-    } catch (error: any) {
-      console.error(
-        'Error fetching products:',
-        error.response?.status,
-        error.response?.data || error.message
-      );
+      const response = await this.medusa.store.product.list();
+      return response.products || [];
+    } catch (error: unknown) {
+      console.error('Error fetching products:', (error as Error).message);
       return [];
     }
   }
 
-  async getProduct(id: string): Promise<Product | null> {
+  async getProduct(id: string): Promise<HttpTypes.StoreProduct | null> {
     try {
-      const response = await axios.get(`${this.baseURL}/store/products/${id}`, {
-        headers: this.getHeaders(),
-      });
-      return response.data.product || null;
-    } catch (error: any) {
-      console.error(
-        'Error fetching product:',
-        error.response?.status,
-        error.response?.data || error.message
-      );
+      const response = await this.medusa.store.product.retrieve(id);
+      return response.product || null;
+    } catch (error: unknown) {
+      console.error('Error fetching product:', (error as Error).message);
       return null;
     }
   }
