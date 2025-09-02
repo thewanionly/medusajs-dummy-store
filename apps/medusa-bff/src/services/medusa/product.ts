@@ -1,16 +1,8 @@
-import Medusa from '@medusajs/js-sdk';
 import type { HttpTypes } from '@medusajs/types';
 
-export class ProductService {
-  private medusa: Medusa;
+import { MedusaBaseService } from '.';
 
-  constructor(baseURL: string, publishableKey?: string) {
-    this.medusa = new Medusa({
-      baseUrl: baseURL,
-      publishableKey,
-    });
-  }
-
+export class ProductService extends MedusaBaseService {
   async getProducts(): Promise<HttpTypes.StoreProduct[]> {
     try {
       const response = await this.medusa.store.product.list();
