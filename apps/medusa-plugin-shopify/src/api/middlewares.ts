@@ -11,5 +11,12 @@ export default defineMiddlewares({
         vendor: z.string().optional(),
       },
     },
+    {
+      method: 'POST',
+      matcher: '/admin/products/:id',
+      additionalDataValidator: {
+        vendor: z.string().nullish(),
+      },
+    },
   ],
 });
