@@ -1,0 +1,10 @@
+{
+  "name": "@mds/jest-config",
+  "version": "0.0.0",
+  "exports": {
+    "./base": "./base.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
