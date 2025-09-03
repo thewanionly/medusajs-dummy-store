@@ -46,10 +46,9 @@ export default class ShopifyModuleService {
     this.options = { ...options };
   }
 
-  async extractShopifyProducts() {
+  async extractShopifyProducts(hardLimit = 2000) {
     try {
       const products: ShopifyProduct[] = [];
-      const hardLimit = 2000;
       const limit = 250;
       let page = 1;
       let hasMore = true;
@@ -87,10 +86,9 @@ export default class ShopifyModuleService {
     }
   }
 
-  async extractShopifyCollections() {
+  async extractShopifyCollections(hardLimit = 2000) {
     try {
       const collections: ShopifyCollection[] = [];
-      const hardLimit = 2000;
       const limit = 250;
       let page = 1;
       let hasMore = true;

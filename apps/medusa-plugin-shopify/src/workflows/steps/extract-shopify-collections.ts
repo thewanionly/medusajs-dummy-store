@@ -6,7 +6,7 @@ import ShopifyModuleService from '../../modules/shopify/service';
 
 export const extractShopifyCollectionsStep = createStep(
   'extract-shopify-collections',
-  async (_, { container }) => {
+  async (hardLimit: number, { container }) => {
     const shopifyModuleService: ShopifyModuleService =
       container.resolve(SHOPIFY_MODULE);
     const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
@@ -15,7 +15,8 @@ export const extractShopifyCollectionsStep = createStep(
       'Extracting collections from Shopify...'
     );
 
-    const response = await shopifyModuleService.extractShopifyCollections();
+    const response =
+      await shopifyModuleService.extractShopifyCollections(hardLimit);
 
     logger.success(
       activityId,

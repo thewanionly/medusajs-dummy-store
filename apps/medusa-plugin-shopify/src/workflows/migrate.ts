@@ -14,10 +14,10 @@ export const migrateWorkflowId = 'migrate-shopify-data';
 
 export const migrateShopifyDataWorkflow = createWorkflow(
   migrateWorkflowId,
-  () => {
+  (hardLimit: number) => {
     // Extract available Shopify data
-    const { products } = extractShopifyProductsStep();
-    const { collections } = extractShopifyCollectionsStep();
+    const { products } = extractShopifyProductsStep(hardLimit);
+    const { collections } = extractShopifyCollectionsStep(hardLimit);
 
     // Import entities to Medusa
     importProductTypesWorkflow.runAsStep({

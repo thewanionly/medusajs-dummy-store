@@ -5,14 +5,15 @@ import ShopifyModuleService from '../../modules/shopify/service';
 
 export const extractShopifyProductsStep = createStep(
   'extract-shopify-products',
-  async (_, { container }) => {
+  async (hardLimit: number, { container }) => {
     const shopifyModuleService: ShopifyModuleService =
       container.resolve(SHOPIFY_MODULE);
     const logger = container.resolve('logger');
 
     const activityId = logger.activity('Extracting products from Shopify...');
 
-    const response = await shopifyModuleService.extractShopifyProducts();
+    const response =
+      await shopifyModuleService.extractShopifyProducts(hardLimit);
 
     logger.success(
       activityId,
