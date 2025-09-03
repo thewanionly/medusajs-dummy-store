@@ -54,8 +54,9 @@ This plugin exposes an API route (`/admin/shopify-plugin/migrate`) to migrate Sh
 4. Build the unique list of Product Tags then import them to Medusa
 5. Import all Product Collections to Medusa, update existing ones if necessary
 6. Import all Products to Medusa, update existing ones if necessary
+7. Link Products to Product Collections
 
-> **Note**: There is a hard limit of 2000 Products and 2000 Product Collections to be extracted from Shopify to prevent a heap out of memory error.
+> **Note**: There is a default hard limit of 2000 Products and 2000 Product Collections to be extracted from Shopify to prevent a heap out of memory error.
 
 ### How to use the API
 

@@ -46,6 +46,22 @@ export const prepareProductsForImportStep = createStep(
         (type) => type.value === shopifyProduct.product_type
       );
 
+      const productOptions = shopifyProduct.options?.map((option) => {
+        const existingOption = existingProduct?.options?.find(
+          (existingOpt) => existingOpt.title === option.name
+        );
+
+        return {
+          title: option.name,
+          values: option.values,
+          ...(existingOption
+            ? {
+                id: existingOption.id,
+              }
+            : null),
+        };
+      });
+
       const productData: CreateProductWorkflowInputDTO | UpsertProductDTO = {
         title: shopifyProduct.title,
         description: shopifyProduct.body_html,
@@ -61,21 +77,7 @@ export const prepareProductsForImportStep = createStep(
           },
         ],
         shipping_profile_id: shippingProfiles[0].id,
-        options: shopifyProduct.options?.map((option) => {
-          const existingOption = existingProduct?.options?.find(
-            (existingOpt) => existingOpt.title === option.name
-          );
-
-          return {
-            title: option.name,
-            values: option.values,
-            ...(existingOption
-              ? {
-                  id: existingOption.id,
-                }
-              : null),
-          };
-        }),
+        options: productOptions,
         images: shopifyProduct.images.map((entry) => {
           const existingImage = existingProduct?.images?.find(
             (existingImg) =>
@@ -101,6 +103,27 @@ export const prepareProductsForImportStep = createStep(
             existingProduct?.variants?.find(
               (v) => v.metadata?.external_id === variantExternalId
             );
+          const productOption = (optionIndex: number) =>
+            productOptions.find((pOption) =>
+              pOption.values.includes(child[`option${optionIndex}`])
+            );
+          const childOptions = {
+            ...(productOption(1)?.title
+              ? {
+                  [productOption(1)?.title ?? child.option1]: child.option1,
+                }
+              : null),
+            ...(productOption(2)?.title
+              ? {
+                  [productOption(2)?.title ?? child.option2]: child.option2,
+                }
+              : null),
+            ...(productOption(3)?.title
+              ? {
+                  [productOption(3)?.title ?? child.option3]: child.option3,
+                }
+              : null),
+          };
 
           return {
             title: child.title,
@@ -111,6 +134,7 @@ export const prepareProductsForImportStep = createStep(
                 currency_code,
               };
             }),
+            options: childOptions,
             metadata: {
               external_id: variantExternalId,
             },

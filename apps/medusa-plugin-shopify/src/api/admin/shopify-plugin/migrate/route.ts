@@ -7,15 +7,20 @@ import {
 import { linkProductsToCollectionWorkflow } from '../../../../workflows/link-products-to-collection';
 import { migrateShopifyDataWorkflow } from '../../../../workflows/migrate';
 
+const HARD_LIMIT = 2000;
+
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const container = req.scope;
+  const hardLimit = req.query.hardLimit;
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
   const activityId = logger.activity('Migrating all data from Shopify...');
 
   try {
     const {
       result: { collections },
-    } = await migrateShopifyDataWorkflow(container).run();
+    } = await migrateShopifyDataWorkflow(container).run({
+      input: Number(hardLimit) || HARD_LIMIT,
+    });
 
     logger.progress(activityId, 'Linking Products to Product Collections...');
 
