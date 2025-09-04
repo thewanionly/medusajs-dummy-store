@@ -66,6 +66,8 @@ export const importProductsWorkflow = createWorkflow(
       productsToUpdate,
       productsToCreateAdditionalData,
       productsToUpdateAdditionalData,
+      variantsToCreateAdditionalData,
+      variantsToUpdateAdditionalData,
     } = prepareProductsForImportStep({
       products,
       stores,
@@ -81,6 +83,7 @@ export const importProductsWorkflow = createWorkflow(
         additional_data: {
           isFromMigration: true,
           products: productsToCreateAdditionalData,
+          variants: variantsToCreateAdditionalData,
         },
       },
     });
@@ -91,6 +94,7 @@ export const importProductsWorkflow = createWorkflow(
         additional_data: {
           isFromMigration: true,
           products: productsToUpdateAdditionalData,
+          variants: variantsToUpdateAdditionalData,
         },
       },
     });
