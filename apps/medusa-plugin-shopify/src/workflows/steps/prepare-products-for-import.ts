@@ -32,6 +32,14 @@ export const prepareProductsForImportStep = createStep(
   }: PrepareProductsForImportStepInput) => {
     const productsToCreate = new Map<string, CreateProductWorkflowInputDTO>();
     const productsToUpdate = new Map<string, UpsertProductDTO>();
+    const productsToCreateAdditionalData = new Map<
+      string,
+      Record<string, unknown>
+    >();
+    const productsToUpdateAdditionalData = new Map<
+      string,
+      Record<string, unknown>
+    >();
 
     products.forEach((shopifyProduct) => {
       const shopifyProductId = shopifyProduct.id.toString();
@@ -152,16 +160,34 @@ export const prepareProductsForImportStep = createStep(
           : null),
       };
 
+      const additionalProductData = {
+        vendor: shopifyProduct.vendor,
+      };
+
       if (existingProduct) {
         productsToUpdate.set(existingProduct.id, productData);
+        productsToUpdateAdditionalData.set(
+          existingProduct!.id,
+          additionalProductData
+        );
       } else {
         productsToCreate.set(productData.external_id!, productData);
+        productsToCreateAdditionalData.set(
+          productData.external_id!,
+          additionalProductData
+        );
       }
     });
 
     return new StepResponse({
       productsToCreate: Array.from(productsToCreate.values()),
       productsToUpdate: Array.from(productsToUpdate.values()),
+      productsToCreateAdditionalData: Object.fromEntries(
+        productsToCreateAdditionalData
+      ),
+      productsToUpdateAdditionalData: Object.fromEntries(
+        productsToUpdateAdditionalData
+      ),
     });
   }
 );

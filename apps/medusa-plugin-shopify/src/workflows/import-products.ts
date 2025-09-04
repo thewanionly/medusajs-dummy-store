@@ -4,7 +4,8 @@ import {
   transform,
 } from '@medusajs/framework/workflows-sdk';
 import {
-  batchProductsWorkflow,
+  createProductsWorkflow,
+  updateProductsWorkflow,
   useQueryGraphStep,
 } from '@medusajs/medusa/core-flows';
 
@@ -60,21 +61,37 @@ export const importProductsWorkflow = createWorkflow(
       },
     });
 
-    const { productsToCreate, productsToUpdate } = prepareProductsForImportStep(
-      {
-        products,
-        stores,
-        shippingProfiles,
-        existingProducts,
-        productTags,
-        productTypes,
-      }
-    );
+    const {
+      productsToCreate,
+      productsToUpdate,
+      productsToCreateAdditionalData,
+      productsToUpdateAdditionalData,
+    } = prepareProductsForImportStep({
+      products,
+      stores,
+      shippingProfiles,
+      existingProducts,
+      productTags,
+      productTypes,
+    });
 
-    batchProductsWorkflow.runAsStep({
+    createProductsWorkflow.runAsStep({
       input: {
-        create: productsToCreate,
-        update: productsToUpdate,
+        products: productsToCreate,
+        additional_data: {
+          isFromMigration: true,
+          products: productsToCreateAdditionalData,
+        },
+      },
+    });
+
+    updateProductsWorkflow.runAsStep({
+      input: {
+        products: productsToUpdate,
+        additional_data: {
+          isFromMigration: true,
+          products: productsToUpdateAdditionalData,
+        },
       },
     });
 
