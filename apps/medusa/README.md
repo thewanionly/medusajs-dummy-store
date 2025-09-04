@@ -60,3 +60,11 @@
    ```
 
 6. Go to [Settings > Publishable API Keys](http://localhost:9000/app/settings/publishable-api-keys) and copy a Publishable API key. This will be used for running the `medusa-storefront` application.
+
+## Seeding Stock and Inventory After Migration
+
+When using the Shopify migration, after all data has been migrated run the following command to add stock to all existing variants:
+
+```bash
+pnpm run db:seed:stock
+```
