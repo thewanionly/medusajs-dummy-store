@@ -22,6 +22,9 @@
     "graphql": "^16.8.1"
   },
   "devDependencies": {
+    "@mds/eslint-config": "workspace:*",
+    "@mds/prettier-config": "workspace:*",
+    "@mds/typescript-config": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.0.0",
