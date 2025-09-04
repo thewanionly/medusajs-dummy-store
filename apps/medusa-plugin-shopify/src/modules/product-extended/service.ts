@@ -1,9 +1,9 @@
 import { MedusaService } from '@medusajs/framework/utils';
 
 import ProductExtended from './models/product-extended';
+import ProductVariantExtended from './models/product-variant-extended';
 
-class ProductExtendedModuleService extends MedusaService({
+export default class ProductExtendedModuleService extends MedusaService({
   ProductExtended,
+  ProductVariantExtended,
 }) {}
-
-export default ProductExtendedModuleService;
