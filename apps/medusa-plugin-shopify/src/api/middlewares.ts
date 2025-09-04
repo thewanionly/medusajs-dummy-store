@@ -18,5 +18,12 @@ export default defineMiddlewares({
         vendor: z.string().nullish(),
       },
     },
+    {
+      method: 'POST',
+      matcher: '/admin/products/:id/variants',
+      additionalDataValidator: {
+        requires_shipping: z.boolean().optional(),
+      },
+    },
   ],
 });
