@@ -1,30 +1,29 @@
 {
   "extends": "@mds/typescript-config/nextjs.json",
   "compilerOptions": {
-    "target": "es5",
+    "baseUrl": ".",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./src",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@lib/*": ["lib/*"],
-      "@modules/*": ["modules/*"],
-      "@pages/*": ["pages/*"]
+      "@mds/ui/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": [
-    "node_modules",
-    ".next",
-    ".nyc_output",
-    "coverage",
-    "jest-coverage"
-  ]
+  "exclude": ["node_modules"]
 }

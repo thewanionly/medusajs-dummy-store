@@ -15,6 +15,7 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
+    "@mds/ui": "workspace:*",
     "@headlessui/react": "^2.2.0",
     "@medusajs/icons": "2.9.0",
     "@medusajs/js-sdk": "2.9.0",

@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
+import { Breadcrumbs } from '@mds/ui/components/breadcrumbs/breadcrumbs';
 import { HttpTypes } from '@medusajs/types';
 import ImageGallery from '@modules/products/components/image-gallery';
 import ProductActions from '@modules/products/components/product-actions';
@@ -30,6 +31,9 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
 
   return (
     <>
+      <div className="content-container my-8">
+        <Breadcrumbs />
+      </div>
       <div
         className="content-container relative flex flex-col py-6 small:flex-row small:items-start"
         data-testid="product-container"
