@@ -1,5 +1,6 @@
 import { HttpTypes } from '@medusajs/types';
-import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
+
+export type SortOptions = 'price_asc' | 'price_desc' | 'created_at';
 
 interface MinPricedProduct extends HttpTypes.StoreProduct {
   _minPrice?: number;
@@ -15,7 +16,8 @@ export function sortProducts(
   products: HttpTypes.StoreProduct[],
   sortBy: SortOptions
 ): HttpTypes.StoreProduct[] {
-  let sortedProducts = products as MinPricedProduct[];
+  // Create a copy of the array to avoid mutating the original
+  let sortedProducts = [...products] as MinPricedProduct[];
 
   if (['price_asc', 'price_desc'].includes(sortBy)) {
     // Precompute the minimum price for each product

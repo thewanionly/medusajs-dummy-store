@@ -1,11 +1,11 @@
 'use server';
 
-import { sdk } from '@lib/config';
+import { graphqlFetch } from '@lib/bff/apollo-client';
+import { GET_PRODUCTS_QUERY } from '@lib/bff/graphql-queries';
 import { sortProducts } from '@lib/util/sort-products';
 import { HttpTypes } from '@medusajs/types';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
 
-import { getAuthHeaders, getCacheOptions } from './cookies';
 import { getRegion, retrieveRegion } from './regions';
 
 export const listProducts = async ({
@@ -46,50 +46,66 @@ export const listProducts = async ({
     };
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  try {
+    // Build filters for GraphQL (handle the type issue with any)
+    const filters: any = {};
+    const qParams = queryParams as any;
 
-  const next = {
-    ...(await getCacheOptions('products')),
-  };
+    if (qParams?.q) filters.q = qParams.q;
+    if (qParams?.category_id)
+      filters.category_id = Array.isArray(qParams.category_id)
+        ? qParams.category_id
+        : [qParams.category_id];
+    if (qParams?.collection_id)
+      filters.collection_id = Array.isArray(qParams.collection_id)
+        ? qParams.collection_id
+        : [qParams.collection_id];
+    if (qParams?.tag_id)
+      filters.tag_id = Array.isArray(qParams.tag_id)
+        ? qParams.tag_id
+        : [qParams.tag_id];
+    if (qParams?.handle)
+      filters.handle = Array.isArray(qParams.handle)
+        ? qParams.handle
+        : [qParams.handle];
+    if (qParams?.status)
+      filters.status = Array.isArray(qParams.status)
+        ? qParams.status
+        : [qParams.status];
+    if (qParams?.id)
+      filters.id = Array.isArray(qParams.id) ? qParams.id : [qParams.id];
 
-  return sdk.client
-    .fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
-      `/store/products`,
-      {
-        method: 'GET',
-        query: {
-          limit,
-          offset,
-          region_id: region?.id,
-          fields:
-            '*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags',
-          ...queryParams,
-        },
-        headers,
-        next,
-        cache: 'force-cache',
-      }
-    )
-    .then(({ products, count }) => {
-      const nextPage = count > offset + limit ? pageParam + 1 : null;
-
-      return {
-        response: {
-          products,
-          count,
-        },
-        nextPage: nextPage,
-        queryParams,
-      };
+    // GraphQL query to BFF
+    const data = await graphqlFetch(GET_PRODUCTS_QUERY, {
+      limit,
+      offset,
+      filters: Object.keys(filters).length > 0 ? filters : undefined,
+      region_id: region?.id,
+      fields:
+        '*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags',
     });
+
+    const products = data.products.products;
+    const count = data.products.count;
+    const nextPage = count > offset + limit ? pageParam + 1 : null;
+
+    return {
+      response: {
+        products,
+        count,
+      },
+      nextPage: nextPage,
+      queryParams,
+    };
+  } catch (error) {
+    console.error('Error fetching products from BFF:', error);
+    return {
+      response: { products: [], count: 0 },
+      nextPage: null,
+    };
+  }
 };
 
-/**
- * This will fetch 100 products to the Next.js cache and sort them based on the sortBy parameter.
- * It will then return the paginated products based on the page and limit parameters.
- */
 export const listProductsWithSort = async ({
   page = 0,
   queryParams,
