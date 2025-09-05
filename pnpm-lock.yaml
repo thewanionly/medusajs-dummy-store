@@ -256,6 +256,9 @@ importers:
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.7(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@mds/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@medusajs/icons':
         specifier: 2.9.0
         version: 2.9.0(react@19.0.0-rc-66855b96-20241106)
