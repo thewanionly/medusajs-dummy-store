@@ -4,6 +4,7 @@ import { MedusaError } from '@medusajs/framework/utils';
 import { ShopifyCollection, ShopifyProduct } from './types';
 
 const DELAY_MS = 500;
+const LIMIT_PER_PAGE = 250;
 
 type Options = {
   baseUrl: string;
@@ -49,7 +50,7 @@ export default class ShopifyModuleService {
   async extractShopifyProducts(hardLimit = 2000) {
     try {
       const products: ShopifyProduct[] = [];
-      const limit = 250;
+      const limit = Math.min(LIMIT_PER_PAGE, hardLimit);
       let page = 1;
       let hasMore = true;
 
@@ -89,7 +90,7 @@ export default class ShopifyModuleService {
   async extractShopifyCollections(hardLimit = 2000) {
     try {
       const collections: ShopifyCollection[] = [];
-      const limit = 250;
+      const limit = Math.min(LIMIT_PER_PAGE, hardLimit);
       let page = 1;
       let hasMore = true;
 
@@ -128,12 +129,16 @@ export default class ShopifyModuleService {
 
   async extractShopifyProductsInCollection({
     collectionHandle,
+    hardLimit,
   }: {
     collectionHandle: string;
+    hardLimit?: number;
   }) {
     try {
       const products: ShopifyProduct[] = [];
-      const limit = 250;
+      const limit = hardLimit
+        ? Math.min(LIMIT_PER_PAGE, hardLimit)
+        : LIMIT_PER_PAGE;
       let page = 1;
       let hasMore = true;
 
@@ -152,7 +157,9 @@ export default class ShopifyModuleService {
           products.push(...productsInCollection);
         }
 
-        hasMore = productsInCollection.length === limit;
+        hasMore =
+          productsInCollection.length === limit &&
+          (!hardLimit || products.length < hardLimit);
         page++;
 
         // Wait to avoid being rate limited

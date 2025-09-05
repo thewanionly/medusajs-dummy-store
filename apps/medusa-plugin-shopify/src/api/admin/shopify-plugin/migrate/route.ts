@@ -11,7 +11,11 @@ const HARD_LIMIT = 2000;
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const container = req.scope;
-  const hardLimit = req.query.hardLimit;
+  const {
+    hardLimitProducts,
+    hardLimitCollections,
+    hardLimitProductsPerCollection,
+  } = req.query;
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
   const activityId = logger.activity('Migrating all data from Shopify...');
 
@@ -19,7 +23,10 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     const {
       result: { collections },
     } = await migrateShopifyDataWorkflow(container).run({
-      input: Number(hardLimit) || HARD_LIMIT,
+      input: {
+        hardLimitProducts: Number(hardLimitProducts) || HARD_LIMIT,
+        hardLimitCollections: Number(hardLimitCollections) || HARD_LIMIT,
+      },
     });
 
     logger.progress(activityId, 'Linking Products to Product Collections...');
@@ -27,7 +34,12 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     // Process collections sequentially to prevent being rate-limited
     for (const collection of collections) {
       await linkProductsToCollectionWorkflow(container).run({
-        input: { collection },
+        input: {
+          collection,
+          hardLimit: hardLimitProductsPerCollection
+            ? Number(hardLimitProductsPerCollection)
+            : undefined,
+        },
       });
     }
 

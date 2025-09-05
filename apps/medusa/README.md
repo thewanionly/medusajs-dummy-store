@@ -61,6 +61,12 @@
 
 6. Go to [Settings > Publishable API Keys](http://localhost:9000/app/settings/publishable-api-keys) and copy a Publishable API key. This will be used for running the `medusa-storefront` application.
 
+## Populating `products` data with Shopify Data Migration
+
+By running `pnpm run seed` above, we only populated few dummy product data. To populate more products data in our database, we can use `medusa-plugin-shopify`. This plugin handles migration of Shopify product data feed from specific source, transforms it to conform with Medusa's product data model, and adds the products to our database.
+
+To use this plugin in this application, please refer to [medusa-plugin-shopify's README](../medusa-plugin-shopify/README.md)
+
 ## Seeding Stock and Inventory After Migration
 
 When using the Shopify migration, after all data has been migrated run the following command to add stock to all existing variants:
