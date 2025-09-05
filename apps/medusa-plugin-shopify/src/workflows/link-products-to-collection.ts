@@ -13,11 +13,12 @@ import { logMessageStep } from './steps/log-message';
 
 type LinkProductsToCollectionWorkflowInput = {
   collection: ShopifyCollection;
+  hardLimit?: number;
 };
 
 export const linkProductsToCollectionWorkflow = createWorkflow(
   'link-products-to-collection',
-  ({ collection }: LinkProductsToCollectionWorkflowInput) => {
+  ({ collection, hardLimit }: LinkProductsToCollectionWorkflowInput) => {
     const { collection: medusaCollection } =
       retrieveOrCreateCollectionWorkflow.runAsStep({
         input: {
@@ -33,6 +34,7 @@ export const linkProductsToCollectionWorkflow = createWorkflow(
     const { products: productsInCollection } =
       extractShopifyProductsInCollectionStep({
         collection,
+        hardLimit,
       });
 
     const step1Message = transform(

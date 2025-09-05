@@ -6,12 +6,13 @@ import { ShopifyCollection } from '../../modules/shopify/types';
 
 type ExtractShopifyProductsInCollectionInput = {
   collection: ShopifyCollection;
+  hardLimit?: number;
 };
 
 export const extractShopifyProductsInCollectionStep = createStep(
   'extract-shopify-products-in-collection',
   async (
-    { collection }: ExtractShopifyProductsInCollectionInput,
+    { collection, hardLimit }: ExtractShopifyProductsInCollectionInput,
     { container }
   ) => {
     const shopifyModuleService: ShopifyModuleService =
@@ -25,6 +26,7 @@ export const extractShopifyProductsInCollectionStep = createStep(
     const response =
       await shopifyModuleService.extractShopifyProductsInCollection({
         collectionHandle: collection.handle,
+        hardLimit,
       });
 
     logger.success(

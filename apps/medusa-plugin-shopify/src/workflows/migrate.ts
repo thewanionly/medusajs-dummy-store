@@ -12,12 +12,20 @@ import { extractShopifyProductsStep } from './steps/extract-shopify-products';
 
 export const migrateWorkflowId = 'migrate-shopify-data';
 
+export type MigrateShopifyDataWorkflowInput = {
+  hardLimitProducts: number;
+  hardLimitCollections: number;
+};
+
 export const migrateShopifyDataWorkflow = createWorkflow(
   migrateWorkflowId,
-  (hardLimit: number) => {
+  ({
+    hardLimitProducts,
+    hardLimitCollections,
+  }: MigrateShopifyDataWorkflowInput) => {
     // Extract available Shopify data
-    const { products } = extractShopifyProductsStep(hardLimit);
-    const { collections } = extractShopifyCollectionsStep(hardLimit);
+    const { products } = extractShopifyProductsStep(hardLimitProducts);
+    const { collections } = extractShopifyCollectionsStep(hardLimitCollections);
 
     // Import entities to Medusa
     importProductTypesWorkflow.runAsStep({
