@@ -69,7 +69,7 @@ export default function SearchModal() {
             className="w-full [&_button]:w-[3%] [&_input]:w-[94%] [&_input]:outline-none"
             queryHook={queryHook}
           />
-          <Hits hitComponent={Hit} />
+          <Hits hitComponent={Hit} classNames={{ root: 'overflow-auto' }} />
         </InstantSearch>
       </Modal>
     </>
