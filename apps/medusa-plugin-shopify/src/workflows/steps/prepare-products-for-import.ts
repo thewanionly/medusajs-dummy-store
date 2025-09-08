@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
+  CreateProductVariantWorkflowInputDTO,
   CreateProductWorkflowInputDTO,
   ProductDTO,
   ProductTagDTO,
   ProductTypeDTO,
   UpsertProductDTO,
+  UpsertProductVariantDTO,
 } from '@medusajs/framework/types';
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
@@ -32,6 +34,22 @@ export const prepareProductsForImportStep = createStep(
   }: PrepareProductsForImportStepInput) => {
     const productsToCreate = new Map<string, CreateProductWorkflowInputDTO>();
     const productsToUpdate = new Map<string, UpsertProductDTO>();
+    const productsToCreateAdditionalData = new Map<
+      string,
+      Record<string, unknown>
+    >();
+    const productsToUpdateAdditionalData = new Map<
+      string,
+      Record<string, unknown>
+    >();
+    const variantsToCreateAdditionalData = new Map<
+      string,
+      Record<string, unknown>
+    >();
+    const variantsToUpdateAdditionalData = new Map<
+      string,
+      Record<string, unknown>
+    >();
 
     products.forEach((shopifyProduct) => {
       const shopifyProductId = shopifyProduct.id.toString();
@@ -60,6 +78,78 @@ export const prepareProductsForImportStep = createStep(
               }
             : null),
         };
+      });
+
+      const productVariants = [];
+
+      shopifyProduct.variants?.forEach((variant) => {
+        const variantExternalId = variant.id.toString();
+        const existingVariant =
+          existingProduct?.variants &&
+          existingProduct?.variants?.find(
+            (v) => v.metadata?.external_id === variantExternalId
+          );
+        const productOption = (optionIndex: number) =>
+          productOptions.find((pOption) =>
+            pOption.values.includes(variant[`option${optionIndex}`])
+          );
+        const childOptions = {
+          ...(productOption(1)?.title
+            ? {
+                [productOption(1)?.title ?? variant.option1]: variant.option1,
+              }
+            : null),
+          ...(productOption(2)?.title
+            ? {
+                [productOption(2)?.title ?? variant.option2]: variant.option2,
+              }
+            : null),
+          ...(productOption(3)?.title
+            ? {
+                [productOption(3)?.title ?? variant.option3]: variant.option3,
+              }
+            : null),
+        };
+
+        const variantAdditionalData = {
+          requires_shipping: variant.requires_shipping,
+        };
+
+        if (existingVariant) {
+          variantsToUpdateAdditionalData.set(
+            existingVariant.id,
+            variantAdditionalData
+          );
+        } else {
+          variantsToCreateAdditionalData.set(
+            variantExternalId,
+            variantAdditionalData
+          );
+        }
+
+        (
+          productVariants as unknown as
+            | CreateProductVariantWorkflowInputDTO[]
+            | UpsertProductVariantDTO[]
+        )?.push({
+          title: variant.title,
+          sku: variant.sku,
+          prices: stores[0].supported_currencies.map(({ currency_code }) => {
+            return {
+              amount: variant.price,
+              currency_code,
+            };
+          }),
+          options: childOptions,
+          metadata: {
+            external_id: variantExternalId,
+          },
+          ...(existingVariant
+            ? {
+                id: existingVariant.id,
+              }
+            : null),
+        });
       });
 
       const productData: CreateProductWorkflowInputDTO | UpsertProductDTO = {
@@ -96,55 +186,7 @@ export const prepareProductsForImportStep = createStep(
               : null),
           };
         }),
-        variants: shopifyProduct.variants?.map((child) => {
-          const variantExternalId = child.id.toString();
-          const existingVariant =
-            existingProduct?.variants &&
-            existingProduct?.variants?.find(
-              (v) => v.metadata?.external_id === variantExternalId
-            );
-          const productOption = (optionIndex: number) =>
-            productOptions.find((pOption) =>
-              pOption.values.includes(child[`option${optionIndex}`])
-            );
-          const childOptions = {
-            ...(productOption(1)?.title
-              ? {
-                  [productOption(1)?.title ?? child.option1]: child.option1,
-                }
-              : null),
-            ...(productOption(2)?.title
-              ? {
-                  [productOption(2)?.title ?? child.option2]: child.option2,
-                }
-              : null),
-            ...(productOption(3)?.title
-              ? {
-                  [productOption(3)?.title ?? child.option3]: child.option3,
-                }
-              : null),
-          };
-
-          return {
-            title: child.title,
-            sku: child.sku,
-            prices: stores[0].supported_currencies.map(({ currency_code }) => {
-              return {
-                amount: child.price,
-                currency_code,
-              };
-            }),
-            options: childOptions,
-            metadata: {
-              external_id: variantExternalId,
-            },
-            ...(existingVariant
-              ? {
-                  id: existingVariant.id,
-                }
-              : null),
-          };
-        }),
+        variants: productVariants,
         ...(existingProduct
           ? {
               id: existingProduct.id,
@@ -152,16 +194,40 @@ export const prepareProductsForImportStep = createStep(
           : null),
       };
 
+      const additionalProductData = {
+        vendor: shopifyProduct.vendor,
+      };
+
       if (existingProduct) {
         productsToUpdate.set(existingProduct.id, productData);
+        productsToUpdateAdditionalData.set(
+          existingProduct!.id,
+          additionalProductData
+        );
       } else {
         productsToCreate.set(productData.external_id!, productData);
+        productsToCreateAdditionalData.set(
+          productData.external_id!,
+          additionalProductData
+        );
       }
     });
 
     return new StepResponse({
       productsToCreate: Array.from(productsToCreate.values()),
       productsToUpdate: Array.from(productsToUpdate.values()),
+      productsToCreateAdditionalData: Object.fromEntries(
+        productsToCreateAdditionalData
+      ),
+      productsToUpdateAdditionalData: Object.fromEntries(
+        productsToUpdateAdditionalData
+      ),
+      variantsToCreateAdditionalData: Object.fromEntries(
+        variantsToCreateAdditionalData
+      ),
+      variantsToUpdateAdditionalData: Object.fromEntries(
+        variantsToUpdateAdditionalData
+      ),
     });
   }
 );
