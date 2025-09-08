@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import DOMPurify from 'isomorphic-dompurify';
 import {
   Hits,
   InstantSearch,
@@ -82,7 +83,12 @@ const Hit = ({ hit }: { hit: Hit }) => {
       <Image src={hit.thumbnail} alt={hit.title} width={100} height={100} />
       <div className="flex flex-col gap-y-1">
         <h3>{hit.title}</h3>
-        <p className="text-sm text-gray-500">{hit.description}</p>
+        <p
+          className="text-sm text-gray-500"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(hit.description),
+          }}
+        />
       </div>
       <Link
         href={`/products/${hit.handle}`}
