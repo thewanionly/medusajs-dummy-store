@@ -1,7 +1,7 @@
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { ALGOLIA_MODULE } from '../../modules/algolia';
-import AlgoliaModuleService from '../../modules/algolia/service';
+import { ALGOLIA_MODULE } from '../../../modules/algolia';
+import AlgoliaModuleService from '../../../modules/algolia/service';
 
 export type DeleteProductsFromAlgoliaWorkflow = {
   ids: string[];
