@@ -17,8 +17,10 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./src",
     "paths": {
-      "@/types/*": ["types/*"],
-      "@/services/*": ["services/*"]
+      "@types/*": ["types/*"],
+      "@services/*": ["services/*"],
+      "@graphql/*": ["graphql/*"],
+      "@mocks/*": ["__mocks__/*"]
     }
   },
   "include": ["src/**/*"],

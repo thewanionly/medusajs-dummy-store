@@ -1,13 +1,26 @@
 import { GraphQLContext } from '../types/context';
 
+export interface ProductsArgs {
+  limit?: number;
+  offset?: number;
+}
+
+export interface ProductArgs {
+  id: string;
+}
+
 export const productResolvers = {
   Query: {
-    products: async (_parent: any, _args: any, context: GraphQLContext) => {
+    products: async (
+      _parent: unknown,
+      args: ProductsArgs,
+      context: GraphQLContext
+    ) => {
       return await context.productService.getProducts();
     },
     product: async (
-      _parent: any,
-      { id }: { id: string },
+      _parent: unknown,
+      { id }: ProductArgs,
       context: GraphQLContext
     ) => {
       return await context.productService.getProduct(id);
