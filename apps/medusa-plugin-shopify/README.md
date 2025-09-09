@@ -22,7 +22,19 @@ This plugin uses the public product feeds from Shopify.
    npx medusa plugin:add medusa-plugin-shopify
    ```
 
-   Next, register the plugin in your Medusa application's `medusa-config.ts` (this step is already implemented in `apps/medusa`):
+   This will add `medusa-plugin-shopify` in your Medusa application's package.json's dependencies, with its value containing a file path:
+
+   ```json
+    "medusa-plugin-shopify": "file:.yalc/medusa-plugin-shopify",
+   ```
+
+   It is important to note that this change is only temporary and is only needed during local development. **It should not be committed to Git and pushed to the remote repo.**<br/><br/>
+
+   Also, when running pnpm install in the Medusa application or in the monorepo's root with this change in place, it will be added in pnpm-lock.yaml. **This change should also not be committed to Git and pushed to remote repo.**<br/><br/>
+
+   To prevent committing these to remote repo, before committing your changes, you need to remove the changes to `medusa-plugin-shopify` in the Medusa application's package.json and run `pnpm install` afterwards to update the pnpm-lock file.<br/><br/>
+
+4. If you haven't already, register the plugin in your Medusa application's `medusa-config.ts`. This step is already implemented in `apps/medusa` so skip this step if you are working on `apps/medusa`:
 
    ```ts
    module.exports = defineConfig({
@@ -44,13 +56,13 @@ This plugin uses the public product feeds from Shopify.
    SHOPIFY_BASE_URL=https://www.my-store.com
    ```
 
-4. This plugin contains new models for the custom product properties that are linked to Product module's models. To reflect these new models in your database, in the root of your Medusa application (`apps/medusa`), run the ff:
+5. This plugin contains new models for the custom product properties that are linked to Product module's models. To reflect these new models in your database, in the root of your Medusa application (`apps/medusa`), run the ff:
 
    ```bash
    npx medusa db:migrate
    ```
 
-5. You can now run the development server of your Medusa application (`apps/medusa`):
+6. You can now run the development server of your Medusa application (`apps/medusa`):
 
    ```bash
    pnpm run dev
