@@ -13,6 +13,11 @@
     "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
     "./modules/*": "./.medusa/server/src/modules/*/index.js",
     "./providers/*": "./.medusa/server/src/providers/*/index.js",
+    "./admin": {
+      "import": "./.medusa/server/src/admin/index.mjs",
+      "require": "./.medusa/server/src/admin/index.js",
+      "default": "./.medusa/server/src/admin/index.js"
+    },
     "./*": "./.medusa/server/src/*.js"
   },
   "keywords": [
@@ -36,7 +41,7 @@
     "@medusajs/js-sdk": "2.9.0",
     "@medusajs/medusa": "2.9.0",
     "@medusajs/test-utils": "2.9.0",
-    "@medusajs/ui": "4.0.4",
+    "@medusajs/ui": "4.0.19",
     "@medusajs/icons": "2.9.0",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
@@ -63,15 +68,17 @@
     "@medusajs/admin-sdk": "2.9.0",
     "@medusajs/cli": "2.9.0",
     "@medusajs/framework": "2.9.0",
-    "@medusajs/test-utils": "2.9.0",
+    "@medusajs/js-sdk": "2.9.0",
     "@medusajs/medusa": "2.9.0",
-    "@medusajs/ui": "4.0.3",
+    "@medusajs/test-utils": "2.9.0",
+    "@medusajs/ui": "4.0.19",
     "@medusajs/icons": "2.9.0",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
     "@mikro-orm/knex": "6.4.3",
     "@mikro-orm/migrations": "6.4.3",
     "@mikro-orm/postgresql": "6.4.3",
+    "@tanstack/react-query": "5.64.2",
     "awilix": "^8.0.1",
     "pg": "^8.13.0"
   },

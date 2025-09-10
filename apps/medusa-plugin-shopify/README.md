@@ -22,7 +22,19 @@ This plugin uses the public product feeds from Shopify.
    npx medusa plugin:add medusa-plugin-shopify
    ```
 
-   Next, register the plugin in your Medusa application's `medusa-config.ts` (this step is already implemented in `apps/medusa`):
+   This will add `medusa-plugin-shopify` in your Medusa application's package.json's dependencies, with its value containing a file path:
+
+   ```json
+    "medusa-plugin-shopify": "file:.yalc/medusa-plugin-shopify",
+   ```
+
+   It is important to note that this change is only temporary and is only needed during local development. **It should not be committed to Git and pushed to the remote repo.**<br/><br/>
+
+   Also, when running pnpm install in the Medusa application or in the monorepo's root with this change in place, it will be added in pnpm-lock.yaml. **This change should also not be committed to Git and pushed to remote repo.**<br/><br/>
+
+   To prevent committing these to remote repo, before committing your changes, you need to remove the changes to `medusa-plugin-shopify` in the Medusa application's package.json and run `pnpm install` afterwards to update the pnpm-lock file.<br/><br/>
+
+4. If you haven't already, register the plugin in your Medusa application's `medusa-config.ts`. This step is already implemented in `apps/medusa` so skip this step if you are working on `apps/medusa`:
 
    ```ts
    module.exports = defineConfig({
@@ -44,19 +56,86 @@ This plugin uses the public product feeds from Shopify.
    SHOPIFY_BASE_URL=https://www.my-store.com
    ```
 
-4. This plugin contains new models for the custom product properties that are linked to Product module's models. To reflect these new models in your database, in the root of your Medusa application (`apps/medusa`), run the ff:
+5. This plugin contains new models for the custom product properties that are linked to Product module's models. To reflect these new models in your database, in the root of your Medusa application (`apps/medusa`), run the ff:
 
    ```bash
    npx medusa db:migrate
    ```
 
-5. You can now run the development server of your Medusa application (`apps/medusa`):
+6. If you are in development mode (i.e. making changes in apps/medusa-plugin-shopify), follow the steps in [Development mode](#development-mode) section. Otherwise, you can now run the development server of your Medusa application (`apps/medusa`):
 
    ```bash
    pnpm run dev
    ```
 
    Your local development server runs at http://localhost:9000 by default. Refer to [How to use the API](#how-to-use-the-api) section to start using this API for product data migration.
+
+## Development Mode
+
+When in development, republish the plugin every time new changes are saved:
+
+```bash
+npx medusa plugin:develop
+```
+
+Then in Medusa application, run the development server:
+
+```bash
+pnpm run dev
+```
+
+Your local development server runs at http://localhost:9000 by default. Refer to [How to use the API](#how-to-use-the-api) section to start using this API for product data migration.
+
+### With Admin UI Extensions
+
+In a Medusa plugin with admin UI extensions (e.g. routes, widgets in src/admin) such as this plugin (apps/medusa-plugin-shopify), when in development mode (i.e. after running `npx medusa plugin:develop` and running local dev server in apps/medusa), the admin UI changes are not reflected in the local dev server sometimes. This is a [known issue](https://github.com/medusajs/medusa/issues/12556).
+
+As a workaround, when running this plugin in development mode, do the ff steps, assuming you have already done the steps mentioned in [Get started](#get-started) section:
+
+1. Run the ff command to watch for changes in the plugin and automatically update the plugin in the Medusa application using it:
+
+   ```bash
+   npx medusa plugin:develop
+   ```
+
+2. In the Medusa application run the development server:
+
+   ```bash
+   pnpm run dev
+   ```
+
+   Your local development server runs at http://localhost:9000 by default.
+
+3. Confirm admin UI extensions are shown in Medusa application. Then, make some changes to any of the admin UI extensions in `src/admin`.
+
+4. If the changes are not reflected, force a file save anywhere outside `src/admin` (e.g. by pressing CTRL + S in any files in src/api) to trigger a change in the plugin and rebuilds it.
+
+5. Refresh the Medusa application. In some cases, this will already reflect any admin UI extensions changes made in `src/admin` and all changes from now on.
+
+6. However, if changes are still not reflected or cached content are shown or the ff error appears in the terminal:
+
+   ```text
+   [vite] error while updating dependencies ...
+   ```
+
+   Do the ff steps:
+   a. Stop the Medusa application (`apps/medusa`) and the Plugin development watch mode (`apps/medusa-plugin-shopify`)
+   b. In `apps/medusa`, remove the changes made to `"medusa-plugin-shopify"` in package.json.
+   c. In `apps/medusa`, remove `node_modules`, `.medusa`, `.yalc`, and `yalc.lock`:
+
+   ```bash
+   rm -rf node_modules && rm -rf .medusa && rm -rf .yalc && rm -rf yalc.lock
+   ```
+
+   d. In `apps/medusa-plugin-shopify`, remove `node_modules` and `.medusa`:
+
+   ```bash
+   rm -rf node_modules && rm -rf .medusa
+   ```
+
+   e. Re-do steps #1 to #3 in [Get started](#get-started) section. For step #1, run the command in the monorepo root.
+   f. Re-do steps #1 to #3 in [Development Mode > With Admin UI Extensions](#with-admin-ui-extensions) section.
+   g. At this point, any changes to admin UI extensions in the plugin will be reflected in Medusa application. However, if issue/error still persists, we would have to rely on rebuilding the plugin every time we make some changes by repeating the Steps a to f.
 
 ## How it Works
 
@@ -98,14 +177,6 @@ curl --location 'http://localhost:9000/admin/shopify-plugin/migrate' \
 --header 'X-Publishable-API-Key: YOUR_PUBLISHABLE_KEY' \
 --header 'Authorization: Bearer AUTHORIZATION_TOKEN' \
 --data ''
-```
-
-## Development Mode
-
-When in development, republish the plugin every time new changes are saved:
-
-```bash
-npx medusa plugin:develop
 ```
 
 ## Custom Properties
