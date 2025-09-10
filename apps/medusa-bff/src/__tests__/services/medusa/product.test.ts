@@ -146,9 +146,7 @@ describe('ProductService', () => {
       let result = await productService.getProduct('prod_specific');
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenCalledWith(
         'prod_specific',
-        {
-          fields: '+variants.inventory_quantity,+metadata,+tags',
-        }
+        {}
       );
       expect(result).toEqual(mockProduct);
 
@@ -235,23 +233,17 @@ describe('ProductService', () => {
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenNthCalledWith(
         1,
         'prod_1',
-        {
-          fields: '+variants.inventory_quantity,+metadata,+tags',
-        }
+        {}
       );
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenNthCalledWith(
         2,
         'prod_1',
-        {
-          fields: '+variants.inventory_quantity,+metadata,+tags',
-        }
+        {}
       );
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenNthCalledWith(
         3,
         'prod_2',
-        {
-          fields: '+variants.inventory_quantity,+metadata,+tags',
-        }
+        {}
       );
 
       const mockProducts = createMockProducts(10);

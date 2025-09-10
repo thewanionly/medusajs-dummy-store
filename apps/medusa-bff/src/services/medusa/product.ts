@@ -45,7 +45,6 @@ export class ProductService extends MedusaBaseService {
   ): Promise<HttpTypes.StoreProduct | null> {
     try {
       const queryParams = {
-        fields: '+variants.inventory_quantity,+metadata,+tags',
         ...params,
       };
       const response = await this.medusa.store.product.retrieve(
