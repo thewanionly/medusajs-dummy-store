@@ -147,8 +147,7 @@ describe('ProductService', () => {
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenCalledWith(
         'prod_specific',
         {
-          fields:
-            '*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags',
+          fields: '+variants.inventory_quantity,+metadata,+tags',
         }
       );
       expect(result).toEqual(mockProduct);
@@ -237,24 +236,21 @@ describe('ProductService', () => {
         1,
         'prod_1',
         {
-          fields:
-            '*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags',
+          fields: '+variants.inventory_quantity,+metadata,+tags',
         }
       );
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenNthCalledWith(
         2,
         'prod_1',
         {
-          fields:
-            '*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags',
+          fields: '+variants.inventory_quantity,+metadata,+tags',
         }
       );
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenNthCalledWith(
         3,
         'prod_2',
         {
-          fields:
-            '*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags',
+          fields: '+variants.inventory_quantity,+metadata,+tags',
         }
       );
 

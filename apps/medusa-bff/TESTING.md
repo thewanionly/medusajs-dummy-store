@@ -2,15 +2,6 @@
 
 This comprehensive guide outlines testing practices, patterns, configuration, and guidelines for the Medusa BFF GraphQL API project.
 
-## Current Test Status
-
-### Enhanced Test Coverage
-
-- **9+ tests total** across all layers
-- **14 resolver tests** - GraphQL layer testing
-- **23 service tests** - Business logic testing
-- **9+ schema tests** - GraphQL schema validation testing
-
 ### Coverage Requirements: 80%
 
 Our project enforces a minimum of 80% coverage
@@ -20,6 +11,8 @@ Our project enforces a minimum of 80% coverage
 ### Folder Organization
 
 Tests are organized in a central `__tests__` folder structure:
+Reference:
+[apollo-server github](https://github.com/apollographql/apollo-server/tree/main/packages/server/src/__tests__)
 
 ```
 src/
@@ -60,32 +53,7 @@ The following files are excluded from coverage requirements:
 
 ## Testing Best Practices
 
-### 1. Apollo Server v4 Testing (IMPORTANT)
-
-**DO use Apollo Server v4's `executeOperation`** method:
-
-```typescript
-import { ApolloServer } from '@apollo/server';
-
-const server = new ApolloServer<TestContext>({
-  typeDefs,
-  resolvers,
-});
-
-const response = await server.executeOperation(
-  {
-    query: PRODUCTS_QUERY,
-    variables: { id: 'prod_1' },
-  },
-  {
-    contextValue: {
-      productService: mockProductService,
-    },
-  }
-);
-```
-
-### 2. Test Data Factories
+### 1. Test Data Factories
 
 Use factory functions for consistent, reusable test data:
 
@@ -109,7 +77,7 @@ const createMockProducts = (count = 3) =>
   );
 ```
 
-### 3. Mock Management
+### 2. Mock Management
 
 ```typescript
 //  Centralized mock management
@@ -138,7 +106,7 @@ afterEach(() => {
 });
 ```
 
-### 4. Test Organization
+### 3. Test Organization
 
 ```typescript
 describe('ComponentName', () => {
@@ -342,40 +310,40 @@ describe('GraphQL Integration Tests', () => {
 
 ```bash
 # Run all tests
-npm run test
+pnpm run test
 
 # Run tests in watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Run tests with coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Run tests with coverage (CI mode)
-npm run test:coverage:ci
+pnpm run test:coverage:ci
 
 # Run tests with coverage threshold enforcement
-npm run test:coverage:threshold
+pnpm run test:coverage:threshold
 
 # Run complete validation (lint + types + tests + build)
-npm run validate
+pnpm run validate
 
 # CI pipeline
-npm run ci
+pnpm run ci
 
 # Run specific test suites
-npm test -- resolver
-npm test -- service
-npm test -- schema
+pnpm test -- resolver
+pnpm test -- service
+pnpm test -- schema
 ```
 
 ### Debugging Tests
 
 ```bash
 # Run specific test file
-npm test -- product.test.ts
+pnpm test -- product.test.ts
 
 # Run with verbose output
-npm test -- --verbose
+pnpm test -- --verbose
 
 # Debug mode
 node --inspect-brk node_modules/.bin/jest --runInBand
