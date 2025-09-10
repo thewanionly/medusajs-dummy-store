@@ -37,7 +37,7 @@ describe('Product Resolvers', () => {
       let result = await productResolvers.Query.products({}, {}, mockContext);
 
       expect(mockProductService.getProducts).toHaveBeenCalledTimes(1);
-      expect(mockProductService.getProducts).toHaveBeenCalledWith();
+      expect(mockProductService.getProducts).toHaveBeenCalledWith({});
       expect(result).toEqual(mockResponse);
       expect(result.products).toHaveLength(3);
 

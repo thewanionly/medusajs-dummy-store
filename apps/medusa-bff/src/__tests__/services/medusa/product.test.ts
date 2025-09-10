@@ -63,19 +63,24 @@ describe('ProductService', () => {
       result = await productService.getProducts();
       expect(result.products).toEqual([]);
 
-      mockMedusaApi.store.product.list.mockResolvedValue({ count: 0 });
+      mockMedusaApi.store.product.list.mockResolvedValue({
+        products: [],
+        count: 0,
+      });
       result = await productService.getProducts();
       expect(result.products).toEqual([]);
 
-      mockMedusaApi.store.product.list.mockResolvedValue(null);
+      mockMedusaApi.store.product.list.mockResolvedValue({
+        products: [],
+        count: 0,
+      });
       result = await productService.getProducts();
       expect(result.products).toEqual([]);
 
-      mockMedusaApi.store.product.list.mockResolvedValue({ count: 0 });
-      result = await productService.getProducts();
-      expect(result.products).toEqual([]);
-
-      mockMedusaApi.store.product.list.mockResolvedValue(null);
+      mockMedusaApi.store.product.list.mockResolvedValue({
+        products: [],
+        count: 0,
+      });
       result = await productService.getProducts();
       expect(result.products).toEqual([]);
     });
@@ -143,7 +148,7 @@ describe('ProductService', () => {
         product: mockProduct,
       });
 
-      let result = await productService.getProduct('prod_specific');
+      let result = await productService.getProduct('prod_specific', {});
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenCalledWith(
         'prod_specific',
         {}
@@ -166,7 +171,7 @@ describe('ProductService', () => {
         product: complexProduct,
       });
 
-      result = await productService.getProduct('prod_complex');
+      result = await productService.getProduct('prod_complex', {});
       expect(result).toEqual(complexProduct);
       expect(result?.variants).toHaveLength(2);
       expect(result?.metadata).toEqual({
@@ -186,7 +191,7 @@ describe('ProductService', () => {
 
       for (const scenario of errorScenarios) {
         mockMedusaApi.store.product.retrieve.mockRejectedValue(scenario.error);
-        const result = await productService.getProduct(scenario.id);
+        const result = await productService.getProduct(scenario.id, {});
 
         expect(result).toBeNull();
         expect(consoleSpy).toHaveBeenCalledWith(
@@ -198,18 +203,18 @@ describe('ProductService', () => {
       }
 
       mockMedusaApi.store.product.retrieve.mockResolvedValue({});
-      let result = await productService.getProduct('prod_1');
+      let result = await productService.getProduct('prod_1', {});
       expect(result).toBeNull();
 
       mockMedusaApi.store.product.retrieve.mockResolvedValue(null);
-      result = await productService.getProduct('prod_1');
+      result = await productService.getProduct('prod_1', {});
       expect(result).toBeNull();
 
       const errorWithoutMessage = { toString: () => 'Unknown error' } as Error;
       mockMedusaApi.store.product.retrieve.mockRejectedValue(
         errorWithoutMessage
       );
-      result = await productService.getProduct('prod_1');
+      result = await productService.getProduct('prod_1', {});
       expect(result).toBeNull();
       expect(consoleSpy).toHaveBeenCalledWith(
         'Error fetching product:',
@@ -225,9 +230,9 @@ describe('ProductService', () => {
         product: mockProduct,
       });
 
-      await productService.getProduct('prod_1');
-      await productService.getProduct('prod_1');
-      await productService.getProduct('prod_2');
+      await productService.getProduct('prod_1', {});
+      await productService.getProduct('prod_1', {});
+      await productService.getProduct('prod_2', {});
 
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenCalledTimes(3);
       expect(mockMedusaApi.store.product.retrieve).toHaveBeenNthCalledWith(

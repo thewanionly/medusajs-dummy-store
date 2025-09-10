@@ -16,14 +16,14 @@ export const productResolvers = {
       args: ProductsArgs,
       context: GraphQLContext
     ) => {
-      return await context.productService.getProducts();
+      return await context.productService.getProducts(args);
     },
     product: async (
       _parent: unknown,
-      { id }: ProductArgs,
+      args: ProductArgs,
       context: GraphQLContext
     ) => {
-      return await context.productService.getProduct(id);
+      return await context.productService.getProduct(args.id);
     },
   },
 };
