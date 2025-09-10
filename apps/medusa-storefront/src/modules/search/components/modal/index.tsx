@@ -1,0 +1,100 @@
+'use client';
+
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import DOMPurify from 'isomorphic-dompurify';
+import {
+  Hits,
+  InstantSearch,
+  SearchBox,
+  SearchBoxProps,
+} from 'react-instantsearch';
+
+import { Button } from '@medusajs/ui';
+
+import { searchClient } from '../../../../lib/config';
+import Modal from '../../../common/components/modal';
+
+type Hit = {
+  objectID: string;
+  id: string;
+  title: string;
+  description: string;
+  handle: string;
+  thumbnail: string;
+};
+
+const DEBOUNCE_TIME = 250;
+
+type QueryHook = NonNullable<SearchBoxProps['queryHook']>;
+
+export default function SearchModal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const timerId = useRef<NodeJS.Timeout | null>(null);
+
+  const queryHook = useCallback<QueryHook>((query, search) => {
+    if (timerId.current) {
+      clearTimeout(timerId.current);
+    }
+
+    timerId.current = setTimeout(() => search(query), DEBOUNCE_TIME);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  return (
+    <>
+      <div className="hidden h-full items-center gap-x-6 small:flex">
+        <Button
+          onClick={() => setIsOpen(true)}
+          variant="transparent"
+          className="text-small-regular px-0 hover:bg-transparent hover:text-ui-fg-base focus:!bg-transparent"
+        >
+          Search
+        </Button>
+      </div>
+      <Modal isOpen={isOpen} close={() => setIsOpen(false)}>
+        <InstantSearch
+          searchClient={searchClient}
+          indexName={process.env.NEXT_PUBLIC_ALGOLIA_PRODUCT_INDEX_NAME}
+        >
+          <SearchBox
+            className="w-full [&_button]:w-[3%] [&_input]:w-[94%] [&_input]:outline-none"
+            queryHook={queryHook}
+          />
+          <Hits hitComponent={Hit} classNames={{ root: 'overflow-auto' }} />
+        </InstantSearch>
+      </Modal>
+    </>
+  );
+}
+
+const Hit = ({ hit }: { hit: Hit }) => {
+  return (
+    <div className="relative mt-4 flex flex-row gap-x-2">
+      <Image src={hit.thumbnail} alt={hit.title} width={100} height={100} />
+      <div className="flex flex-col gap-y-1">
+        <h3>{hit.title}</h3>
+        <p
+          className="text-sm text-gray-500"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(hit.description),
+          }}
+        />
+      </div>
+      <Link
+        href={`/products/${hit.handle}`}
+        className="absolute right-0 top-0 h-full w-full"
+        aria-label={`View Product: ${hit.title}`}
+      />
+    </div>
+  );
+};
