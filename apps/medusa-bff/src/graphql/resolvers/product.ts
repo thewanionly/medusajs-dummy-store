@@ -1,3 +1,5 @@
+import { HttpTypes } from '@medusajs/types';
+
 import { GraphQLContext } from '../types/context';
 
 export interface ProductsArgs {
@@ -5,7 +7,7 @@ export interface ProductsArgs {
   offset?: number;
 }
 
-export interface ProductArgs {
+export interface ProductArgs extends HttpTypes.StoreProductParams {
   id: string;
 }
 
@@ -20,10 +22,10 @@ export const productResolvers = {
     },
     product: async (
       _parent: unknown,
-      args: ProductArgs,
+      { id, ...params }: ProductArgs,
       context: GraphQLContext
     ) => {
-      return await context.productService.getProduct(args.id);
+      return await context.productService.getProduct(id, params);
     },
   },
 };
