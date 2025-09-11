@@ -1,4 +1,4 @@
-import { baseTypeDefs } from './base';
-import { productTypeDefs } from './product';
+import { baseTypeDefs } from '@graphql/schemas/base';
+import { productTypeDefs } from '@graphql/schemas/product';
 
 export const typeDefs = [baseTypeDefs, productTypeDefs];

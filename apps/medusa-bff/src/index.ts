@@ -6,10 +6,9 @@ import http from 'http';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-
-import { resolvers } from './graphql/resolvers';
-import { typeDefs } from './graphql/schemas';
-import { createServices } from './services';
+import { resolvers } from '@graphql/resolvers';
+import { typeDefs } from '@graphql/schemas';
+import { createServices } from '@services/index';
 
 async function startServer() {
   const app = express();
