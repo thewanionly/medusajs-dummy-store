@@ -4,10 +4,18 @@ import { MedusaBaseService } from '.';
 
 export class ProductService extends MedusaBaseService {
   async getProducts(
-    params?: HttpTypes.StoreProductListParams
+    params?: HttpTypes.StoreProductListParams & { region_id?: string; fields?: string }
   ): Promise<HttpTypes.StoreProductListResponse> {
     try {
-      const response = await this.medusa.store.product.list(params);
+      const { region_id, fields, ...medusaParams } = params || {};
+      
+      const queryParams: HttpTypes.StoreProductListParams = {
+        ...medusaParams,
+        ...(region_id && { region_id }),
+        ...(fields && { fields }),
+      };
+
+      const response = await this.medusa.store.product.list(queryParams);
       return response;
     } catch (error: unknown) {
       console.error('Error fetching products:', (error as Error).message);
@@ -22,10 +30,18 @@ export class ProductService extends MedusaBaseService {
 
   async getProduct(
     id: string,
-    params?: HttpTypes.StoreProductParams
+    params?: HttpTypes.StoreProductParams & { region_id?: string; fields?: string }
   ): Promise<HttpTypes.StoreProduct | null> {
     try {
-      const response = await this.medusa.store.product.retrieve(id, params);
+      const { region_id, fields, ...medusaParams } = params || {};
+      
+      const queryParams: HttpTypes.StoreProductParams = {
+        ...medusaParams,
+        ...(region_id && { region_id }),
+        ...(fields && { fields }),
+      };
+
+      const response = await this.medusa.store.product.retrieve(id, queryParams);
       return response?.product || null;
     } catch (error: unknown) {
       console.error('Error fetching product:', (error as Error).message);
