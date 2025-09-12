@@ -32,4 +32,60 @@ export class ProductService extends MedusaBaseService {
       return null;
     }
   }
+
+  async getProductCategories(
+    params?: HttpTypes.StoreProductCategoryParams
+  ): Promise<HttpTypes.StoreProductCategory[] | []> {
+    try {
+      const response = await this.medusa.store.category.list(params);
+      return response?.product_categories || [];
+    } catch (error: unknown) {
+      console.error(
+        'Error fetching product categories:',
+        (error as Error).message
+      );
+      return [];
+    }
+  }
+
+  async getProductCategory(
+    id: string,
+    params?: HttpTypes.StoreProductCategoryParams
+  ): Promise<HttpTypes.StoreProductCategory | null> {
+    try {
+      const response = await this.medusa.store.category.retrieve(id, params);
+      return response?.product_category || null;
+    } catch (error: unknown) {
+      console.error(
+        'Error fetching product category:',
+        (error as Error).message
+      );
+      return null;
+    }
+  }
+
+  async getCollections(
+    params?: HttpTypes.StoreCollectionFilters
+  ): Promise<HttpTypes.StoreCollection[] | []> {
+    try {
+      const response = await this.medusa.store.collection.list(params);
+      return response?.collections || [];
+    } catch (error: unknown) {
+      console.error('Error fetching collections:', (error as Error).message);
+      return [];
+    }
+  }
+
+  async getCollection(
+    id: string,
+    params?: HttpTypes.SelectParams
+  ): Promise<HttpTypes.StoreCollection | null> {
+    try {
+      const response = await this.medusa.store.collection.retrieve(id, params);
+      return response.collection || null;
+    } catch (error: unknown) {
+      console.error('Error fetching collection:', (error as Error).message);
+      return null;
+    }
+  }
 }
