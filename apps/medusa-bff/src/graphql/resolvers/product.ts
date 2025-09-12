@@ -4,20 +4,26 @@ import { GraphQLContext } from '../types/context';
 
 export interface ProductArgs extends HttpTypes.StoreProductParams {
   id: string;
+  region_id?: string;
+  fields?: string;
 }
 
 export interface CategoryArgs extends HttpTypes.StoreProductCategoryParams {
   id: string;
+  region_id?: string;
+  fields?: string;
 }
 
 export interface CollectionArgs extends HttpTypes.StoreCollectionFilters {
   id: string;
+  region_id?: string;
+  fields?: string;
 }
 export const productResolvers = {
   Query: {
     products: async (
       _parent: unknown,
-      args: HttpTypes.StoreProductParams,
+      args: HttpTypes.StoreProductParams & { region_id?: string; fields?: string },
       context: GraphQLContext
     ) => {
       return await context.productService.getProducts(args);

@@ -33,6 +33,14 @@ export const GET_PRODUCTS_QUERY = gql`
           value
           metadata
         }
+        options {
+          id
+          title
+          values {
+            id
+            value
+          }
+        }
         variants {
           id
           title
@@ -54,6 +62,11 @@ export const GET_PRODUCTS_QUERY = gql`
           metadata
           variant_rank
           product_id
+          options {
+            id
+            option_id
+            value
+          }
           calculated_price {
             calculated_amount
             is_calculated_price_price_list
@@ -137,6 +150,14 @@ export const GET_PRODUCT_QUERY = gql`
         value
         metadata
       }
+      options {
+        id
+        title
+        values {
+          id
+          value
+        }
+      }
       variants {
         id
         title
@@ -158,6 +179,11 @@ export const GET_PRODUCT_QUERY = gql`
         metadata
         variant_rank
         product_id
+        options {
+          id
+          option_id
+          value
+        }
         calculated_price {
           calculated_amount
           is_calculated_price_price_list

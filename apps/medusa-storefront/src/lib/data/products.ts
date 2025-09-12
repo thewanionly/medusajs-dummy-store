@@ -43,7 +43,7 @@ export const listProducts = async ({
   try {
     const data: any = await graphqlFetch(GET_PRODUCTS_QUERY, {
       region_id: region.id,
-      fields: '*variants.calculated_price',
+      fields: '*variants.calculated_price,*variants.options,*options',
     });
 
     return {
