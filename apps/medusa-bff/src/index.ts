@@ -18,12 +18,12 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   plugins: [
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === 'production' 
       ? ApolloServerPluginLandingPageProductionDefault({
-          graphRef: process.env.APOLLO_GRAPH_REF,
-          footer: false,
+          graphRef: process.env.APOLLO_GRAPH_REF!,
+          embed: true,
         })
-      : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+      : ApolloServerPluginLandingPageLocalDefault(),
   ],
     introspection: true,
 });
