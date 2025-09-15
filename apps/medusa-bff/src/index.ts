@@ -5,7 +5,7 @@ import http from 'http';
 
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { resolvers } from '@graphql/resolvers';
 import { typeDefs } from '@graphql/schemas';
 import { createServices } from '@services/index';
@@ -14,12 +14,19 @@ async function startServer() {
   const app = express();
   const httpServer = http.createServer(app);
 
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [
+    process.env.NODE_ENV === 'production'
+      ? ApolloServerPluginLandingPageProductionDefault({
+          graphRef: process.env.APOLLO_GRAPH_REF,
+          footer: false,
+        })
+      : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+  ],
     introspection: true,
-  });
+});
 
   await server.start();
 
