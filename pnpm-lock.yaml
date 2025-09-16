@@ -81,6 +81,9 @@ importers:
         specifier: 3.25.76
         version: 3.25.76
     devDependencies:
+      '@mds/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@mds/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config
