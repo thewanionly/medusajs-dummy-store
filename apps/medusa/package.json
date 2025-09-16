@@ -21,6 +21,8 @@
     "start:local": "NODE_ENV=development medusa start",
     "start:prod": "NODE_ENV=production medusa start",
     "dev": "medusa develop",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
     "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
     "test:integration:modules": "TEST_TYPE=integration:modules NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
     "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
@@ -45,6 +47,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@mds/prettier-config": "workspace:*",
     "@mds/typescript-config": "workspace:*",
     "@medusajs/test-utils": "2.10.1",
     "@mikro-orm/cli": "6.4.3",
