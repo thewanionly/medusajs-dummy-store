@@ -81,6 +81,9 @@ importers:
         specifier: 3.25.76
         version: 3.25.76
     devDependencies:
+      '@mds/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@medusajs/test-utils':
         specifier: 2.10.1
         version: 2.10.1(@medusajs/framework@2.10.1(@medusajs/cli@2.10.1(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/medusa@2.10.1)(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)
