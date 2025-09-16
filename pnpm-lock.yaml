@@ -71,9 +71,6 @@ importers:
       awilix:
         specifier: ^8.0.1
         version: 8.0.1
-      medusa-plugin-shopify:
-        specifier: workspace:*
-        version: link:../medusa-plugin-shopify
       pg:
         specifier: ^8.13.0
         version: 8.16.3
