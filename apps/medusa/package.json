@@ -15,7 +15,7 @@
   "scripts": {
     "predeploy": "medusa db:migrate",
     "build": "medusa build",
-    "build:prod": "cd ../medusa-plugin-shopify && pnpm install --frozen-lockfile && npx medusa plugin:publish && cd ../medusa && npx medusa plugin:add medusa-plugin-shopify && pnpm run build && cd .medusa/server && npx medusa plugin:add medusa-plugin-shopify && pnpm install --ignore-workspace && pnpm run predeploy",
+    "build:prod": "cd ../medusa-plugin-shopify && pnpm install && npx medusa plugin:publish && cd ../medusa && npx medusa plugin:add medusa-plugin-shopify && pnpm run build && cd .medusa/server && npx medusa plugin:add medusa-plugin-shopify && pnpm install --no-frozen-lockfile && pnpm run predeploy",
     "db:seed:stock": "medusa exec ./src/scripts/seed-stock.ts",
     "seed": "medusa exec ./src/scripts/seed.ts",
     "start:local": "NODE_ENV=development medusa start",
