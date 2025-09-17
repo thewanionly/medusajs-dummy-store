@@ -24,7 +24,8 @@ async function withRetry<T>(
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await operation();
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       lastError = error as Error;
       if (attempt === maxRetries) break;
 
@@ -43,7 +44,7 @@ async function withRetry<T>(
 export default class ShopifyModuleService {
   private options: Options;
 
-  constructor(_, options: Options) {
+  constructor(_: unknown, options: Options) {
     this.options = { ...options };
   }
 

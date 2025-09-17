@@ -46,7 +46,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     logger.success(activityId, 'Finished migrating all data from Shopify!');
 
     res.sendStatus(200);
-  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
     logger.failure(
       activityId,
       'Failed to migrate Shopify data to Medusa database'
