@@ -223,6 +223,9 @@ importers:
       '@mds/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config
+      '@mds/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@medusajs/admin-sdk':
         specifier: 2.10.1
         version: 2.10.1
