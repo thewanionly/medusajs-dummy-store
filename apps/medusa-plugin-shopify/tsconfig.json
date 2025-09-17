@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "declaration": false,
+    "declarationMap": false,
     "sourceMap": false,
     "inlineSourceMap": true,
     "outDir": "./.medusa/server",
