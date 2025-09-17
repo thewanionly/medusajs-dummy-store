@@ -35,6 +35,7 @@
     "prepublishOnly": "medusa plugin:build"
   },
   "devDependencies": {
+    "@mds/prettier-config": "workspace:*",
     "@medusajs/admin-sdk": "2.10.1",
     "@medusajs/cli": "2.10.1",
     "@medusajs/framework": "2.10.1",
