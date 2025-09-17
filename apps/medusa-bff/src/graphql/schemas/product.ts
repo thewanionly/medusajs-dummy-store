@@ -169,13 +169,9 @@ export const productTypeDefs = `
       limit: Int
       offset: Int
       filters: ProductFilters
-      region_id: String
-      fields: String
     ): ProductListResponse!
     product(
       id: ID!
-      region_id: String
-      fields: String
     ): Product
     productCategories(
       limit: Int
@@ -186,23 +182,19 @@ export const productTypeDefs = `
       is_internal: Boolean
       include_descendants_tree: Boolean
       parent_category_id: String
-      fields: String
     ): [ProductCategory!]!
     productCategory(
-      id: ID
+      id: ID!
       handle: String
-      fields: String
     ): ProductCategory
     collections(
       limit: Int
       offset: Int
       handle: [String]
-      fields: String
     ): [Collection!]!
     collection(
-      id: ID
+      id: ID!
       handle: String
-      fields: String
     ): Collection
   }
 `;

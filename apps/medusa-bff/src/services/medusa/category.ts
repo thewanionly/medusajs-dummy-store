@@ -1,6 +1,7 @@
 import type { HttpTypes } from '@medusajs/types';
 
 import { MedusaBaseService } from '.';
+import { handleMedusaError } from '../../lib/error-utils';
 
 export class CategoryService extends MedusaBaseService {
   async getCategories(
@@ -10,8 +11,7 @@ export class CategoryService extends MedusaBaseService {
       const response = await this.medusa.store.category.list(params);
       return response.product_categories || [];
     } catch (error: unknown) {
-      console.error('Error fetching categories:', (error as Error).message);
-      return [];
+      handleMedusaError(error, 'fetch categories', ['categories']);
     }
   }
 
@@ -23,8 +23,7 @@ export class CategoryService extends MedusaBaseService {
       const response = await this.medusa.store.category.retrieve(id, params);
       return response.product_category ?? null;
     } catch (error: unknown) {
-      console.error('Error fetching category:', (error as Error).message);
-      return null;
+      handleMedusaError(error, 'fetch category', ['category']);
     }
   }
 }

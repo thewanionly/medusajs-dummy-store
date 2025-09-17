@@ -6,8 +6,7 @@ const apolloClient = new ApolloClient({
   link: new HttpLink({
     uri: process.env.NEXT_PUBLIC_BFF_URL || 'http://localhost:4000/graphql',
   }),
-  cache: new InMemoryCache(),
-
+  cache: new InMemoryCache({}),
   defaultOptions: {
     watchQuery: {
       notifyOnNetworkStatusChange: true,
@@ -30,3 +29,5 @@ export async function graphqlFetch(
     throw new Error(error.message || 'GraphQL error');
   }
 }
+
+export default apolloClient;

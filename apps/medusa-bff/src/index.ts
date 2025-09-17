@@ -5,6 +5,7 @@ import http from 'http';
 
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { resolvers } from '@graphql/resolvers';
 import { typeDefs } from '@graphql/schemas';
@@ -24,7 +25,8 @@ const server = new ApolloServer({
           embed: true,
         })
       : ApolloServerPluginLandingPageLocalDefault(),
-  ],
+ApolloServerPluginDrainHttpServer({ httpServer })
+    ],
     introspection: true,
 });
 

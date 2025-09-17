@@ -1,7 +1,7 @@
 'use server';
 
+import { GET_PRODUCTS_QUERY } from '@lib/bff';
 import { graphqlFetch } from '@lib/bff/apollo-client';
-import { GET_PRODUCTS_QUERY } from '@lib/bff/graphql-queries';
 import { sortProducts } from '@lib/util/sort-products';
 import { HttpTypes } from '@medusajs/types';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
@@ -41,10 +41,7 @@ export const listProducts = async ({
   }
 
   try {
-    const data: any = await graphqlFetch(GET_PRODUCTS_QUERY, {
-      region_id: region.id,
-      fields: '*variants.calculated_price,*variants.options,*options',
-    });
+    const data = await graphqlFetch(GET_PRODUCTS_QUERY);
 
     return {
       response: {

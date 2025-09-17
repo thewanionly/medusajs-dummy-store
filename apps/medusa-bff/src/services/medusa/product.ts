@@ -1,51 +1,29 @@
 import type { HttpTypes } from '@medusajs/types';
 
 import { MedusaBaseService } from '.';
+import { handleMedusaError } from '../../lib/error-utils';
 
 export class ProductService extends MedusaBaseService {
   async getProducts(
-    params?: HttpTypes.StoreProductListParams & { region_id?: string; fields?: string }
+    params?: HttpTypes.StoreProductListParams 
   ): Promise<HttpTypes.StoreProductListResponse> {
     try {
-      const { region_id, fields, ...medusaParams } = params || {};
-      
-      const queryParams: HttpTypes.StoreProductListParams = {
-        ...medusaParams,
-        ...(region_id && { region_id }),
-        ...(fields && { fields }),
-      };
-
-      const response = await this.medusa.store.product.list(queryParams);
+      const response = await this.medusa.store.product.list(params);
       return response;
     } catch (error: unknown) {
-      console.error('Error fetching products:', (error as Error).message);
-      return {
-        products: [],
-        count: 0,
-        limit: params?.limit ?? 0,
-        offset: params?.offset ?? 0,
-      };
+      handleMedusaError(error, 'fetch products', ['products']);
     }
   }
 
   async getProduct(
     id: string,
-    params?: HttpTypes.StoreProductParams & { region_id?: string; fields?: string }
+    params?: HttpTypes.StoreProductParams  
   ): Promise<HttpTypes.StoreProduct | null> {
     try {
-      const { region_id, fields, ...medusaParams } = params || {};
-      
-      const queryParams: HttpTypes.StoreProductParams = {
-        ...medusaParams,
-        ...(region_id && { region_id }),
-        ...(fields && { fields }),
-      };
-
-      const response = await this.medusa.store.product.retrieve(id, queryParams);
+      const response = await this.medusa.store.product.retrieve(id, params);
       return response?.product || null;
     } catch (error: unknown) {
-      console.error('Error fetching product:', (error as Error).message);
-      return null;
+      handleMedusaError(error, 'fetch product', ['product']);
     }
   }
 
@@ -56,11 +34,7 @@ export class ProductService extends MedusaBaseService {
       const response = await this.medusa.store.category.list(params);
       return response?.product_categories || [];
     } catch (error: unknown) {
-      console.error(
-        'Error fetching product categories:',
-        (error as Error).message
-      );
-      return [];
+      handleMedusaError(error, 'fetch product categories', ['productCategories']);
     }
   }
 
@@ -72,11 +46,7 @@ export class ProductService extends MedusaBaseService {
       const response = await this.medusa.store.category.retrieve(id, params);
       return response?.product_category || null;
     } catch (error: unknown) {
-      console.error(
-        'Error fetching product category:',
-        (error as Error).message
-      );
-      return null;
+      handleMedusaError(error, 'fetch product category', ['productCategory']);
     }
   }
 
@@ -87,8 +57,7 @@ export class ProductService extends MedusaBaseService {
       const response = await this.medusa.store.collection.list(params);
       return response?.collections || [];
     } catch (error: unknown) {
-      console.error('Error fetching collections:', (error as Error).message);
-      return [];
+      handleMedusaError(error, 'fetch collections', ['collections']);
     }
   }
 
@@ -100,8 +69,7 @@ export class ProductService extends MedusaBaseService {
       const response = await this.medusa.store.collection.retrieve(id, params);
       return response.collection || null;
     } catch (error: unknown) {
-      console.error('Error fetching collection:', (error as Error).message);
-      return null;
+      handleMedusaError(error, 'fetch collection', ['collection']);
     }
   }
 }
