@@ -1,6 +1,7 @@
 import type { HttpTypes } from '@medusajs/types';
 
 import { MedusaBaseService } from '.';
+import { handleMedusaError } from '../../lib/error-utils';
 
 export class CollectionService extends MedusaBaseService {
   async getCollections(
@@ -10,8 +11,7 @@ export class CollectionService extends MedusaBaseService {
       const response = await this.medusa.store.collection.list(params);
       return response.collections || [];
     } catch (error: unknown) {
-      console.error('Error fetching collections:', (error as Error).message);
-      return [];
+      handleMedusaError(error, 'fetch collections', ['collections']);
     }
   }
 
@@ -23,8 +23,7 @@ export class CollectionService extends MedusaBaseService {
       const response = await this.medusa.store.collection.retrieve(id, params);
       return response.collection ?? null;
     } catch (error: unknown) {
-      console.error('Error fetching collection:', (error as Error).message);
-      return null;
+      handleMedusaError(error, 'fetch collection', ['collection']);
     }
   }
 }
