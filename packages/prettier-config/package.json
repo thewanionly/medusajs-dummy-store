@@ -6,7 +6,7 @@
   "exports": {
     "./base": "./base.js"
   },
-  "devDependencies": {
+  "dependencies": {
     "@trivago/prettier-plugin-sort-imports": "5.2.1",
     "prettier-plugin-tailwindcss": "^0.6.9"
   }

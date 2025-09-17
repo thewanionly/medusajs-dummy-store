@@ -19,7 +19,6 @@
     "@mds/prettier-config": "workspace:*",
     "@mds/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
-    "@trivago/prettier-plugin-sort-imports": "5.2.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
