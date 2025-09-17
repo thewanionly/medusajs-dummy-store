@@ -220,6 +220,9 @@ importers:
 
   apps/medusa-plugin-shopify:
     devDependencies:
+      '@mds/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@mds/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config

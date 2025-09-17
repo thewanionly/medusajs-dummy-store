@@ -35,6 +35,7 @@
     "prepublishOnly": "medusa plugin:build"
   },
   "devDependencies": {
+    "@mds/eslint-config": "workspace:*",
     "@mds/prettier-config": "workspace:*",
     "@mds/typescript-config": "workspace:*",
     "@medusajs/admin-sdk": "2.10.1",
