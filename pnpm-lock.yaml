@@ -286,6 +286,9 @@ importers:
       awilix:
         specifier: ^8.0.1
         version: 8.0.1
+      eslint:
+        specifier: ^9.31.0
+        version: 9.31.0(jiti@2.5.1)
       pg:
         specifier: ^8.13.0
         version: 8.16.3
