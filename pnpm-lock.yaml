@@ -26,6 +26,9 @@ importers:
 
   apps/medusa:
     dependencies:
+      '@mds/medusa-plugin-shopify':
+        specifier: workspace:*
+        version: link:../medusa-plugin-shopify
       '@medusajs/admin-sdk':
         specifier: 2.10.2
         version: 2.10.2

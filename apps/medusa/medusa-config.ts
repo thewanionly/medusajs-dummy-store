@@ -33,7 +33,7 @@ module.exports = defineConfig({
   ],
   plugins: [
     {
-      resolve: 'medusa-plugin-shopify',
+      resolve: '@mds/medusa-plugin-shopify',
       options: {
         baseUrl: process.env.SHOPIFY_BASE_URL,
       },
