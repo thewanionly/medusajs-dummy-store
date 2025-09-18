@@ -43,7 +43,7 @@
      pnpm run seed
      ```
 
-3. Publish and add `medusa-plugin-shopify` in this application. Follow `apps/medusa-plugin-shopify` README's [Get Started](../medusa-plugin-shopify/README.md#get-started) section.
+3. Publish `@mds/medusa-plugin-shopify` plugin locally. Follow `apps/medusa-plugin-shopify` README's [Get Started](../medusa-plugin-shopify/README.md#get-started) section.
 
 4. Start the development server:
 
