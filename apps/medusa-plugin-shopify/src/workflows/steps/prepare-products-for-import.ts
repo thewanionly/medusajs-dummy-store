@@ -64,6 +64,9 @@ export const prepareProductsForImportStep = createStep(
         (type) => type.value === shopifyProduct.product_type
       );
 
+      type OptionKey = 'option1' | 'option2' | 'option3';
+      const optionKeys: OptionKey[] = ['option1', 'option2', 'option3'];
+
       const productOptions = shopifyProduct.options?.map((option) => {
         const existingOption = existingProduct?.options?.find(
           (existingOpt) => existingOpt.title === option.name
@@ -80,7 +83,9 @@ export const prepareProductsForImportStep = createStep(
         };
       });
 
-      const productVariants = [];
+      const productVariants:
+        | CreateProductVariantWorkflowInputDTO[]
+        | UpsertProductVariantDTO[] = [];
 
       shopifyProduct.variants?.forEach((variant) => {
         const variantExternalId = variant.id.toString();
@@ -89,10 +94,13 @@ export const prepareProductsForImportStep = createStep(
           existingProduct?.variants?.find(
             (v) => v.metadata?.external_id === variantExternalId
           );
-        const productOption = (optionIndex: number) =>
-          productOptions.find((pOption) =>
-            pOption.values.includes(variant[`option${optionIndex}`])
+        const productOption = (optionIndex: number) => {
+          const key = optionKeys[optionIndex - 1];
+          const value = key ? variant[key] : undefined;
+          return productOptions.find((pOption) =>
+            value ? pOption.values.includes(value) : false
           );
+        };
         const childOptions = {
           ...(productOption(1)?.title
             ? {
@@ -127,19 +135,17 @@ export const prepareProductsForImportStep = createStep(
           );
         }
 
-        (
-          productVariants as unknown as
-            | CreateProductVariantWorkflowInputDTO[]
-            | UpsertProductVariantDTO[]
-        )?.push({
+        productVariants.push({
           title: variant.title,
           sku: variant.sku,
-          prices: stores[0].supported_currencies.map(({ currency_code }) => {
-            return {
-              amount: variant.price,
-              currency_code,
-            };
-          }),
+          prices: stores[0].supported_currencies.map(
+            (c: { currency_code: string }) => {
+              return {
+                amount: variant.price,
+                currency_code: c.currency_code,
+              };
+            }
+          ),
           options: childOptions,
           metadata: {
             external_id: variantExternalId,
@@ -205,7 +211,10 @@ export const prepareProductsForImportStep = createStep(
           additionalProductData
         );
       } else {
-        productsToCreate.set(productData.external_id!, productData);
+        productsToCreate.set(
+          productData.external_id!,
+          productData as CreateProductWorkflowInputDTO
+        );
         productsToCreateAdditionalData.set(
           productData.external_id!,
           additionalProductData

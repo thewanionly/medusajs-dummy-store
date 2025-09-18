@@ -75,7 +75,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       >
         <div className="relative">
           {isLoading && (
-            <div className="absolute top-1/2 right-3 -translate-y-1/2">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
             </div>
           )}
@@ -89,7 +89,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               'peer',
               height,
-              'px-4 pt-5 pb-2',
+              'px-4 pb-2 pt-5',
               hasError &&
                 'border-destructive focus-visible:ring-destructive/50',
               isLoading && 'pr-10',
@@ -100,7 +100,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             htmlFor={id}
             className={cn(
               labelVariants({ variant }),
-              'top-2 left-3 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:translate-y-0',
+              'left-3 top-2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:translate-y-0',
               hasValue && '-top-2 translate-y-0',
               labelClassName
             )}

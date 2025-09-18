@@ -1,3 +1,17 @@
+import { createRequire } from 'node:module';
+
+const requireFromHere = createRequire(import.meta.url);
+
+const plugins = [];
+try {
+  plugins.push(
+    requireFromHere.resolve('@trivago/prettier-plugin-sort-imports')
+  );
+} catch {}
+try {
+  plugins.push(requireFromHere.resolve('prettier-plugin-tailwindcss'));
+} catch {}
+
 /** @type {import("prettier").Config} */
 export default {
   arrowParens: 'always',
@@ -16,8 +30,5 @@ export default {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
-  plugins: [
-    '@trivago/prettier-plugin-sort-imports',
-    'prettier-plugin-tailwindcss',
-  ],
+  plugins,
 };
