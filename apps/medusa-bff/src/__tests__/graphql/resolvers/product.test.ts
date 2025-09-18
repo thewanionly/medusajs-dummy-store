@@ -110,8 +110,7 @@ describe('Product Resolvers', () => {
 
       let result = await productResolvers.Query.product(
         {},
-        {},
-        'prod_123',
+        { id: 'prod_123' },
         mockContext
       );
 
@@ -155,8 +154,7 @@ describe('Product Resolvers', () => {
       );
       result = await productResolvers.Query.product(
         {},
-        {},
-        'prod_complex',
+        { id: 'prod_complex' },
         mockContext
       );
 
@@ -171,8 +169,7 @@ describe('Product Resolvers', () => {
       mockProductService.getProduct.mockResolvedValue(null);
       result = await productResolvers.Query.product(
         {},
-        {},
-        'nonexistent',
+        { id: 'nonexistent' },
         mockContext
       );
       expect(result).toBeNull();
@@ -191,7 +188,7 @@ describe('Product Resolvers', () => {
         mockProductService.getProduct.mockRejectedValue(error);
 
         await expect(
-          productResolvers.Query.product({}, {}, scenario.id, mockContext)
+          productResolvers.Query.product({}, { id: scenario.id }, mockContext)
         ).rejects.toThrow(scenario.error);
 
         expect(mockProductService.getProduct).toHaveBeenCalledWith(scenario.id, {});
@@ -228,7 +225,7 @@ describe('Product Resolvers', () => {
       const mockCategory = { id: 'cat_1', name: 'Electronics', handle: 'electronics' };
       mockProductService.getProductCategory.mockResolvedValue(mockCategory as any);
 
-      const result = await productResolvers.Query.productCategory({}, {}, 'cat_1', mockContext);
+      const result = await productResolvers.Query.productCategory({}, { id: 'cat_1' }, mockContext);
       expect(mockProductService.getProductCategory).toHaveBeenCalledWith('cat_1', {});
       expect(result).toEqual(mockCategory);
     });
@@ -238,7 +235,7 @@ describe('Product Resolvers', () => {
       mockProductService.getProductCategory.mockRejectedValue(error);
 
       await expect(
-        productResolvers.Query.productCategory({}, {}, 'invalid', mockContext)
+        productResolvers.Query.productCategory({}, { id: 'invalid' }, mockContext)
       ).rejects.toThrow('Category not found');
     });
   });
@@ -271,7 +268,7 @@ describe('Product Resolvers', () => {
       const mockCollection = { id: 'col_1', title: 'Summer Collection', handle: 'summer' };
       mockProductService.getCollection.mockResolvedValue(mockCollection as any);
 
-      const result = await productResolvers.Query.collection({}, {}, 'col_1', mockContext);
+      const result = await productResolvers.Query.collection({}, { id: 'col_1' }, mockContext);
       expect(mockProductService.getCollection).toHaveBeenCalledWith('col_1', {});
       expect(result).toEqual(mockCollection);
     });
@@ -281,7 +278,7 @@ describe('Product Resolvers', () => {
       mockProductService.getCollection.mockRejectedValue(error);
 
       await expect(
-        productResolvers.Query.collection({}, {}, 'invalid', mockContext)
+        productResolvers.Query.collection({}, { id: 'invalid' }, mockContext)
       ).rejects.toThrow('Collection not found');
     });
   });

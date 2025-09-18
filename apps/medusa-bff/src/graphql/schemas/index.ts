@@ -1,4 +1,15 @@
-import { baseTypeDefs } from '@graphql/schemas/base';
-import { productTypeDefs } from '@graphql/schemas/product';
+import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { mergeTypeDefs } from '@graphql-tools/merge';
+import { glob } from 'glob';
 
-export const typeDefs = [baseTypeDefs, productTypeDefs];
+import { baseTypeDefs } from '@graphql/schemas/base';
+
+const path = __dirname;
+const files = glob.sync('*.graphql', {
+  cwd: path,
+});
+
+const schemas = files.map((file) => readFileSync(join(path, file), 'utf8'));
+
+export const typeDefs = mergeTypeDefs([baseTypeDefs, ...schemas]);

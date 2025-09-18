@@ -71,6 +71,9 @@ importers:
       awilix:
         specifier: ^8.0.1
         version: 8.0.1
+      medusa-plugin-shopify:
+        specifier: file:.yalc/medusa-plugin-shopify
+        version: file:apps/medusa/.yalc/medusa-plugin-shopify(c4kp5g6zro2yye4vdaqityjefa)
       pg:
         specifier: ^8.13.0
         version: 8.16.3
@@ -150,6 +153,9 @@ importers:
       '@apollo/server':
         specifier: ^4.10.4
         version: 4.12.2(graphql@16.11.0)
+      '@graphql-tools/merge':
+        specifier: ^9.1.1
+        version: 9.1.1(graphql@16.11.0)
       '@medusajs/js-sdk':
         specifier: 2.10.1
         version: 2.10.1(awilix@8.0.1)(ioredis@5.7.0)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0))
@@ -171,9 +177,15 @@ importers:
       express:
         specifier: ^4.18.2
         version: 4.21.2
+      glob:
+        specifier: ^11.0.3
+        version: 11.0.3
       graphql:
         specifier: ^16.8.1
         version: 16.11.0
+      graphql-scalars:
+        specifier: ^1.24.2
+        version: 1.24.2(graphql@16.11.0)
     devDependencies:
       '@mds/eslint-config':
         specifier: workspace:*
@@ -210,7 +222,6 @@ importers:
         version: 3.6.2
       ts-jest:
         specifier: ^29.4.1
-        version: 29.4.1(@babel/core@7.28.4)(@jest/transform@29.7.0)(@jest/types@30.0.5)(babel-jest@29.7.0(@babel/core@7.28.4))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.13))(typescript@5.8.3)
       tsc-alias:
         specifier: ^1.8.16
         version: 1.8.16
@@ -2423,6 +2434,14 @@ packages:
 
   '@ioredis/commands@1.3.1':
     resolution: {integrity: sha512-bYtU8avhGIcje3IhvF9aSjsa5URMZBHnwKtOvXsT4sfYy9gppW11gLPT/9oNqlJZD47yPKveQFTAFWpHjKvUoQ==}
+
+  '@isaacs/balanced-match@4.0.1':
+    resolution: {integrity: sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ==}
+    engines: {node: 20 || >=22}
+
+  '@isaacs/brace-expansion@5.0.0':
+    resolution: {integrity: sha512-ZT55BDLV0yv0RBm2czMiZ+SqCGO7AvmOM3G/w2xhVPH+te0aKgFjmBvGlL1dH+ql2tgGO3MVrbb3jCKyvpgnxA==}
+    engines: {node: 20 || >=22}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -7515,6 +7534,11 @@ packages:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
     hasBin: true
 
+  glob@11.0.3:
+    resolution: {integrity: sha512-2Nim7dha1KVkaiF4q6Dj+ngPPMdfvLJEOpZk/jKiUAkqKebpGAWQXAq9z1xu9HKu5lWfqw/FASuccEjyznjPaA==}
+    engines: {node: 20 || >=22}
+    hasBin: true
+
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
     deprecated: Glob versions prior to v9 are no longer supported
@@ -7561,6 +7585,12 @@ packages:
     peerDependenciesMeta:
       cosmiconfig-toml-loader:
         optional: true
+
+  graphql-scalars@1.24.2:
+    resolution: {integrity: sha512-FoZ11yxIauEnH0E5rCUkhDXHVn/A6BBfovJdimRZCQlFCl+h7aVvarKmI15zG4VtQunmCDdqdtNs6ixThy3uAg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
   graphql-tag@2.12.6:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
@@ -8579,6 +8609,27 @@ packages:
   media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
+
+  medusa-plugin-shopify@file:apps/medusa/.yalc/medusa-plugin-shopify:
+    resolution: {directory: apps/medusa/.yalc/medusa-plugin-shopify, type: directory}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@medusajs/admin-sdk': 2.10.1
+      '@medusajs/cli': 2.10.1
+      '@medusajs/framework': 2.10.1
+      '@medusajs/icons': 2.10.1
+      '@medusajs/js-sdk': 2.10.1
+      '@medusajs/medusa': 2.10.1
+      '@medusajs/test-utils': 2.10.1
+      '@medusajs/ui': 4.0.21
+      '@mikro-orm/cli': 6.4.3
+      '@mikro-orm/core': 6.4.3
+      '@mikro-orm/knex': 6.4.3
+      '@mikro-orm/migrations': 6.4.3
+      '@mikro-orm/postgresql': 6.4.3
+      '@tanstack/react-query': 5.64.2
+      awilix: ^8.0.1
+      pg: ^8.13.0
 
   merge-descriptors@1.0.3:
     resolution: {integrity: sha512-gaNvAS7TZ897/rVaZ0nMtAyxNyi/pdbjbAwUpFQpN70GqnVfOiXpeUUMKRBmzXaSQ8DdTX4/0ms62r2K+hE6mQ==}
@@ -13078,6 +13129,7 @@ snapshots:
       '@swc/helpers': 0.5.17
 
   '@ioredis/commands@1.3.1': {}
+
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -19592,6 +19644,15 @@ snapshots:
       package-json-from-dist: 1.0.1
       path-scurry: 1.11.1
 
+  glob@11.0.3:
+    dependencies:
+      foreground-child: 3.3.1
+      jackspeak: 4.1.1
+      minimatch: 10.0.3
+      minipass: 7.1.2
+      package-json-from-dist: 1.0.1
+      path-scurry: 2.0.0
+
   glob@7.2.3:
     dependencies:
       fs.realpath: 1.0.0
@@ -19655,6 +19716,11 @@ snapshots:
       - typescript
       - uWebSockets.js
       - utf-8-validate
+
+  graphql-scalars@1.24.2(graphql@16.11.0):
+    dependencies:
+      graphql: 16.11.0
+      tslib: 2.8.1
 
   graphql-tag@2.12.6(graphql@16.11.0):
     dependencies:
@@ -21011,6 +21077,25 @@ snapshots:
   meant@1.0.3: {}
 
   media-typer@0.3.0: {}
+
+  medusa-plugin-shopify@file:apps/medusa/.yalc/medusa-plugin-shopify(c4kp5g6zro2yye4vdaqityjefa):
+    dependencies:
+      '@medusajs/admin-sdk': 2.10.1
+      '@medusajs/cli': 2.10.1(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.13)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(@types/node@20.19.13)(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0))
+      '@medusajs/framework': 2.10.1(@medusajs/cli@2.10.1(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.13)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(@types/node@20.19.13)(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.13)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0))
+      '@medusajs/icons': 2.10.1(react@19.0.0-rc-66855b96-20241106)
+      '@medusajs/js-sdk': 2.10.1(awilix@8.0.1)(ioredis@5.7.0)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0))
+      '@medusajs/medusa': 2.10.1(27xnvo3belygkvsp6nug5kfly4)
+      '@medusajs/test-utils': 2.10.1(@medusajs/framework@2.10.1(@medusajs/cli@2.10.1(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.13)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(@types/node@20.19.13)(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.13)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.30.1)(terser@5.44.0)))(@medusajs/medusa@2.10.1)(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)
+      '@medusajs/ui': 4.0.21(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3)
+      '@mikro-orm/cli': 6.4.3(pg@8.16.3)
+      '@mikro-orm/core': 6.4.3
+      '@mikro-orm/knex': 6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3)
+      '@mikro-orm/migrations': 6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.13)(pg@8.16.3)
+      '@mikro-orm/postgresql': 6.4.3(@mikro-orm/core@6.4.3)
+      '@tanstack/react-query': 5.64.2(react@19.0.0-rc-66855b96-20241106)
+      awilix: 8.0.1
+      pg: 8.16.3
 
   merge-descriptors@1.0.3: {}
 

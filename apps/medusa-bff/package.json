@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@graphql-tools/merge": "^9.1.1",
     "@medusajs/js-sdk": "2.10.1",
     "@medusajs/types": "2.10.1",
     "apollo-server-express": "^3.12.1",
@@ -27,7 +28,9 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^4.18.2",
-    "graphql": "^16.8.1"
+    "glob": "^11.0.3",
+    "graphql": "^16.8.1",
+    "graphql-scalars": "^1.24.2"
   },
   "devDependencies": {
     "@mds/eslint-config": "workspace:*",
