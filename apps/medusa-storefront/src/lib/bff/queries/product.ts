@@ -8,8 +8,18 @@ import {
 } from '../fragments/product';
 
 export const GET_PRODUCTS_QUERY = gql`
-  query GetProducts($limit: Int, $offset: Int, $filters: ProductFilters) {
-    products(limit: $limit, offset: $offset, filters: $filters) {
+  query GetProducts(
+    $limit: Int
+    $offset: Int
+    $filters: ProductFilters
+    $region_id: String
+  ) {
+    products(
+      limit: $limit
+      offset: $offset
+      filters: $filters
+      region_id: $region_id
+    ) {
       products {
         ...ProductFull
       }
@@ -22,8 +32,8 @@ export const GET_PRODUCTS_QUERY = gql`
 `;
 
 export const GET_PRODUCT_QUERY = gql`
-  query GetProduct($id: ID!) {
-    product(id: $id) {
+  query GetProduct($id: ID!, $region_id: String) {
+    product(id: $id, region_id: $region_id) {
       ...ProductFull
     }
   }
@@ -180,4 +190,3 @@ export const GET_COLLECTION_QUERY = gql`
   ${PRODUCT_COLLECTION_FRAGMENT}
   ${PRODUCT_CORE_FRAGMENT}
 `;
-

@@ -1,6 +1,9 @@
-import { DocumentNode } from 'graphql';
-
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  OperationVariables,
+} from '@apollo/client';
 
 const apolloClient = new ApolloClient({
   link: new HttpLink({
@@ -14,18 +17,20 @@ const apolloClient = new ApolloClient({
   },
 });
 
-export async function graphqlFetch(
-  query: DocumentNode,
-  variables?: any
-): Promise<any> {
+export async function graphqlFetch<
+  TResult,
+  TVariables extends OperationVariables,
+>(
+  options: ApolloClient.QueryOptions<TResult, TVariables>
+): Promise<TResult | undefined> {
   try {
-    const { data } = await apolloClient.query({
-      query,
-      variables,
+    const { data } = await apolloClient.query<TResult, TVariables>({
+      ...options,
       fetchPolicy: 'network-only',
     });
     return data;
   } catch (error: any) {
+    // TODO - Better error handling
     throw new Error(error.message || 'GraphQL error');
   }
 }

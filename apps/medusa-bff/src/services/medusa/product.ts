@@ -63,7 +63,7 @@ export class ProductService extends MedusaBaseService {
 
   async getCollection(
     id: string,
-    params?: HttpTypes.SelectParams
+    params?: HttpTypes.StoreCollectionFilters
   ): Promise<HttpTypes.StoreCollection | null> {
     try {
       const response = await this.medusa.store.collection.retrieve(id, params);

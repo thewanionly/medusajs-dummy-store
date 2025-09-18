@@ -4,18 +4,19 @@ import { GET_COLLECTIONS_QUERY, GET_COLLECTION_QUERY } from '@lib/bff';
 import { graphqlFetch } from '@lib/bff/apollo-client';
 import {
   GetCollectionQuery,
+  GetCollectionQueryVariables,
   GetCollectionsQuery,
+  GetCollectionsQueryVariables,
 } from '@lib/bff/generated-types/graphql';
 
-export const retrieveCollection = async (
-  id: string
-): Promise<GetCollectionQuery['collection'] | null> => {
+export const retrieveCollection = async (id: string) => {
   try {
-    const data: GetCollectionQuery = await graphqlFetch(GET_COLLECTION_QUERY, {
-      id,
-    });
+    const data = await graphqlFetch<
+      GetCollectionQuery,
+      GetCollectionQueryVariables
+    >({ query: GET_COLLECTION_QUERY, variables: { id } });
 
-    return data.collection || null;
+    return data?.collection || null;
   } catch (error) {
     console.error('Error fetching collection from BFF:', error);
     return null;
@@ -24,25 +25,19 @@ export const retrieveCollection = async (
 
 export const listCollections = async (
   queryParams: Record<string, string> = {}
-): Promise<{
-  collections: GetCollectionsQuery['collections'];
-  count: number;
-}> => {
+) => {
   try {
     const limit = parseInt(queryParams.limit || '100');
     const offset = parseInt(queryParams.offset || '0');
 
-    const data: GetCollectionsQuery = await graphqlFetch(
-      GET_COLLECTIONS_QUERY,
-      {
-        limit,
-        offset,
-      }
-    );
+    const data = await graphqlFetch<
+      GetCollectionsQuery,
+      GetCollectionsQueryVariables
+    >({ query: GET_COLLECTIONS_QUERY, variables: { limit, offset } });
 
     return {
-      collections: data.collections,
-      count: data.collections?.length || 0,
+      collections: data?.collections,
+      count: data?.collections?.length || 0,
     };
   } catch (error) {
     console.error('Error fetching collections from BFF:', error);
@@ -50,15 +45,17 @@ export const listCollections = async (
   }
 };
 
-export const getCollectionByHandle = async (
-  handle: string
-): Promise<GetCollectionQuery['collection'] | null> => {
+export const getCollectionByHandle = async (handle: string) => {
   try {
-    const data: GetCollectionQuery = await graphqlFetch(GET_COLLECTION_QUERY, {
-      handle,
+    const data = await graphqlFetch<
+      GetCollectionQuery,
+      GetCollectionQueryVariables
+    >({
+      query: GET_COLLECTION_QUERY,
+      variables: { handle },
     });
 
-    return data.collection || null;
+    return data?.collection || null;
   } catch (error) {
     console.error('Error fetching collection by handle from BFF:', error);
     return null;

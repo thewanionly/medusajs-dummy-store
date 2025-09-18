@@ -10,7 +10,7 @@ const config: CodegenConfig = {
       config: {
         useTypeImports: true,
         documentMode: 'documentNode',
-        gqlImport: 'graphql-tag#gql',
+        gqlImport: '@apollo/client#gql',
         dedupeFragments: true,
         inlineFragmentTypes: 'combine',
         skipTypename: false,

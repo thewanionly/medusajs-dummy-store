@@ -2,6 +2,10 @@
 
 import { GET_PRODUCTS_QUERY } from '@lib/bff';
 import { graphqlFetch } from '@lib/bff/apollo-client';
+import {
+  GetProductsQuery,
+  GetProductsQueryVariables,
+} from '@lib/bff/generated-types/graphql';
 import { sortProducts } from '@lib/util/sort-products';
 import { HttpTypes } from '@medusajs/types';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
@@ -17,7 +21,10 @@ export const listProducts = async ({
   countryCode?: string;
   regionId?: string;
 }): Promise<{
-  response: { products: HttpTypes.StoreProduct[]; count: number };
+  response: {
+    products: GetProductsQuery['products']['products'];
+    count: number;
+  };
   nextPage: number | null;
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
 }> => {
@@ -41,12 +48,20 @@ export const listProducts = async ({
   }
 
   try {
-    const data = await graphqlFetch(GET_PRODUCTS_QUERY);
+    const data = await graphqlFetch<
+      GetProductsQuery,
+      GetProductsQueryVariables
+    >({
+      query: GET_PRODUCTS_QUERY,
+      variables: {
+        region_id: region.id,
+      },
+    });
 
     return {
       response: {
-        products: data.products?.products || [],
-        count: data.products?.count || 0,
+        products: data?.products?.products ?? [],
+        count: data?.products?.count || 0,
       },
       nextPage: null,
     };
