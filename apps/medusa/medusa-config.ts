@@ -30,6 +30,9 @@ module.exports = defineConfig({
         productIndexName: process.env.ALGOLIA_PRODUCT_INDEX_NAME!,
       },
     },
+    {
+      resolve: './src/modules/loyalty',
+    },
   ],
   plugins: [
     {
