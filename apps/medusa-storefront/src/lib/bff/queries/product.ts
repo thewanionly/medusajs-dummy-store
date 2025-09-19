@@ -11,12 +11,14 @@ export const GET_PRODUCTS_QUERY = gql`
   query GetProducts(
     $limit: Int
     $offset: Int
+    $handle: String
     $filters: ProductFilters
     $region_id: String
   ) {
     products(
       limit: $limit
       offset: $offset
+      handle: $handle
       filters: $filters
       region_id: $region_id
     ) {

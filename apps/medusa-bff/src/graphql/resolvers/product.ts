@@ -1,4 +1,8 @@
-import { HttpTypes, StoreCollectionFilters, StoreProductCategoryParams } from '@medusajs/types';
+import {
+  HttpTypes,
+  StoreCollectionFilters,
+  StoreProductCategoryParams,
+} from '@medusajs/types';
 
 import { GraphQLContext } from '../types/context';
 
@@ -14,7 +18,7 @@ export const productResolvers = {
     product: async (
       _parent: unknown,
       params: HttpTypes.StoreProductParams,
-      id:string,
+      id: string,
       context: GraphQLContext
     ) => {
       return await context.productService.getProduct(id, params);
@@ -28,8 +32,8 @@ export const productResolvers = {
     },
     productCategory: async (
       _parent: unknown,
-    params: StoreProductCategoryParams,
-      id:string,
+      params: StoreProductCategoryParams,
+      id: string,
       context: GraphQLContext
     ) => {
       return await context.productService.getProductCategory(id, params);
@@ -44,7 +48,7 @@ export const productResolvers = {
     collection: async (
       _parent: unknown,
       params: StoreCollectionFilters,
-id:string,
+      id: string,
       context: GraphQLContext
     ) => {
       return await context.productService.getCollection(id, params);

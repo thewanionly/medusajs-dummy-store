@@ -15,6 +15,7 @@ import { getRegion, retrieveRegion } from './regions';
 export const listProducts = async ({
   countryCode,
   regionId,
+  queryParams,
 }: {
   pageParam?: number;
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
@@ -46,7 +47,7 @@ export const listProducts = async ({
       nextPage: null,
     };
   }
-
+  console.log('queryParams', queryParams);
   try {
     const data = await graphqlFetch<
       GetProductsQuery,
@@ -54,6 +55,7 @@ export const listProducts = async ({
     >({
       query: GET_PRODUCTS_QUERY,
       variables: {
+        ...queryParams,
         region_id: region.id,
       },
     });
@@ -96,7 +98,7 @@ export const listProductsWithSort = async ({
   const limit = queryParams?.limit || 12;
 
   const {
-    response: { products, count },
+    response: { products: rawProducts, count },
   } = await listProducts({
     pageParam: 0,
     queryParams: {
@@ -106,6 +108,7 @@ export const listProductsWithSort = async ({
     countryCode,
   });
 
+  const products = (rawProducts ?? []) as HttpTypes.StoreProduct[];
   const sortedProducts = sortProducts(products, sortBy);
 
   const pageParam = (page - 1) * limit;
