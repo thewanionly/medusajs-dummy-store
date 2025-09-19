@@ -37,13 +37,27 @@ const createBreadcrumbItems = (segments: string[]) => [
   })),
 ];
 
+// Helper function to check if a string is a locale code (e.g., 'en', 'en-US')
+const isLocaleCode = (segment: string): boolean =>
+  /^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/.test(segment);
+
+const getPathSegments = (pathname: string): string[] => {
+  const segments: string[] = pathname.split('/').filter(Boolean);
+
+  if (segments.length > 0 && isLocaleCode(segments[0] ?? '')) {
+    segments.shift();
+  }
+
+  return segments;
+};
+
 export function Breadcrumbs({
   iconClassName,
   iconSize,
   separatorIcon,
 }: BreadcrumbsProps) {
   const pathname = usePathname();
-  const pathSegments = pathname.split('/').filter(Boolean);
+  const pathSegments = getPathSegments(pathname);
   const breadcrumbItems = createBreadcrumbItems(pathSegments);
   const SeparatorIcon = separatorIcon ? SEPARATOR_ICONS[separatorIcon] : null;
 
