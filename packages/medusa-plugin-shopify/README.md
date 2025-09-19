@@ -23,7 +23,7 @@ This plugin uses the public product feeds from Shopify.
      // ...
      plugins: [
        {
-         resolve: 'medusa-plugin-shopify',
+         resolve: '@mds/medusa-plugin-shopify',
          options: {
            baseUrl: process.env.SHOPIFY_BASE_URL,
          },
@@ -44,7 +44,7 @@ This plugin uses the public product feeds from Shopify.
    npx medusa db:migrate
    ```
 
-5. If you are in development mode (i.e. making changes in apps/medusa-plugin-shopify), follow the steps in [Development mode](#development-mode) section. Otherwise, you can now run the development server of your Medusa application (`apps/medusa`):
+5. If you are in development mode (i.e. making changes in packages/medusa-plugin-shopify), follow the steps in [Development mode](#development-mode) section. Otherwise, you can now run the development server of your Medusa application (`apps/medusa`):
 
    ```bash
    pnpm run dev
@@ -70,7 +70,7 @@ Your local development server runs at http://localhost:9000 by default. Refer to
 
 ### With Admin UI Extensions
 
-In a Medusa plugin with admin UI extensions (e.g. routes, widgets in src/admin) such as this plugin (apps/medusa-plugin-shopify), when in development mode (i.e. after running `npx medusa plugin:develop` and running local dev server in apps/medusa), the admin UI changes are not reflected in the local dev server sometimes. This is a [known issue](https://github.com/medusajs/medusa/issues/12556).
+In a Medusa plugin with admin UI extensions (e.g. routes, widgets in src/admin) such as this plugin (packages/medusa-plugin-shopify), when in development mode (i.e. after running `npx medusa plugin:develop` and running local dev server in apps/medusa), the admin UI changes are not reflected in the local dev server sometimes. This is a [known issue](https://github.com/medusajs/medusa/issues/12556).
 
 As a workaround, when running this plugin in development mode, do the ff steps, assuming you have already done the steps mentioned in [Get started](#get-started) section:
 
@@ -101,23 +101,22 @@ As a workaround, when running this plugin in development mode, do the ff steps, 
    ```
 
    Do the ff steps:
-   a. Stop the Medusa application (`apps/medusa`) and the Plugin development watch mode (`apps/medusa-plugin-shopify`)
-   b. In `apps/medusa`, remove the changes made to `"medusa-plugin-shopify"` in package.json.
-   c. In `apps/medusa`, remove `node_modules`, `.medusa`, `.yalc`, and `yalc.lock`:
+   a. Stop the Medusa application (`apps/medusa`) and the Plugin development watch mode (`packages/medusa-plugin-shopify`)
+   b. In `apps/medusa`, remove `node_modules`, `.medusa`, `.yalc`, and `yalc.lock`:
 
    ```bash
    rm -rf node_modules && rm -rf .medusa && rm -rf .yalc && rm -rf yalc.lock
    ```
 
-   d. In `apps/medusa-plugin-shopify`, remove `node_modules` and `.medusa`:
+   c. In `packages/medusa-plugin-shopify`, remove `node_modules` and `.medusa`:
 
    ```bash
    rm -rf node_modules && rm -rf .medusa
    ```
 
-   e. Re-do steps #1 to #3 in [Get started](#get-started) section. For step #1, run the command in the monorepo root.
-   f. Re-do steps #1 to #3 in [Development Mode > With Admin UI Extensions](#with-admin-ui-extensions) section.
-   g. At this point, any changes to admin UI extensions in the plugin will be reflected in Medusa application. However, if issue/error still persists, we would have to rely on rebuilding the plugin every time we make some changes by repeating the Steps a to f.
+   d. Re-do steps #1 to #3 in [Get started](#get-started) section. For step #1, run the command in the monorepo root.
+   e. Re-do steps #1 to #3 in [Development Mode > With Admin UI Extensions](#with-admin-ui-extensions) section.
+   f. At this point, any changes to admin UI extensions in the plugin will be reflected in Medusa application. However, if issue/error still persists, we would have to rely on rebuilding the plugin every time we make some changes by repeating the Steps a to f.
 
 ## How it Works
 
