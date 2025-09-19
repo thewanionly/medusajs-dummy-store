@@ -110,7 +110,7 @@ describe('Product Resolvers', () => {
         mockContext
       );
 
-      expect(mockProductService.getProduct).toHaveBeenCalledWith('prod_123');
+      expect(mockProductService.getProduct).toHaveBeenCalledWith('prod_123', {});
       expect(mockProductService.getProduct).toHaveBeenCalledTimes(1);
       expect(result).toEqual(mockProduct);
       expect(result?.id).toBe('prod_123');
@@ -187,7 +187,7 @@ describe('Product Resolvers', () => {
           productResolvers.Query.product({}, { id: scenario.id }, mockContext)
         ).rejects.toThrow(scenario.error);
 
-        expect(mockProductService.getProduct).toHaveBeenCalledWith(scenario.id);
+        expect(mockProductService.getProduct).toHaveBeenCalledWith(scenario.id, {});
         jest.clearAllMocks();
       }
     });
