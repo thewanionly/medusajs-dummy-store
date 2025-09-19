@@ -197,7 +197,7 @@ function RatingCount({
   switch (display) {
     case 'minimal':
       return (
-        <div aria-label={label}>
+        <div data-testid="rating-count-minimal" aria-label={label}>
           <StarMinimal
             iconClassName={iconClassName}
             textClassName={textClassName}
@@ -210,7 +210,7 @@ function RatingCount({
       );
     case 'detailed':
       return (
-        <div aria-label={label}>
+        <div data-testid="rating-count-detailed" aria-label={label}>
           <StarDetailed
             iconClassName={iconClassName}
             textClassName={textClassName}
@@ -224,7 +224,7 @@ function RatingCount({
       );
     default:
       return (
-        <div aria-label={label}>
+        <div data-testid="rating-count-default" aria-label={label}>
           <StarCompact
             iconClassName={iconClassName}
             textClassName={textClassName}

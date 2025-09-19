@@ -83,6 +83,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
             ref={ref}
             id={id}
+            data-testid={id}
             disabled={disabled || isLoading}
             placeholder=" " // Required for floating label behavior
             aria-invalid={hasError}
