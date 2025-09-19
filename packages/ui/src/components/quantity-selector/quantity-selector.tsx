@@ -90,6 +90,7 @@ function QuantitySelector({
   return (
     <div className={cn(quantitySelectorVariants({ variant, size }), className)}>
       <Button
+        data-testid="decrement-button"
         variant={buttonVariant ?? 'default'}
         type="button"
         className={cn(buttonVariants({ controlVariant }), buttonClassName)}
@@ -100,6 +101,7 @@ function QuantitySelector({
         <Minus />
       </Button>
       <Input
+        data-testid="quantity-input"
         className={cn(inputVariants({ inputVariant }), inputClassName)}
         type="text"
         inputMode="numeric"
@@ -108,6 +110,7 @@ function QuantitySelector({
         onBlur={() => updateValue(currentValue)}
       />
       <Button
+        data-testid="increment-button"
         variant={buttonVariant ?? 'default'}
         type="button"
         className={cn(buttonVariants({ controlVariant }), buttonClassName)}
