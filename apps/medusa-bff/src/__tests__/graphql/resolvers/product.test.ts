@@ -12,6 +12,10 @@ describe('Product Resolvers', () => {
     mockProductService = {
       getProducts: jest.fn(),
       getProduct: jest.fn(),
+      getProductCategories: jest.fn(),
+      getProductCategory: jest.fn(),
+      getCollections: jest.fn(),
+      getCollection: jest.fn(),
     } as unknown as jest.Mocked<ProductService>;
 
     mockContext = {
@@ -110,7 +114,7 @@ describe('Product Resolvers', () => {
         mockContext
       );
 
-      expect(mockProductService.getProduct).toHaveBeenCalledWith('prod_123');
+      expect(mockProductService.getProduct).toHaveBeenCalledWith('prod_123', {});
       expect(mockProductService.getProduct).toHaveBeenCalledTimes(1);
       expect(result).toEqual(mockProduct);
       expect(result?.id).toBe('prod_123');
@@ -187,9 +191,95 @@ describe('Product Resolvers', () => {
           productResolvers.Query.product({}, { id: scenario.id }, mockContext)
         ).rejects.toThrow(scenario.error);
 
-        expect(mockProductService.getProduct).toHaveBeenCalledWith(scenario.id);
+        expect(mockProductService.getProduct).toHaveBeenCalledWith(scenario.id, {});
         jest.clearAllMocks();
       }
+    });
+  });
+
+  describe('Query.productCategories', () => {
+    it('should handle successful category retrieval', async () => {
+      const mockCategories = [
+        { id: 'cat_1', name: 'Electronics', handle: 'electronics' },
+        { id: 'cat_2', name: 'Clothing', handle: 'clothing' },
+      ];
+      mockProductService.getProductCategories.mockResolvedValue(mockCategories as any);
+
+      const result = await productResolvers.Query.productCategories({}, {}, mockContext);
+      expect(mockProductService.getProductCategories).toHaveBeenCalledWith({});
+      expect(result).toEqual(mockCategories);
+    });
+
+    it('should handle errors', async () => {
+      const error = new Error('Category fetch failed');
+      mockProductService.getProductCategories.mockRejectedValue(error);
+
+      await expect(
+        productResolvers.Query.productCategories({}, {}, mockContext)
+      ).rejects.toThrow('Category fetch failed');
+    });
+  });
+
+  describe('Query.productCategory', () => {
+    it('should handle successful single category retrieval', async () => {
+      const mockCategory = { id: 'cat_1', name: 'Electronics', handle: 'electronics' };
+      mockProductService.getProductCategory.mockResolvedValue(mockCategory as any);
+
+      const result = await productResolvers.Query.productCategory({}, { id: 'cat_1' }, mockContext);
+      expect(mockProductService.getProductCategory).toHaveBeenCalledWith('cat_1', {});
+      expect(result).toEqual(mockCategory);
+    });
+
+    it('should handle errors', async () => {
+      const error = new Error('Category not found');
+      mockProductService.getProductCategory.mockRejectedValue(error);
+
+      await expect(
+        productResolvers.Query.productCategory({}, { id: 'invalid' }, mockContext)
+      ).rejects.toThrow('Category not found');
+    });
+  });
+
+  describe('Query.collections', () => {
+    it('should handle successful collection retrieval', async () => {
+      const mockCollections = [
+        { id: 'col_1', title: 'Summer Collection', handle: 'summer' },
+        { id: 'col_2', title: 'Winter Collection', handle: 'winter' },
+      ];
+      mockProductService.getCollections.mockResolvedValue(mockCollections as any);
+
+      const result = await productResolvers.Query.collections({}, {}, mockContext);
+      expect(mockProductService.getCollections).toHaveBeenCalledWith({});
+      expect(result).toEqual(mockCollections);
+    });
+
+    it('should handle errors', async () => {
+      const error = new Error('Collection fetch failed');
+      mockProductService.getCollections.mockRejectedValue(error);
+
+      await expect(
+        productResolvers.Query.collections({}, {}, mockContext)
+      ).rejects.toThrow('Collection fetch failed');
+    });
+  });
+
+  describe('Query.collection', () => {
+    it('should handle successful single collection retrieval', async () => {
+      const mockCollection = { id: 'col_1', title: 'Summer Collection', handle: 'summer' };
+      mockProductService.getCollection.mockResolvedValue(mockCollection as any);
+
+      const result = await productResolvers.Query.collection({}, { id: 'col_1' }, mockContext);
+      expect(mockProductService.getCollection).toHaveBeenCalledWith('col_1', {});
+      expect(result).toEqual(mockCollection);
+    });
+
+    it('should handle errors', async () => {
+      const error = new Error('Collection not found');
+      mockProductService.getCollection.mockRejectedValue(error);
+
+      await expect(
+        productResolvers.Query.collection({}, { id: 'invalid' }, mockContext)
+      ).rejects.toThrow('Collection not found');
     });
   });
 });
