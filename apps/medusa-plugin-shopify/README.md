@@ -60,7 +60,7 @@ When in development, republish the plugin every time new changes are saved:
 npx medusa plugin:develop
 ```
 
-Then in Medusa application, run the development server:
+Then in Medusa application (`apps/medusa`), run the development server:
 
 ```bash
 pnpm run dev
