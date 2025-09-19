@@ -28,7 +28,7 @@ importers:
     dependencies:
       '@mds/medusa-plugin-shopify':
         specifier: workspace:*
-        version: link:../medusa-plugin-shopify
+        version: link:../../packages/medusa-plugin-shopify
       '@medusajs/admin-sdk':
         specifier: 2.10.2
         version: 2.10.2
@@ -221,105 +221,6 @@ importers:
         specifier: ^5.6.2
         version: 5.8.3
 
-  apps/medusa-plugin-shopify:
-    devDependencies:
-      '@mds/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@mds/prettier-config':
-        specifier: workspace:*
-        version: link:../../packages/prettier-config
-      '@mds/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@medusajs/admin-sdk':
-        specifier: 2.10.2
-        version: 2.10.2
-      '@medusajs/cli':
-        specifier: 2.10.2
-        version: 2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))
-      '@medusajs/framework':
-        specifier: 2.10.2
-        version: 2.10.2(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))
-      '@medusajs/icons':
-        specifier: 2.10.2
-        version: 2.10.2(react@19.0.0-rc-66855b96-20241106)
-      '@medusajs/js-sdk':
-        specifier: 2.10.2
-        version: 2.10.2(awilix@8.0.1)(ioredis@5.7.0)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))
-      '@medusajs/medusa':
-        specifier: 2.10.2
-        version: 2.10.2(@babel/runtime@7.28.2)(@medusajs/admin-sdk@2.10.2)(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/framework@2.10.2(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/icons@2.10.2(react@19.0.0-rc-66855b96-20241106))(@medusajs/test-utils@2.10.2)(@medusajs/ui@4.0.22(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(awilix@8.0.1)(ioredis@5.7.0)(lightningcss@1.30.1)(pg@8.16.3)(picomatch@4.0.3)(posthog-node@4.18.0)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react-router-dom@6.20.1(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(terser@5.43.1)(ts-node@10.9.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(typescript@5.8.3))(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))(yalc@1.0.0-pre.53)
-      '@medusajs/test-utils':
-        specifier: 2.10.2
-        version: 2.10.2(@medusajs/framework@2.10.2(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/medusa@2.10.2)(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)
-      '@medusajs/ui':
-        specifier: 4.0.22
-        version: 4.0.22(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3)
-      '@mikro-orm/cli':
-        specifier: 6.4.3
-        version: 6.4.3(pg@8.16.3)
-      '@mikro-orm/core':
-        specifier: 6.4.3
-        version: 6.4.3
-      '@mikro-orm/knex':
-        specifier: 6.4.3
-        version: 6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3)
-      '@mikro-orm/migrations':
-        specifier: 6.4.3
-        version: 6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3)
-      '@mikro-orm/postgresql':
-        specifier: 6.4.3
-        version: 6.4.3(@mikro-orm/core@6.4.3)
-      '@swc/core':
-        specifier: 1.5.7
-        version: 1.5.7(@swc/helpers@0.5.15)
-      '@tanstack/react-query':
-        specifier: 5.64.2
-        version: 5.64.2(react@19.0.0-rc-66855b96-20241106)
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.9
-      '@types/react':
-        specifier: npm:types-react@19.0.0-rc.1
-        version: types-react@19.0.0-rc.1
-      '@types/react-dom':
-        specifier: npm:types-react-dom@19.0.0-rc.1
-        version: types-react-dom@19.0.0-rc.1
-      awilix:
-        specifier: ^8.0.1
-        version: 8.0.1
-      eslint:
-        specifier: ^9.31.0
-        version: 9.31.0(jiti@2.5.1)
-      pg:
-        specifier: ^8.13.0
-        version: 8.16.3
-      prop-types:
-        specifier: ^15.8.1
-        version: 15.8.1
-      react:
-        specifier: 19.0.0-rc-66855b96-20241106
-        version: 19.0.0-rc-66855b96-20241106
-      react-dom:
-        specifier: 19.0.0-rc-66855b96-20241106
-        version: 19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106)
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(typescript@5.8.3)
-      typescript:
-        specifier: ^5.6.2
-        version: 5.8.3
-      vite:
-        specifier: ^5.2.11
-        version: 5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)
-      yalc:
-        specifier: ^1.0.0-pre.53
-        version: 1.0.0-pre.53
-      zod:
-        specifier: 3.25.76
-        version: 3.25.76
-
   apps/medusa-storefront:
     dependencies:
       '@headlessui/react':
@@ -509,6 +410,105 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(typescript@5.8.3))
+
+  packages/medusa-plugin-shopify:
+    devDependencies:
+      '@mds/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@mds/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@mds/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@medusajs/admin-sdk':
+        specifier: 2.10.2
+        version: 2.10.2
+      '@medusajs/cli':
+        specifier: 2.10.2
+        version: 2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))
+      '@medusajs/framework':
+        specifier: 2.10.2
+        version: 2.10.2(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))
+      '@medusajs/icons':
+        specifier: 2.10.2
+        version: 2.10.2(react@19.0.0-rc-66855b96-20241106)
+      '@medusajs/js-sdk':
+        specifier: 2.10.2
+        version: 2.10.2(awilix@8.0.1)(ioredis@5.7.0)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))
+      '@medusajs/medusa':
+        specifier: 2.10.2
+        version: 2.10.2(@babel/runtime@7.28.2)(@medusajs/admin-sdk@2.10.2)(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/framework@2.10.2(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/icons@2.10.2(react@19.0.0-rc-66855b96-20241106))(@medusajs/test-utils@2.10.2)(@medusajs/ui@4.0.22(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(awilix@8.0.1)(ioredis@5.7.0)(lightningcss@1.30.1)(pg@8.16.3)(picomatch@4.0.3)(posthog-node@4.18.0)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react-router-dom@6.20.1(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(terser@5.43.1)(ts-node@10.9.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(typescript@5.8.3))(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1))(yalc@1.0.0-pre.53)
+      '@medusajs/test-utils':
+        specifier: 2.10.2
+        version: 2.10.2(@medusajs/framework@2.10.2(@medusajs/cli@2.10.2(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@mikro-orm/cli@6.4.3(pg@8.16.3))(@mikro-orm/core@6.4.3)(@mikro-orm/knex@6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3))(@mikro-orm/migrations@6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3))(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)(ioredis@5.7.0)(pg@8.16.3)(vite@5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)))(@medusajs/medusa@2.10.2)(@mikro-orm/postgresql@6.4.3(@mikro-orm/core@6.4.3))(awilix@8.0.1)
+      '@medusajs/ui':
+        specifier: 4.0.22
+        version: 4.0.22(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(typescript@5.8.3)
+      '@mikro-orm/cli':
+        specifier: 6.4.3
+        version: 6.4.3(pg@8.16.3)
+      '@mikro-orm/core':
+        specifier: 6.4.3
+        version: 6.4.3
+      '@mikro-orm/knex':
+        specifier: 6.4.3
+        version: 6.4.3(@mikro-orm/core@6.4.3)(pg@8.16.3)
+      '@mikro-orm/migrations':
+        specifier: 6.4.3
+        version: 6.4.3(@mikro-orm/core@6.4.3)(@types/node@20.19.9)(pg@8.16.3)
+      '@mikro-orm/postgresql':
+        specifier: 6.4.3
+        version: 6.4.3(@mikro-orm/core@6.4.3)
+      '@swc/core':
+        specifier: 1.5.7
+        version: 1.5.7(@swc/helpers@0.5.15)
+      '@tanstack/react-query':
+        specifier: 5.64.2
+        version: 5.64.2(react@19.0.0-rc-66855b96-20241106)
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.9
+      '@types/react':
+        specifier: npm:types-react@19.0.0-rc.1
+        version: types-react@19.0.0-rc.1
+      '@types/react-dom':
+        specifier: npm:types-react-dom@19.0.0-rc.1
+        version: types-react-dom@19.0.0-rc.1
+      awilix:
+        specifier: ^8.0.1
+        version: 8.0.1
+      eslint:
+        specifier: ^9.31.0
+        version: 9.31.0(jiti@2.5.1)
+      pg:
+        specifier: ^8.13.0
+        version: 8.16.3
+      prop-types:
+        specifier: ^15.8.1
+        version: 15.8.1
+      react:
+        specifier: 19.0.0-rc-66855b96-20241106
+        version: 19.0.0-rc-66855b96-20241106
+      react-dom:
+        specifier: 19.0.0-rc-66855b96-20241106
+        version: 19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.5.7(@swc/helpers@0.5.15))(@types/node@20.19.9)(typescript@5.8.3)
+      typescript:
+        specifier: ^5.6.2
+        version: 5.8.3
+      vite:
+        specifier: ^5.2.11
+        version: 5.4.19(@types/node@20.19.9)(lightningcss@1.30.1)(terser@5.43.1)
+      yalc:
+        specifier: ^1.0.0-pre.53
+        version: 1.0.0-pre.53
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
 
   packages/prettier-config:
     dependencies:
