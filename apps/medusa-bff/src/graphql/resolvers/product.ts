@@ -10,10 +10,14 @@ export const productResolvers = {
   Query: {
     products: async (
       _parent: unknown,
-      args: HttpTypes.StoreProductParams,
+      args: HttpTypes.StoreProductParams & {
+        filters: HttpTypes.StoreProductParams;
+      },
       context: GraphQLContext
     ) => {
-      return await context.productService.getProducts(args);
+      const { filters, ...rest } = args;
+      const medusaParams = { ...(rest || {}), ...(filters || {}) };
+      return await context.productService.getProducts(medusaParams);
     },
     product: async (
       _parent: unknown,

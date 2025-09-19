@@ -38,6 +38,7 @@ input ProductFilters {
   collection_id: String
   q: String
   handle: String
+  id: [ID!]
 }
 
 type Product {
