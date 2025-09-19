@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
-    "@medusajs/js-sdk": "2.10.2",
-    "@medusajs/types": "2.10.2",
+    "@medusajs/js-sdk": "2.10.3",
+    "@medusajs/types": "2.10.3",
     "apollo-server-express": "^3.12.1",
     "axios": "^1.6.0",
     "cors": "^2.8.5",
