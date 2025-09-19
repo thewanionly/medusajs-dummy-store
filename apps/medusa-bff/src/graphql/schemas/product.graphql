@@ -5,9 +5,9 @@ type Query {
   products(
     limit: Int
     offset: Int
-    filters: ProductFilters
     region_id: String
     handle: String
+    filters: ProductFilters
   ): ProductListResponse!
   product(id: ID!, region_id: String): Product
   productCategories(
@@ -38,6 +38,7 @@ input ProductFilters {
   collection_id: String
   q: String
   handle: String
+  id: [ID!]
 }
 
 type Product {

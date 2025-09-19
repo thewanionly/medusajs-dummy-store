@@ -47,6 +47,14 @@ export const listProducts = async ({
       nextPage: null,
     };
   }
+  const variables: GetProductsQueryVariables = {
+    region_id: region.id,
+    limit: queryParams?.limit,
+    offset: queryParams?.offset,
+    handle: queryParams?.handle,
+    filters: { id: queryParams?.id },
+  };
+
   console.log('queryParams', queryParams);
   try {
     const data = await graphqlFetch<
@@ -54,10 +62,7 @@ export const listProducts = async ({
       GetProductsQueryVariables
     >({
       query: GET_PRODUCTS_QUERY,
-      variables: {
-        ...queryParams,
-        region_id: region.id,
-      },
+      variables,
     });
 
     return {
