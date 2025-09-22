@@ -30,10 +30,10 @@ export const getCartLoyaltyPromoAmountStep = createStep(
       );
     }
 
-    const pointsAmount =
-      await loyaltyModuleService.calculatePointsFromAmount(loyaltyPoints);
+    const promoDiscountAmount =
+      await loyaltyModuleService.calculateAmountFromPoints(loyaltyPoints);
 
-    const amount = Math.min(pointsAmount, cart.total);
+    const amount = Math.min(promoDiscountAmount, cart.total);
 
     return new StepResponse(amount);
   }

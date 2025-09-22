@@ -72,17 +72,61 @@ class LoyaltyModuleService extends MedusaService({
     return points[0]?.points || 0;
   }
 
+  /**
+   * Calculates the loyalty points earned from a purchase amount.
+   *
+   * @param amount - Purchase amount
+   * @returns
+   */
   async calculatePointsFromAmount(amount: number): Promise<number> {
-    // Convert amount to points using the given conversion rate
-    // Round down to nearest whole point
-    const points = Math.floor(Math.floor(amount) / this.options.conversionRate);
-
-    if (points < 0) {
+    if (amount < 0) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
         'Amount cannot be negative'
       );
     }
+
+    // By default, purchasing 10 units of currency grants 1 point
+    const points = Math.floor(amount / this.options.conversionRate);
+
+    return points;
+  }
+
+  /**
+   * Calculates the amount to be discounted from redeeming loyalty points.
+   *
+   * @param points - Loyalty points to redeem
+   * @returns
+   */
+  async calculateAmountFromPoints(points: number): Promise<number> {
+    if (points < 0) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Points cannot be negative'
+      );
+    }
+
+    // By default, redeeming 1 point grants 1 unit of currency
+    const amount = points;
+
+    return amount;
+  }
+
+  /**
+   * Calculates the loyalty points required to redeem a promo discount
+   *
+   * @param discountAmount - The promo discount value
+   */
+  async calculatePointsRequired(discountAmount: number): Promise<number> {
+    if (discountAmount < 0) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Discount cannot be negative'
+      );
+    }
+
+    // By default, 1 unit of currency requires redeeming 1 point
+    const points = discountAmount;
 
     return points;
   }

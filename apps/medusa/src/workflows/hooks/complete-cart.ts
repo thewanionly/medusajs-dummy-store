@@ -43,7 +43,8 @@ completeCartWorkflow.hooks.validate(async ({ cart }, { container }) => {
   const customerLoyaltyPoints = await loyaltyModuleService.getPoints(
     carts[0].customer!.id
   );
-  const requiredPoints = await loyaltyModuleService.calculatePointsFromAmount(
+
+  const requiredPoints = await loyaltyModuleService.calculatePointsRequired(
     loyaltyPromo.application_method!.value as number
   );
 
