@@ -32,6 +32,9 @@ module.exports = defineConfig({
     },
     {
       resolve: './src/modules/loyalty',
+      options: {
+        conversionRate: process.env.LOYALTY_CONVERSION_RATE,
+      },
     },
   ],
   plugins: [

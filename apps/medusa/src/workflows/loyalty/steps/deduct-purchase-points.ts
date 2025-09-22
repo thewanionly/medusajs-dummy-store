@@ -15,7 +15,7 @@ export const deductPurchasePointsStep = createStep(
       container.resolve(LOYALTY_MODULE);
 
     const pointsToDeduct =
-      await loyaltyModuleService.calculatePointsFromAmount(amount);
+      await loyaltyModuleService.calculatePointsRequired(amount);
 
     const result = await loyaltyModuleService.deductPoints(
       customer_id,
