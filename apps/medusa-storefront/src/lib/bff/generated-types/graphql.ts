@@ -38,9 +38,16 @@ export type Collection = {
   handle: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   metadata?: Maybe<Scalars['JSON']['output']>;
-  products?: Maybe<Array<Maybe<Product>>>;
+  products: Array<Product>;
   title: Scalars['String']['output'];
   updated_at: Scalars['DateTime']['output'];
+};
+
+
+export type Collection_ProductsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  q?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Money = {
@@ -98,7 +105,7 @@ export type ProductCategory = {
 
 export type ProductFilters = {
   category_id?: InputMaybe<Scalars['String']['input']>;
-  collection_id?: InputMaybe<Scalars['String']['input']>;
+  collection_id?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   handle?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Array<Scalars['ID']['input']>>;
   q?: InputMaybe<Scalars['String']['input']>;
@@ -345,10 +352,10 @@ export type GetCollectionsQueryVariables = Exact<{
 
 
 export type GetCollectionsQuery = { __typename?: 'Query', collections: Array<(
-    { __typename?: 'Collection', products?: Array<(
+    { __typename?: 'Collection', products: Array<(
       { __typename?: 'Product', thumbnail?: string | null, variants: Array<{ __typename?: 'ProductVariant', id: string, calculated_price?: { __typename?: 'CalculatedPrice', calculated_amount: number, calculated_price: { __typename?: 'Money', amount?: number | null, currency_code?: string | null } } | null }> }
       & ProductCoreFragment
-    ) | null> | null }
+    )> }
     & ProductCollectionFragment
   )> };
 
@@ -359,10 +366,10 @@ export type GetCollectionQueryVariables = Exact<{
 
 
 export type GetCollectionQuery = { __typename?: 'Query', collection?: (
-    { __typename?: 'Collection', products?: Array<(
+    { __typename?: 'Collection', products: Array<(
       { __typename?: 'Product', description?: string | null, thumbnail?: string | null, images: Array<{ __typename?: 'ProductImage', id: string, url: string }>, variants: Array<{ __typename?: 'ProductVariant', id: string, title: string, inventory_quantity?: number | null, calculated_price?: { __typename?: 'CalculatedPrice', calculated_amount: number, calculated_price: { __typename?: 'Money', amount?: number | null, currency_code?: string | null } } | null }>, tags: Array<{ __typename?: 'ProductTag', id: string, value: string }> }
       & ProductCoreFragment
-    ) | null> | null }
+    )> }
     & ProductCollectionFragment
   ) | null };
 

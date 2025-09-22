@@ -87,14 +87,23 @@ describe('ProductService', () => {
 
     it('should throw GraphQL errors for different scenarios', async () => {
       const errorScenarios = [
-        { error: new Error('Network timeout'), expectedError: 'ServiceUnavailableError' },
-        { error: new Error('Internal server error'), expectedError: 'MedusaServiceError' },
-        { error: new Error('Rate limit exceeded'), expectedError: 'MedusaServiceError' },
+        {
+          error: new Error('Network timeout'),
+          expectedError: 'ServiceUnavailableError',
+        },
+        {
+          error: new Error('Internal server error'),
+          expectedError: 'MedusaServiceError',
+        },
+        {
+          error: new Error('Rate limit exceeded'),
+          expectedError: 'MedusaServiceError',
+        },
       ];
 
       for (const scenario of errorScenarios) {
         mockMedusaApi.store.product.list.mockRejectedValue(scenario.error);
-        
+
         await expect(productService.getProducts()).rejects.toThrow();
       }
     });
@@ -184,8 +193,10 @@ describe('ProductService', () => {
 
       for (const scenario of errorScenarios) {
         mockMedusaApi.store.product.retrieve.mockRejectedValue(scenario.error);
-        
-        await expect(productService.getProduct(scenario.id, {})).rejects.toThrow();
+
+        await expect(
+          productService.getProduct(scenario.id, {})
+        ).rejects.toThrow();
         jest.clearAllMocks();
       }
 
@@ -205,7 +216,7 @@ describe('ProductService', () => {
         { id: 'cat_1', name: 'Electronics', handle: 'electronics' },
         { id: 'cat_2', name: 'Clothing', handle: 'clothing' },
       ];
-      
+
       mockMedusaApi.store.category.list.mockResolvedValue({
         product_categories: mockCategories,
       });
@@ -225,95 +236,49 @@ describe('ProductService', () => {
     });
 
     it('should throw error on failure', async () => {
-      mockMedusaApi.store.category.list.mockRejectedValue(new Error('Category fetch failed'));
-      
+      mockMedusaApi.store.category.list.mockRejectedValue(
+        new Error('Category fetch failed')
+      );
+
       await expect(productService.getProductCategories()).rejects.toThrow();
     });
   });
 
   describe('getProductCategory', () => {
     it('should handle successful single category retrieval', async () => {
-      const mockCategory = { id: 'cat_1', name: 'Electronics', handle: 'electronics' };
-      
+      const mockCategory = {
+        id: 'cat_1',
+        name: 'Electronics',
+        handle: 'electronics',
+      };
+
       mockMedusaApi.store.category.retrieve.mockResolvedValue({
         product_category: mockCategory,
       });
 
       const result = await productService.getProductCategory('cat_1');
       expect(result).toEqual(mockCategory);
-      expect(mockMedusaApi.store.category.retrieve).toHaveBeenCalledWith('cat_1', undefined);
+      expect(mockMedusaApi.store.category.retrieve).toHaveBeenCalledWith(
+        'cat_1',
+        undefined
+      );
     });
 
     it('should return null when category not found', async () => {
       mockMedusaApi.store.category.retrieve.mockResolvedValue({});
-      
+
       const result = await productService.getProductCategory('nonexistent');
       expect(result).toBeNull();
     });
 
     it('should throw error on failure', async () => {
-      mockMedusaApi.store.category.retrieve.mockRejectedValue(new Error('Category not found'));
-      
-      await expect(productService.getProductCategory('invalid')).rejects.toThrow();
-    });
-  });
+      mockMedusaApi.store.category.retrieve.mockRejectedValue(
+        new Error('Category not found')
+      );
 
-  describe('getCollections', () => {
-    it('should handle successful collection retrieval', async () => {
-      const mockCollections = [
-        { id: 'col_1', title: 'Summer Collection', handle: 'summer' },
-        { id: 'col_2', title: 'Winter Collection', handle: 'winter' },
-      ];
-      
-      mockMedusaApi.store.collection.list.mockResolvedValue({
-        collections: mockCollections,
-      });
-
-      const result = await productService.getCollections();
-      expect(result).toEqual(mockCollections);
-      expect(mockMedusaApi.store.collection.list).toHaveBeenCalledWith(undefined);
-    });
-
-    it('should handle empty collection response', async () => {
-      mockMedusaApi.store.collection.list.mockResolvedValue({
-        collections: [],
-      });
-
-      const result = await productService.getCollections();
-      expect(result).toEqual([]);
-    });
-
-    it('should throw error on failure', async () => {
-      mockMedusaApi.store.collection.list.mockRejectedValue(new Error('Collection fetch failed'));
-      
-      await expect(productService.getCollections()).rejects.toThrow();
-    });
-  });
-
-  describe('getCollection', () => {
-    it('should handle successful single collection retrieval', async () => {
-      const mockCollection = { id: 'col_1', title: 'Summer Collection', handle: 'summer' };
-      
-      mockMedusaApi.store.collection.retrieve.mockResolvedValue({
-        collection: mockCollection,
-      });
-
-      const result = await productService.getCollection('col_1');
-      expect(result).toEqual(mockCollection);
-      expect(mockMedusaApi.store.collection.retrieve).toHaveBeenCalledWith('col_1', undefined);
-    });
-
-    it('should return null when collection not found', async () => {
-      mockMedusaApi.store.collection.retrieve.mockResolvedValue({});
-      
-      const result = await productService.getCollection('nonexistent');
-      expect(result).toBeNull();
-    });
-
-    it('should throw error on failure', async () => {
-      mockMedusaApi.store.collection.retrieve.mockRejectedValue(new Error('Collection not found'));
-      
-      await expect(productService.getCollection('invalid')).rejects.toThrow();
+      await expect(
+        productService.getProductCategory('invalid')
+      ).rejects.toThrow();
     });
   });
 

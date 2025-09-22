@@ -1,6 +1,6 @@
 import { GraphQLJSON } from 'graphql-scalars';
 
-import { productResolvers } from '@graphql/resolvers/product';
+import { productResolvers } from './product';
 
 export const resolvers = {
   JSON: GraphQLJSON,

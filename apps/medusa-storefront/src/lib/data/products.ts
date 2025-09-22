@@ -5,6 +5,7 @@ import { graphqlFetch } from '@lib/bff/apollo-client';
 import {
   GetProductsQuery,
   GetProductsQueryVariables,
+  ProductFilters,
 } from '@lib/bff/generated-types/graphql';
 import { sortProducts } from '@lib/util/sort-products';
 import { HttpTypes } from '@medusajs/types';
@@ -18,7 +19,9 @@ export const listProducts = async ({
   queryParams,
 }: {
   pageParam?: number;
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
+  queryParams?: HttpTypes.FindParams &
+    HttpTypes.StoreProductParams &
+    ProductFilters;
   countryCode?: string;
   regionId?: string;
 }): Promise<{
@@ -47,15 +50,20 @@ export const listProducts = async ({
       nextPage: null,
     };
   }
+  const { id, collection_id, handle, limit, offset } = queryParams || {};
+
   const variables: GetProductsQueryVariables = {
     region_id: region.id,
-    limit: queryParams?.limit,
-    offset: queryParams?.offset,
-    handle: queryParams?.handle,
-    filters: { id: queryParams?.id },
+    limit,
+    offset,
+    handle,
+    filters: {
+      ...(id && { id }),
+      ...(handle && { handle }),
+      ...(collection_id && { collection_id }),
+    },
   };
 
-  console.log('queryParams', queryParams);
   try {
     const data = await graphqlFetch<
       GetProductsQuery,

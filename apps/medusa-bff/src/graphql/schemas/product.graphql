@@ -5,9 +5,9 @@ type Query {
   products(
     limit: Int
     offset: Int
+    filters: ProductFilters
     region_id: String
     handle: String
-    filters: ProductFilters
   ): ProductListResponse!
   product(id: ID!, region_id: String): Product
   productCategories(
@@ -33,9 +33,8 @@ type ProductListResponse {
 }
 
 input ProductFilters {
-  # Add your product filter types here based on your BFF implementation
   category_id: String
-  collection_id: String
+  collection_id: [String]
   q: String
   handle: String
   id: [ID!]
@@ -168,5 +167,5 @@ type Collection {
   metadata: JSON
   created_at: DateTime!
   updated_at: DateTime!
-  products: [Product]
+  products(limit: Int, offset: Int, q: String): [Product!]!
 }

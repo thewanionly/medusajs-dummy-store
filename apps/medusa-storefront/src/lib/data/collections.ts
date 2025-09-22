@@ -33,7 +33,10 @@ export const listCollections = async (
     const data = await graphqlFetch<
       GetCollectionsQuery,
       GetCollectionsQueryVariables
-    >({ query: GET_COLLECTIONS_QUERY, variables: { limit, offset } });
+    >({
+      query: GET_COLLECTIONS_QUERY,
+      variables: { limit, offset },
+    });
 
     return {
       collections: data?.collections,
@@ -48,14 +51,15 @@ export const listCollections = async (
 export const getCollectionByHandle = async (handle: string) => {
   try {
     const data = await graphqlFetch<
-      GetCollectionQuery,
-      GetCollectionQueryVariables
+      GetCollectionsQuery,
+      GetCollectionsQueryVariables
     >({
-      query: GET_COLLECTION_QUERY,
-      variables: { handle },
+      query: GET_COLLECTIONS_QUERY,
+      variables: { handle: [handle] },
     });
 
-    return data?.collection || null;
+    const collections = data?.collections || [];
+    return collections.length > 0 ? collections[0] : null;
   } catch (error) {
     console.error('Error fetching collection by handle from BFF:', error);
     return null;

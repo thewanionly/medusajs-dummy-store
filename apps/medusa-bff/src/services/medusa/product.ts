@@ -51,27 +51,4 @@ export class ProductService extends MedusaBaseService {
       handleMedusaError(error, 'fetch product category', ['productCategory']);
     }
   }
-
-  async getCollections(
-    params?: HttpTypes.StoreCollectionFilters
-  ): Promise<HttpTypes.StoreCollection[] | []> {
-    try {
-      const response = await this.medusa.store.collection.list(params);
-      return response?.collections || [];
-    } catch (error: unknown) {
-      handleMedusaError(error, 'fetch collections', ['collections']);
-    }
-  }
-
-  async getCollection(
-    id: string,
-    params?: HttpTypes.StoreCollectionFilters
-  ): Promise<HttpTypes.StoreCollection | null> {
-    try {
-      const response = await this.medusa.store.collection.retrieve(id, params);
-      return response.collection || null;
-    } catch (error: unknown) {
-      handleMedusaError(error, 'fetch collection', ['collection']);
-    }
-  }
 }

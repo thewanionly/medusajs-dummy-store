@@ -5,11 +5,11 @@ import { handleMedusaError } from '../../lib/error-utils';
 
 export class CollectionService extends MedusaBaseService {
   async getCollections(
-    params: HttpTypes.StoreCollectionFilters
+    params?: HttpTypes.StoreCollectionFilters
   ): Promise<HttpTypes.StoreCollection[]> {
     try {
       const response = await this.medusa.store.collection.list(params);
-      return response.collections || [];
+      return response?.collections;
     } catch (error: unknown) {
       handleMedusaError(error, 'fetch collections', ['collections']);
     }
@@ -17,11 +17,11 @@ export class CollectionService extends MedusaBaseService {
 
   async getCollection(
     id: string,
-    params?: HttpTypes.StoreCollectionFilters
+    params: HttpTypes.StoreCollectionFilters
   ): Promise<HttpTypes.StoreCollection | null> {
     try {
       const response = await this.medusa.store.collection.retrieve(id, params);
-      return response.collection ?? null;
+      return response.collection || null;
     } catch (error: unknown) {
       handleMedusaError(error, 'fetch collection', ['collection']);
     }

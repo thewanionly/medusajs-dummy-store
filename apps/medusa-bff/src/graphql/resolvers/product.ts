@@ -11,7 +11,7 @@ export const productResolvers = {
     products: async (
       _parent: unknown,
       args: HttpTypes.StoreProductParams & {
-        filters: HttpTypes.StoreProductParams;
+        filters?: HttpTypes.StoreProductParams;
       },
       context: GraphQLContext
     ) => {
@@ -47,7 +47,7 @@ export const productResolvers = {
       args: HttpTypes.StoreCollectionFilters,
       context: GraphQLContext
     ) => {
-      return await context.productService.getCollections(args);
+      return await context.collectionService.getCollections(args);
     },
     collection: async (
       _parent: unknown,
@@ -55,7 +55,21 @@ export const productResolvers = {
       id: string,
       context: GraphQLContext
     ) => {
-      return await context.productService.getCollection(id, params);
+      return await context.collectionService.getCollection(id, params);
+    },
+  },
+  Collection: {
+    products: async (
+      parent: HttpTypes.StoreCollection,
+      args: HttpTypes.StoreProductListParams,
+      context: GraphQLContext
+    ) => {
+      return await context.productService
+        .getProducts({
+          ...args,
+          collection_id: [parent.id],
+        })
+        .then((res) => res.products);
     },
   },
 };
