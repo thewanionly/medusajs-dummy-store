@@ -186,7 +186,7 @@ export function ProductCard({
 
             {/* Rating */}
             {rating !== undefined && (
-              <div className="flex items-center gap-2">
+              <div data-testid="product-card-rating" className="flex items-center gap-2">
                 <RatingCount
                   average={rating.average}
                   ratingCount={rating.count}
