@@ -1,3 +1,5 @@
+import { setupServer } from 'msw/node';
+
 import {
   createMockProduct,
   createMockProducts,
@@ -5,10 +7,13 @@ import {
 } from '@mocks/products';
 import { ProductService } from '@services/medusa/product';
 
-jest.mock('@medusajs/js-sdk', () => ({
-  __esModule: true,
-  default: jest.fn().mockImplementation(() => mockMedusaApi),
-}));
+import { handlers } from '../../../__mocks__/handlers';
+
+export const server = setupServer(...handlers);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 describe('ProductService', () => {
   let productService: ProductService;
@@ -40,16 +45,11 @@ describe('ProductService', () => {
   });
 
   describe('getProducts', () => {
-    it('should handle all successful and empty response scenarios', async () => {
+    fit('should handle all successful and empty response scenarios', async () => {
       const mockProducts = createMockProducts(5);
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: mockProducts,
-        count: 5,
-        limit: 20,
-        offset: 0,
-      });
 
       let result = await productService.getProducts();
+
       expect(result.products).toEqual(mockProducts);
       expect(result.products).toHaveLength(5);
       expect(result.count).toBe(5);
