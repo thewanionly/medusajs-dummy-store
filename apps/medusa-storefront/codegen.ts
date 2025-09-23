@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: './src/lib/bff/schema.graphql',
+  schema: '../medusa-bff/src/graphql/schemas/*.graphql',
   documents: ['src/lib/bff/**/*.{ts,tsx}'],
   generates: {
     './src/lib/bff/generated-types/graphql.ts': {
@@ -23,4 +23,3 @@ const config: CodegenConfig = {
 };
 
 export default config;
-
