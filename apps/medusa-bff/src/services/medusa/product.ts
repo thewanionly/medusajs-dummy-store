@@ -8,7 +8,10 @@ export class ProductService extends MedusaBaseService {
     params?: HttpTypes.StoreProductListParams
   ): Promise<HttpTypes.StoreProductListResponse> {
     try {
-      const response = await this.medusa.store.product.list(params);
+      const response = await this.medusa.store.product.list({
+        ...params,
+        fields: '+variants.inventory_quantity',
+      });
       return response;
     } catch (error: unknown) {
       handleMedusaError(error, 'fetch products', ['products']);
@@ -20,7 +23,10 @@ export class ProductService extends MedusaBaseService {
     params?: HttpTypes.StoreProductParams
   ): Promise<HttpTypes.StoreProduct | null> {
     try {
-      const response = await this.medusa.store.product.retrieve(id, params);
+      const response = await this.medusa.store.product.retrieve(id, {
+        ...params,
+        fields: '+variants.inventory_quantity',
+      });
       return response?.product || null;
     } catch (error: unknown) {
       handleMedusaError(error, 'fetch product', ['product']);

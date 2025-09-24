@@ -1,3 +1,4 @@
+import { CartService } from './medusa/cart';
 import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
@@ -10,5 +11,6 @@ export const createServices = () => {
     productService: new ProductService(baseUrl, publishableKey),
     categoryService: new CategoryService(baseUrl, publishableKey),
     collectionService: new CollectionService(baseUrl, publishableKey),
+    cartService: new CartService(baseUrl, publishableKey),
   };
 };
