@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@mds/eslint-config": "workspace:*",
+    "@mds/jest-config": "workspace:*",
     "@mds/prettier-config": "workspace:*",
     "@mds/typescript-config": "workspace:*",
     "@types/cors": "^2.8.17",

@@ -187,6 +187,9 @@ importers:
       '@mds/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@mds/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
       '@mds/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config
