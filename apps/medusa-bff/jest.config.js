@@ -57,6 +57,7 @@ export default {
     '^@graphql/(.*)$': '<rootDir>/src/graphql/$1',
     '^@mocks/(.*)$': '<rootDir>/src/__mocks__/$1',
   },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testTimeout: 10000,
   verbose: true,
   collectCoverage: false,

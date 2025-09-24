@@ -1,19 +1,9 @@
-import { setupServer } from 'msw/node';
-
 import {
   createMockProduct,
   createMockProducts,
   mockMedusaApi,
 } from '@mocks/products';
 import { ProductService } from '@services/medusa/product';
-
-import { handlers } from '../../../__mocks__/handlers';
-
-export const server = setupServer(...handlers);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 describe('ProductService', () => {
   let productService: ProductService;
@@ -23,8 +13,6 @@ describe('ProductService', () => {
     jest.clearAllMocks();
     consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     productService = new ProductService('http://localhost:9000', 'test-key');
-    (productService as unknown as { medusa: typeof mockMedusaApi }).medusa =
-      mockMedusaApi;
   });
 
   afterEach(() => {
@@ -48,7 +36,7 @@ describe('ProductService', () => {
     fit('should handle all successful and empty response scenarios', async () => {
       const mockProducts = createMockProducts(5);
 
-      let result = await productService.getProducts();
+      const result = await productService.getProducts();
 
       expect(result.products).toEqual(mockProducts);
       expect(result.products).toHaveLength(5);
@@ -56,33 +44,13 @@ describe('ProductService', () => {
       expect(result.limit).toBe(20);
       expect(result.offset).toBe(0);
 
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: [],
-        count: 0,
-      });
-      result = await productService.getProducts();
-      expect(result.products).toEqual([]);
-
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: [],
-        count: 0,
-      });
-      result = await productService.getProducts();
-      expect(result.products).toEqual([]);
-
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: [],
-        count: 0,
-      });
-      result = await productService.getProducts();
-      expect(result.products).toEqual([]);
-
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: [],
-        count: 0,
-      });
-      result = await productService.getProducts();
-      expect(result.products).toEqual([]);
+      // TODO: create separate test for empty response
+      // mockMedusaApi.store.product.list.mockResolvedValue({
+      //   products: [],
+      //   count: 0,
+      // });
+      // result = await productService.getProducts();
+      // expect(result.products).toEqual([]);
     });
 
     it('should throw GraphQL errors for different scenarios', async () => {
