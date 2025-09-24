@@ -6,8 +6,32 @@ export default {
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          isolatedModules: true,
+          module: 'commonjs',
+          target: 'ES2020',
+        },
+      },
+    ],
+    '^.+\\.[mc]?jsx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          isolatedModules: true,
+          module: 'commonjs',
+          target: 'ES2020',
+        },
+      },
+    ],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!.*(msw|@mswjs/interceptors|headers-polyfill|until-async))',
+  ],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
