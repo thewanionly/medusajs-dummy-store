@@ -1,6 +1,8 @@
-module.exports = {
+import { nodeJestConfig } from '@mds/jest-config/base';
+
+export default {
+  ...nodeJestConfig,
   preset: 'ts-jest',
-  testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
