@@ -43,7 +43,7 @@
      pnpm run seed
      ```
 
-3. Publish and add `medusa-plugin-shopify` in this application. Follow `apps/medusa-plugin-shopify` README's [Get Started](../medusa-plugin-shopify/README.md#get-started) section.
+3. Publish `@mds/medusa-plugin-shopify` plugin locally. Follow `packages/medusa-plugin-shopify` README's [Get Started](../../packages/medusa-plugin-shopify/README.md#get-started) section.
 
 4. Start the development server:
 
@@ -67,7 +67,7 @@
 
 By running `pnpm run seed` above, we only populated few dummy product data. To populate more products data in our database, we can use `medusa-plugin-shopify`. This plugin handles migration of Shopify product data feed from specific source, transforms it to conform with Medusa's product data model, and adds the products to our database.
 
-To use this plugin in this application, please refer to [medusa-plugin-shopify's README](../medusa-plugin-shopify/README.md)
+To use this plugin in this application, please refer to [medusa-plugin-shopify's README](../../packages/medusa-plugin-shopify/README.md)
 
 ## Seeding Stock and Inventory After Migration
 
