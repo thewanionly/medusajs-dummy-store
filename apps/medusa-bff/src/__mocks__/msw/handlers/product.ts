@@ -1,6 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
-import { createMockProducts } from '../products';
+import { createMockProducts } from '@mocks/products';
 
 export const handlers = [
   http.get('http://localhost:9000/store/products', () => {
