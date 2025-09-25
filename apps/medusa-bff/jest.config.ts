@@ -1,6 +1,8 @@
+import type { Config } from 'jest';
+
 import { nodeJestConfig } from '@mds/jest-config/base';
 
-export default {
+const config: Config = {
   ...nodeJestConfig,
   preset: 'ts-jest',
   roots: ['<rootDir>/src'],
@@ -62,3 +64,5 @@ export default {
   verbose: true,
   collectCoverage: false,
 };
+
+export default config;
