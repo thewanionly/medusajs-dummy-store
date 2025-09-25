@@ -11,6 +11,7 @@ export interface CreateCartInput {
   items?: CreateLineItemInput[];
   promo_codes?: string[];
 }
+
 export interface UpdateCartInput {
   shipping_address?: AddressInput;
   billing_address?: AddressInput;

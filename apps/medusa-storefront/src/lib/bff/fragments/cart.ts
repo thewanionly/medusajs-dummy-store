@@ -1,12 +1,21 @@
 import { gql } from '@apollo/client';
 
+import { PRODUCT_VARIANT_FRAGMENT } from './product';
+
 export const LINE_ITEM_FRAGMENT = gql`
   fragment CartItemFields on LineItem {
     id
     title
     quantity
     unit_price
+    created_at
+    thumbnail
+    product_handle
+    variant {
+      ...ProductVariant
+    }
   }
+  ${PRODUCT_VARIANT_FRAGMENT}
 `;
 
 export const ADDRESS_FRAGMENT = gql`
@@ -35,8 +44,14 @@ export const CART_FRAGMENT = gql`
     region_id
     email
     total
+    subtotal
+    original_total
+    currency_code
     items {
       ...CartItemFields
+      variant {
+        ...ProductVariant
+      }
     }
     shipping_address {
       ...AddressFields
@@ -47,4 +62,5 @@ export const CART_FRAGMENT = gql`
   }
   ${LINE_ITEM_FRAGMENT}
   ${ADDRESS_FRAGMENT}
+  ${PRODUCT_VARIANT_FRAGMENT}
 `;

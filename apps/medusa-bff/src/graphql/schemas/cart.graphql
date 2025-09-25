@@ -1,8 +1,19 @@
+scalar DateTime
+
 type LineItem {
   id: ID!
   title: String
   quantity: Int!
+  requires_shipping: Boolean
+  is_discountable: Boolean
+  is_tax_inclusive: Boolean
   unit_price: Int
+  cart: Cart
+  cart_id: String
+  created_at: DateTime
+  product_handle: String
+  thumbnail: String
+  variant: ProductVariant
 }
 
 type Address {
@@ -15,13 +26,38 @@ type Address {
   postal_code: String
 }
 
+type Promotion {
+  id: String
+}
+
 type Cart {
   id: ID!
+  currency_code: String!
+  original_item_total: Int
+  original_item_subtotal: Int
+  original_item_tax_total: Int
+  item_total: Int
+  item_subtotal: Int
+  item_tax_total: Int
+  original_total: Int
+  original_subtotal: Int
+  original_tax_total: Int
+  total: Int
+  subtotal: Int
+  tax_total: Int
+  discount_total: Int
+  discount_tax_total: Int
+  gift_card_total: Int
+  gift_card_tax_total: Int
+  shipping_total: Int
+  shipping_tax_total: Int
+  original_shipping_total: Int
+  original_shipping_subtotal: Int
+  original_shipping_tax_total: Int
+  promotions: [Promotion]
   email: String
   items: [LineItem!]
-  total: Int
   region_id: String
-  currency_code: String
   shipping_address: Address
   billing_address: Address
   created_at: String

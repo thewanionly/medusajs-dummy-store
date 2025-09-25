@@ -10,8 +10,8 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
+import { GetCartQuery } from '@lib/bff/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { Button } from '@medusajs/ui';
 import DeleteButton from '@modules/common/components/delete-button';
 import LineItemOptions from '@modules/common/components/line-item-options';
@@ -22,7 +22,7 @@ import Thumbnail from '@modules/products/components/thumbnail';
 const CartDropdown = ({
   cart: cartState,
 }: {
-  cart?: HttpTypes.StoreCart | null;
+  cart?: GetCartQuery['getCart'] | null;
 }) => {
   const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
     undefined
@@ -128,7 +128,7 @@ const CartDropdown = ({
                         >
                           <Thumbnail
                             thumbnail={item.thumbnail}
-                            images={item.variant?.product?.images}
+                            images={item.product?.images}
                             size="square"
                           />
                         </LocalizedClientLink>
@@ -147,7 +147,7 @@ const CartDropdown = ({
                                 <LineItemOptions
                                   variant={item.variant}
                                   data-testid="cart-item-variant"
-                                  data-value={item.variant}
+                                  data-value={JSON.stringify(item.variant)}
                                 />
                                 <span
                                   data-testid="cart-item-quantity"

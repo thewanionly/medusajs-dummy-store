@@ -36,6 +36,7 @@ import {
   getCacheTag,
   getCartId,
   removeCartId,
+  setCartId,
 } from './cookies';
 import { getRegion } from './regions';
 
@@ -47,12 +48,12 @@ import { getRegion } from './regions';
 export const retrieveCart = async (
   cartId?: string
 ): Promise<GetCartQuery['getCart'] | null> => {
-  console.log('⭐ running retrieveCart with cart Id: ' + cartId);
-
   const id = cartId || (await getCartId());
   if (!id) {
     return null;
   }
+
+  console.log('⭐ running retrieveCart with cart Id: ' + cartId);
 
   try {
     const data = await graphqlFetch<GetCartQuery, GetCartQueryVariables>({
@@ -94,7 +95,12 @@ export const getOrSetCart = async (
       },
     });
 
-    cart = data?.createCart ?? null;
+    cart = data?.createCart;
+
+    await setCartId(cart?.id || '');
+
+    const cartCacheTag = await getCacheTag('carts');
+    revalidateTag(cartCacheTag);
 
     if (cart) {
       const cartCacheTag = await getCacheTag('carts');
