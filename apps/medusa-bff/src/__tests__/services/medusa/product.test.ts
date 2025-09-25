@@ -1,5 +1,11 @@
-import { HttpResponse, http } from 'msw';
-
+import {
+  emptyProductsHandler,
+  internalServerErrorHandler,
+  invalidProductDataHandler,
+  largeDataSetsHandler,
+  networkTimeoutErrorHandler,
+  rateLimitExceededErrorHandler,
+} from '@mocks/msw/handlers/product';
 import { server } from '@mocks/msw/node';
 import {
   createMockProduct,
@@ -49,16 +55,7 @@ describe('ProductService', () => {
     });
 
     it('should handle empty response', async () => {
-      server.use(
-        http.get('http://localhost:9000/store/products', () => {
-          return HttpResponse.json({
-            products: [],
-            count: 0,
-            limit: 20,
-            offset: 0,
-          });
-        })
-      );
+      server.use(emptyProductsHandler);
 
       const result = await productService.getProducts();
 
@@ -95,31 +92,43 @@ describe('ProductService', () => {
     xit('should handle invalid data and large datasets', async () => {
       jest.clearAllMocks();
       consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    });
 
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: [
-          { id: 'valid_prod', title: 'Valid Product' },
-          null,
-          undefined,
-          { id: 'another_valid', title: 'Another Valid' },
-        ],
-      });
+    it('should handle Rate limit exceeded error scenario and return empty array', async () => {
+      server.use(rateLimitExceededErrorHandler);
 
-      let result = await productService.getProducts();
-      expect(result.products).toHaveLength(4);
-      expect(result.products[1]).toBeNull();
-      expect(result.products[2]).toBeUndefined();
+      const error = new Error('Rate limit exceeded');
+
+      const result = await productService.getProducts();
+
+      expect(result.products).toEqual([]);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error fetching products:',
+        error.message
+      );
 
       jest.clearAllMocks();
-      const largeProductSet = createMockProducts(1000);
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: largeProductSet,
-        count: 1000,
-      });
+      consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    });
 
-      result = await productService.getProducts();
+    it('should handle invalid data', async () => {
+      server.use(invalidProductDataHandler);
+
+      const result = await productService.getProducts();
+
+      expect(result.products).toHaveLength(4);
+      expect(result.products[1]).toBeNull();
+      expect(result.products[2]).toBeNull();
+    });
+
+    it('should handle large datasets', async () => {
+      server.use(largeDataSetsHandler);
+
+      const result = await productService.getProducts();
       expect(result.products).toHaveLength(1000);
-      expect(mockMedusaApi.store.product.list).toHaveBeenCalledTimes(1);
+      expect(result.count).toBe(1000);
+      expect(result.limit).toBe(1000);
+      expect(result.offset).toBe(0);
     });
   });
 
