@@ -20,8 +20,22 @@ export const createMockProduct = (overrides = {}) => ({
   collection_id: 'coll_1',
   type_id: 'type_1',
   tags: [
-    { id: 'tag_1', value: 'eco-friendly' },
-    { id: 'tag_2', value: 'cotton' },
+    {
+      id: 'tag_1',
+      value: 'eco-friendly',
+      created_at: '2023-01-01T00:00:00.000Z',
+      updated_at: '2023-01-01T00:00:00.000Z',
+      deleted_at: null,
+      metadata: null,
+    },
+    {
+      id: 'tag_2',
+      value: 'cotton',
+      created_at: '2023-01-01T00:00:00.000Z',
+      updated_at: '2023-01-01T00:00:00.000Z',
+      deleted_at: null,
+      metadata: null,
+    },
   ],
   images: [
     {
@@ -115,6 +129,14 @@ export const createMockProducts = (count = 3) =>
 export const mockMedusaApi = {
   store: {
     product: {
+      list: jest.fn(),
+      retrieve: jest.fn(),
+    },
+    category: {
+      list: jest.fn(),
+      retrieve: jest.fn(),
+    },
+    collection: {
       list: jest.fn(),
       retrieve: jest.fn(),
     },
