@@ -59,6 +59,7 @@ const config: Config = {
     '^@graphql/(.*)$': '<rootDir>/src/graphql/$1',
     '^@mocks/(.*)$': '<rootDir>/src/__mocks__/$1',
   },
+  setupFiles: ['<rootDir>/jest.env.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testTimeout: 10000,
   verbose: true,
