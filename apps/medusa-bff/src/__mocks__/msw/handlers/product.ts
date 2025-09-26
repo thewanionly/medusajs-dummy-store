@@ -4,7 +4,7 @@ import { createMockProduct, createMockProducts } from '@mocks/products';
 
 /* Success (i.e. happy path) handlers */
 export const handlers = [
-  http.get('http://localhost:9000/store/products', () =>
+  http.get(`${process.env.MEDUSA_API_URL}/store/products`, () =>
     HttpResponse.json({
       products: createMockProducts(5),
       count: 5,
@@ -12,7 +12,7 @@ export const handlers = [
       offset: 0,
     })
   ),
-  http.get('http://localhost:9000/store/products/:id', () =>
+  http.get(`${process.env.MEDUSA_API_URL}/store/products/:id`, () =>
     HttpResponse.json({
       product: createMockProduct(),
     })
@@ -21,7 +21,7 @@ export const handlers = [
 
 /* Other handlers */
 export const emptyProductsHandler = http.get(
-  'http://localhost:9000/store/products',
+  `${process.env.MEDUSA_API_URL}/store/products`,
   () =>
     HttpResponse.json({
       products: [],
@@ -32,22 +32,22 @@ export const emptyProductsHandler = http.get(
 );
 
 export const networkTimeoutErrorHandler = http.get(
-  'http://localhost:9000/store/products',
+  `${process.env.MEDUSA_API_URL}/store/products`,
   () => HttpResponse.json({ message: 'Network timeout' }, { status: 504 })
 );
 
 export const internalServerErrorHandler = http.get(
-  'http://localhost:9000/store/products',
+  `${process.env.MEDUSA_API_URL}/store/products`,
   () => HttpResponse.json({ message: 'Internal server error' }, { status: 500 })
 );
 
 export const rateLimitExceededErrorHandler = http.get(
-  'http://localhost:9000/store/products',
+  `${process.env.MEDUSA_API_URL}/store/products`,
   () => HttpResponse.json({ message: 'Rate limit exceeded' }, { status: 429 })
 );
 
 export const invalidProductDataHandler = http.get(
-  'http://localhost:9000/store/products',
+  `${process.env.MEDUSA_API_URL}/store/products`,
   () =>
     HttpResponse.json({
       products: [
@@ -63,7 +63,7 @@ export const invalidProductDataHandler = http.get(
 );
 
 export const largeDataSetsHandler = http.get(
-  'http://localhost:9000/store/products',
+  `${process.env.MEDUSA_API_URL}/store/products`,
   () =>
     HttpResponse.json({
       products: createMockProducts(1000),
@@ -74,7 +74,7 @@ export const largeDataSetsHandler = http.get(
 );
 
 export const productNotFoundHandler = http.get(
-  'http://localhost:9000/store/products/:id',
+  `${process.env.MEDUSA_API_URL}/store/products/:id`,
   ({ params }) =>
     HttpResponse.json(
       { message: `Product with id: ${params.id} was not found` },
@@ -83,7 +83,7 @@ export const productNotFoundHandler = http.get(
 );
 
 export const publishableKeyRequiredHandler = http.get(
-  'http://localhost:9000/store/products/:id',
+  `${process.env.MEDUSA_API_URL}/store/products/:id`,
   () =>
     HttpResponse.json(
       {
@@ -95,11 +95,11 @@ export const publishableKeyRequiredHandler = http.get(
 );
 
 export const unauthorizedAccessHandler = http.get(
-  'http://localhost:9000/store/products/:id',
+  `${process.env.MEDUSA_API_URL}/store/products/:id`,
   () => HttpResponse.json({ message: 'Unauthorized' }, { status: 401 })
 );
 
 export const rateLimitExceededProductErrorHandler = http.get(
-  'http://localhost:9000/store/products/:id',
+  `${process.env.MEDUSA_API_URL}/store/products/:id`,
   () => HttpResponse.json({ message: 'Rate limit exceeded' }, { status: 429 })
 );
