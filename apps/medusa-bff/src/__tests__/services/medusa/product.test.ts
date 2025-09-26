@@ -21,7 +21,10 @@ describe('ProductService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    productService = new ProductService('http://localhost:9000', 'test-key');
+    productService = new ProductService(
+      process.env.MEDUSA_API_URL,
+      process.env.MEDUSA_PUBLISHABLE_KEY
+    );
   });
 
   afterEach(() => {
@@ -31,10 +34,10 @@ describe('ProductService', () => {
   describe('constructor', () => {
     it('should initialize correctly with and without publishable key', () => {
       const serviceWithKey = new ProductService(
-        'http://custom-url:8000',
-        'custom-key'
+        process.env.MEDUSA_API_URL,
+        process.env.MEDUSA_PUBLISHABLE_KEY
       );
-      const serviceWithoutKey = new ProductService('http://localhost:9000');
+      const serviceWithoutKey = new ProductService(process.env.MEDUSA_API_URL);
 
       expect(serviceWithKey).toBeInstanceOf(ProductService);
       expect(serviceWithoutKey).toBeInstanceOf(ProductService);
