@@ -4,7 +4,11 @@ import {
   invalidProductDataHandler,
   largeDataSetsHandler,
   networkTimeoutErrorHandler,
+  productNotFoundHandler,
+  publishableKeyRequiredHandler,
   rateLimitExceededErrorHandler,
+  rateLimitExceededProductErrorHandler,
+  unauthorizedAccessHandler,
 } from '@mocks/msw/handlers/product';
 import { server } from '@mocks/msw/node';
 import {
@@ -132,56 +136,40 @@ describe('ProductService', () => {
     });
   });
 
-  xdescribe('getProduct', () => {
-    it('should handle successful retrieval and complex products', async () => {
-      const mockProduct = createMockProduct({
-        id: 'prod_specific',
-        title: 'Specific Product',
-      });
+  describe('getProduct', () => {
+    it('should handle successful retrieval of a product', async () => {
+      const mockProduct = createMockProduct();
 
-      mockMedusaApi.store.product.retrieve.mockResolvedValue({
-        product: mockProduct,
-      });
+      const result = await productService.getProduct('prod_1');
 
-      let result = await productService.getProduct('prod_specific', {});
-      expect(mockMedusaApi.store.product.retrieve).toHaveBeenCalledWith(
-        'prod_specific',
-        {}
-      );
       expect(result).toEqual(mockProduct);
-
-      const complexProduct = createMockProduct({
-        id: 'prod_complex',
-        variants: [
-          { id: 'var_1', title: 'Small', sku: 'COMPLEX-S', price: 1999 },
-          { id: 'var_2', title: 'Medium', sku: 'COMPLEX-M', price: 2499 },
-        ],
-        metadata: {
-          brand: 'Premium Brand',
-          care_instructions: 'Machine wash cold',
-        },
-      });
-
-      mockMedusaApi.store.product.retrieve.mockResolvedValue({
-        product: complexProduct,
-      });
-
-      result = await productService.getProduct('prod_complex', {});
-      expect(result).toEqual(complexProduct);
-      expect(result?.variants).toHaveLength(2);
-      expect(result?.metadata).toEqual({
-        brand: 'Premium Brand',
-        care_instructions: 'Machine wash cold',
-      });
+      expect(result?.variants).toHaveLength(1);
     });
 
     it('should throw GraphQL errors for different scenarios', async () => {
       const errorScenarios = [
-        { error: new Error('Product not found'), id: 'nonexistent' },
-        { error: new Error('Invalid product ID format'), id: 'invalid-id!@#' },
-        { error: new Error('Product ID cannot be empty'), id: '' },
-        { error: new Error('Unauthorized access'), id: 'protected_prod' },
-        { error: new Error('Rate limit exceeded'), id: 'rate_limited' },
+        {
+          error: new Error(`Product with id: nonexistent was not found`),
+          id: 'nonexistent',
+          handler: productNotFoundHandler,
+        },
+        {
+          error: new Error(
+            'Publishable API key required in the request header: x-publishable-api-key. You can manage your keys in settings in the dashboard.'
+          ),
+          id: 'prod_1',
+          handler: publishableKeyRequiredHandler,
+        },
+        {
+          error: new Error('Unauthorized'),
+          id: 'prod_1',
+          handler: unauthorizedAccessHandler,
+        },
+        {
+          error: new Error('Rate limit exceeded'),
+          id: 'prod_1',
+          handler: rateLimitExceededProductErrorHandler,
+        },
       ];
 
       for (const scenario of errorScenarios) {
@@ -203,8 +191,8 @@ describe('ProductService', () => {
     });
   });
 
-  xdescribe('performance and monitoring', () => {
-    it('should handle concurrent requests and multiple calls without caching', async () => {
+  describe('performance and monitoring', () => {
+    xit('should handle concurrent requests and multiple calls without caching', async () => {
       const mockProduct = createMockProduct();
       mockMedusaApi.store.product.retrieve.mockResolvedValue({
         product: mockProduct,
