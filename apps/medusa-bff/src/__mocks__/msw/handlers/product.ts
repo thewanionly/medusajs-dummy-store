@@ -1,6 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
-import { createMockProducts } from '@mocks/products';
+import { createMockProduct, createMockProducts } from '@mocks/products';
 
 /* Success (i.e. happy path) handlers */
 export const handlers = [
@@ -10,6 +10,11 @@ export const handlers = [
       count: 5,
       limit: 20,
       offset: 0,
+    })
+  ),
+  http.get('http://localhost:9000/store/products/:id', () =>
+    HttpResponse.json({
+      product: createMockProduct(),
     })
   ),
 ];
@@ -66,4 +71,35 @@ export const largeDataSetsHandler = http.get(
       limit: 1000,
       offset: 0,
     })
+);
+
+export const productNotFoundHandler = http.get(
+  'http://localhost:9000/store/products/:id',
+  ({ params }) =>
+    HttpResponse.json(
+      { message: `Product with id: ${params.id} was not found` },
+      { status: 404 }
+    )
+);
+
+export const publishableKeyRequiredHandler = http.get(
+  'http://localhost:9000/store/products/:id',
+  () =>
+    HttpResponse.json(
+      {
+        message:
+          'Publishable API key required in the request header: x-publishable-api-key. You can manage your keys in settings in the dashboard.',
+      },
+      { status: 400 }
+    )
+);
+
+export const unauthorizedAccessHandler = http.get(
+  'http://localhost:9000/store/products/:id',
+  () => HttpResponse.json({ message: 'Unauthorized' }, { status: 401 })
+);
+
+export const rateLimitExceededProductErrorHandler = http.get(
+  'http://localhost:9000/store/products/:id',
+  () => HttpResponse.json({ message: 'Rate limit exceeded' }, { status: 429 })
 );

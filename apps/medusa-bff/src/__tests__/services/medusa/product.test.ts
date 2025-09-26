@@ -4,7 +4,11 @@ import {
   invalidProductDataHandler,
   largeDataSetsHandler,
   networkTimeoutErrorHandler,
+  productNotFoundHandler,
+  publishableKeyRequiredHandler,
   rateLimitExceededErrorHandler,
+  rateLimitExceededProductErrorHandler,
+  unauthorizedAccessHandler,
 } from '@mocks/msw/handlers/product';
 import { server } from '@mocks/msw/node';
 import {
@@ -66,55 +70,35 @@ describe('ProductService', () => {
       expect(result.offset).toBe(0);
     });
 
-    it('should handle Network timeout scenario and return empty array', async () => {
-      server.use(networkTimeoutErrorHandler);
+    it('should handle error scenarios and return empty array', async () => {
+      const errorScenarios = [
+        {
+          error: new Error('Network timeout'),
+          handler: networkTimeoutErrorHandler,
+        },
+        {
+          error: new Error('Internal server error'),
+          handler: internalServerErrorHandler,
+        },
+        {
+          error: new Error('Rate limit exceeded'),
+          handler: rateLimitExceededErrorHandler,
+        },
+      ];
 
-      const error = new Error('Network timeout');
+      for (const scenario of errorScenarios) {
+        server.use(scenario.handler);
+        const result = await productService.getProducts();
 
-      const result = await productService.getProducts();
+        expect(result.products).toEqual([]);
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Error fetching products:',
+          scenario.error.message
+        );
 
-      expect(result.products).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching products:',
-        error.message
-      );
-
-      jest.clearAllMocks();
-      consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    });
-
-    it('should handle Internal server error scenario and return empty array', async () => {
-      server.use(internalServerErrorHandler);
-
-      const error = new Error('Internal server error');
-
-      const result = await productService.getProducts();
-
-      expect(result.products).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching products:',
-        error.message
-      );
-
-      jest.clearAllMocks();
-      consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    });
-
-    it('should handle Rate limit exceeded error scenario and return empty array', async () => {
-      server.use(rateLimitExceededErrorHandler);
-
-      const error = new Error('Rate limit exceeded');
-
-      const result = await productService.getProducts();
-
-      expect(result.products).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching products:',
-        error.message
-      );
-
-      jest.clearAllMocks();
-      consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+        jest.clearAllMocks();
+        consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      }
     });
 
     it('should handle invalid data', async () => {
@@ -138,61 +122,45 @@ describe('ProductService', () => {
     });
   });
 
-  xdescribe('getProduct', () => {
-    it('should handle successful retrieval and complex products', async () => {
-      const mockProduct = createMockProduct({
-        id: 'prod_specific',
-        title: 'Specific Product',
-      });
+  describe('getProduct', () => {
+    it('should handle successful retrieval of a product', async () => {
+      const mockProduct = createMockProduct();
 
-      mockMedusaApi.store.product.retrieve.mockResolvedValue({
-        product: mockProduct,
-      });
+      const result = await productService.getProduct('prod_1');
 
-      let result = await productService.getProduct('prod_specific', {});
-      expect(mockMedusaApi.store.product.retrieve).toHaveBeenCalledWith(
-        'prod_specific',
-        {}
-      );
       expect(result).toEqual(mockProduct);
-
-      const complexProduct = createMockProduct({
-        id: 'prod_complex',
-        variants: [
-          { id: 'var_1', title: 'Small', sku: 'COMPLEX-S', price: 1999 },
-          { id: 'var_2', title: 'Medium', sku: 'COMPLEX-M', price: 2499 },
-        ],
-        metadata: {
-          brand: 'Premium Brand',
-          care_instructions: 'Machine wash cold',
-        },
-      });
-
-      mockMedusaApi.store.product.retrieve.mockResolvedValue({
-        product: complexProduct,
-      });
-
-      result = await productService.getProduct('prod_complex', {});
-      expect(result).toEqual(complexProduct);
-      expect(result?.variants).toHaveLength(2);
-      expect(result?.metadata).toEqual({
-        brand: 'Premium Brand',
-        care_instructions: 'Machine wash cold',
-      });
+      expect(result?.variants).toHaveLength(1);
     });
 
     it('should handle all error scenarios and edge cases', async () => {
       const errorScenarios = [
-        { error: new Error('Product not found'), id: 'nonexistent' },
-        { error: new Error('Invalid product ID format'), id: 'invalid-id!@#' },
-        { error: new Error('Product ID cannot be empty'), id: '' },
-        { error: new Error('Unauthorized access'), id: 'protected_prod' },
-        { error: new Error('Rate limit exceeded'), id: 'rate_limited' },
+        {
+          error: new Error(`Product with id: nonexistent was not found`),
+          id: 'nonexistent',
+          handler: productNotFoundHandler,
+        },
+        {
+          error: new Error(
+            'Publishable API key required in the request header: x-publishable-api-key. You can manage your keys in settings in the dashboard.'
+          ),
+          id: 'prod_1',
+          handler: publishableKeyRequiredHandler,
+        },
+        {
+          error: new Error('Unauthorized'),
+          id: 'prod_1',
+          handler: unauthorizedAccessHandler,
+        },
+        {
+          error: new Error('Rate limit exceeded'),
+          id: 'prod_1',
+          handler: rateLimitExceededProductErrorHandler,
+        },
       ];
 
       for (const scenario of errorScenarios) {
-        mockMedusaApi.store.product.retrieve.mockRejectedValue(scenario.error);
-        const result = await productService.getProduct(scenario.id, {});
+        server.use(scenario.handler);
+        const result = await productService.getProduct(scenario.id);
 
         expect(result).toBeNull();
         expect(consoleSpy).toHaveBeenCalledWith(
@@ -202,30 +170,11 @@ describe('ProductService', () => {
         jest.clearAllMocks();
         consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       }
-
-      mockMedusaApi.store.product.retrieve.mockResolvedValue({});
-      let result = await productService.getProduct('prod_1', {});
-      expect(result).toBeNull();
-
-      mockMedusaApi.store.product.retrieve.mockResolvedValue(null);
-      result = await productService.getProduct('prod_1', {});
-      expect(result).toBeNull();
-
-      const errorWithoutMessage = { toString: () => 'Unknown error' } as Error;
-      mockMedusaApi.store.product.retrieve.mockRejectedValue(
-        errorWithoutMessage
-      );
-      result = await productService.getProduct('prod_1', {});
-      expect(result).toBeNull();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching product:',
-        undefined
-      );
     });
   });
 
-  xdescribe('performance and monitoring', () => {
-    it('should handle concurrent requests and multiple calls without caching', async () => {
+  describe('performance and monitoring', () => {
+    xit('should handle concurrent requests and multiple calls without caching', async () => {
       const mockProduct = createMockProduct();
       mockMedusaApi.store.product.retrieve.mockResolvedValue({
         product: mockProduct,
