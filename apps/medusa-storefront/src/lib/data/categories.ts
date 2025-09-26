@@ -1,50 +1,44 @@
-import { sdk } from '@lib/config';
-import { HttpTypes } from '@medusajs/types';
+import { GET_PRODUCT_CATEGORIES_QUERY } from '@lib/bff';
+import { graphqlFetch } from '@lib/bff/apollo-client';
+import {
+  GetProductCategoryDocument,
+  GetProductCategoryQuery,
+  GetProductCategoryQueryVariables,
+} from '@lib/bff/generated-types/graphql';
 
-import { getCacheOptions } from './cookies';
+export const listCategories = async () => {
+  try {
+    const data = await graphqlFetch<
+      GetProductCategoryQuery,
+      GetProductCategoryQueryVariables
+    >({
+      query: GET_PRODUCT_CATEGORIES_QUERY,
+    });
 
-export const listCategories = async (query?: Record<string, any>) => {
-  const next = {
-    ...(await getCacheOptions('categories')),
-  };
-
-  const limit = query?.limit || 100;
-
-  return sdk.client
-    .fetch<{ product_categories: HttpTypes.StoreProductCategory[] }>(
-      '/store/product-categories',
-      {
-        query: {
-          fields:
-            '*category_children, *products, *parent_category, *parent_category.parent_category',
-          limit,
-          ...query,
-        },
-        next,
-        cache: 'force-cache',
-      }
-    )
-    .then(({ product_categories }) => product_categories);
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching categories from BFF:', error);
+    return [];
+  }
 };
 
-export const getCategoryByHandle = async (categoryHandle: string[]) => {
-  const handle = `${categoryHandle.join('/')}`;
+export const getCategoryByHandle = async () => {
+  const handle = `categoryHandle.join('/')`;
 
-  const next = {
-    ...(await getCacheOptions('categories')),
-  };
+  try {
+    const data = await graphqlFetch<
+      GetProductCategoryQuery,
+      GetProductCategoryQueryVariables
+    >({
+      query: GetProductCategoryDocument,
+      variables: {
+        handle,
+      },
+    });
 
-  return sdk.client
-    .fetch<HttpTypes.StoreProductCategoryListResponse>(
-      `/store/product-categories`,
-      {
-        query: {
-          fields: '*category_children, *products',
-          handle,
-        },
-        next,
-        cache: 'force-cache',
-      }
-    )
-    .then(({ product_categories }) => product_categories[0]);
+    return data?.productCategory || null;
+  } catch (error) {
+    console.error('Error fetching category by handle from BFF:', error);
+    return null;
+  }
 };

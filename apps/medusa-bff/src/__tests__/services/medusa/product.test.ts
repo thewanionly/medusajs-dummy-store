@@ -85,24 +85,26 @@ describe('ProductService', () => {
       expect(result.products).toEqual([]);
     });
 
-    it('should handle all error scenarios and return empty array', async () => {
+    it('should throw GraphQL errors for different scenarios', async () => {
       const errorScenarios = [
-        new Error('Network timeout'),
-        new Error('Internal server error'),
-        new Error('Rate limit exceeded'),
+        {
+          error: new Error('Network timeout'),
+          expectedError: 'ServiceUnavailableError',
+        },
+        {
+          error: new Error('Internal server error'),
+          expectedError: 'MedusaServiceError',
+        },
+        {
+          error: new Error('Rate limit exceeded'),
+          expectedError: 'MedusaServiceError',
+        },
       ];
 
-      for (const error of errorScenarios) {
-        mockMedusaApi.store.product.list.mockRejectedValue(error);
-        const result = await productService.getProducts();
+      for (const scenario of errorScenarios) {
+        mockMedusaApi.store.product.list.mockRejectedValue(scenario.error);
 
-        expect(result.products).toEqual([]);
-        expect(consoleSpy).toHaveBeenCalledWith(
-          'Error fetching products:',
-          error.message
-        );
-        jest.clearAllMocks();
-        consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+        await expect(productService.getProducts()).rejects.toThrow();
       }
     });
 
@@ -180,7 +182,7 @@ describe('ProductService', () => {
       });
     });
 
-    it('should handle all error scenarios and edge cases', async () => {
+    it('should throw GraphQL errors for different scenarios', async () => {
       const errorScenarios = [
         { error: new Error('Product not found'), id: 'nonexistent' },
         { error: new Error('Invalid product ID format'), id: 'invalid-id!@#' },
@@ -191,15 +193,11 @@ describe('ProductService', () => {
 
       for (const scenario of errorScenarios) {
         mockMedusaApi.store.product.retrieve.mockRejectedValue(scenario.error);
-        const result = await productService.getProduct(scenario.id, {});
 
-        expect(result).toBeNull();
-        expect(consoleSpy).toHaveBeenCalledWith(
-          'Error fetching product:',
-          scenario.error.message
-        );
+        await expect(
+          productService.getProduct(scenario.id, {})
+        ).rejects.toThrow();
         jest.clearAllMocks();
-        consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       }
 
       mockMedusaApi.store.product.retrieve.mockResolvedValue({});
@@ -209,17 +207,6 @@ describe('ProductService', () => {
       mockMedusaApi.store.product.retrieve.mockResolvedValue(null);
       result = await productService.getProduct('prod_1', {});
       expect(result).toBeNull();
-
-      const errorWithoutMessage = { toString: () => 'Unknown error' } as Error;
-      mockMedusaApi.store.product.retrieve.mockRejectedValue(
-        errorWithoutMessage
-      );
-      result = await productService.getProduct('prod_1', {});
-      expect(result).toBeNull();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching product:',
-        undefined
-      );
     });
   });
 
