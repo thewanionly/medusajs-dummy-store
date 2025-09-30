@@ -23,7 +23,7 @@ export const getCartLoyaltyPromoAmountStep = createStep(
       cart.customer.id
     );
 
-    if (loyaltyPoints <= 0) {
+    if (loyaltyPoints.points <= 0) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
         'Customer has no loyalty points'
@@ -31,7 +31,9 @@ export const getCartLoyaltyPromoAmountStep = createStep(
     }
 
     const promoDiscountAmount =
-      await loyaltyModuleService.calculateAmountFromPoints(loyaltyPoints);
+      await loyaltyModuleService.calculateAmountFromPoints(
+        loyaltyPoints.points
+      );
 
     const amount = Math.min(promoDiscountAmount, cart.total);
 
