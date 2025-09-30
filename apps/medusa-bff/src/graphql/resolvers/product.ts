@@ -61,4 +61,18 @@ export const productResolvers = {
         .then((res) => res.products);
     },
   },
+  ProductCategory: {
+    products: async (
+      parent: HttpTypes.StoreProductCategory,
+      args: HttpTypes.StoreProductListParams,
+      context: GraphQLContext
+    ) => {
+      return await context.productService
+        .getProducts({
+          ...args,
+          category_id: [parent.id],
+        })
+        .then((res) => res.products);
+    },
+  },
 };

@@ -20,9 +20,7 @@ export default async function Home(props: {
 
   const region = await getRegion(countryCode);
 
-  const { collections } = await listCollections({
-    fields: 'id, handle, title',
-  });
+  const { collections } = await listCollections();
 
   if (!collections || !region) {
     return null;

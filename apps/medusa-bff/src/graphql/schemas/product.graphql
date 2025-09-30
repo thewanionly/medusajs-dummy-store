@@ -7,11 +7,10 @@ type Query {
     offset: Int
     region_id: String
     handle: String
-    category_id: String
+    category_id: [String]
     collection_id: [String]
     q: String
     id: [ID!]
-    fields: String
   ): ProductListResponse!
   product(id: ID!, region_id: String): Product
   productCategories(
@@ -39,6 +38,7 @@ type ProductListResponse {
 type Product {
   id: ID!
   title: String!
+  subtitle: String
   handle: String!
   description: String
   status: String
@@ -47,6 +47,7 @@ type Product {
   weight: Float
   length: Float
   height: Float
+  external_id: String
   width: Float
   hs_code: String
   mid_code: String
@@ -56,12 +57,16 @@ type Product {
   collection_id: String
   created_at: DateTime!
   updated_at: DateTime!
+  deleted_at: DateTime
   images: [ProductImage!]!
+  is_giftcard: Boolean!
+  origin_country: String
+  discountable: Boolean
   tags: [ProductTag!]!
   options: [ProductOption!]!
   variants: [ProductVariant!]!
   collection: Collection
-  categories: [ProductCategory]
+  categories: [ProductCategory!]
 }
 
 type ProductImage {
@@ -143,17 +148,18 @@ type ProductCategory {
   id: ID!
   name: String!
   description: String
-  handle: String!
+  handle: String
   is_active: Boolean
   is_internal: Boolean
   rank: Int
   metadata: JSON
   parent_category_id: String
   created_at: DateTime!
+  deleted_at: DateTime
   updated_at: DateTime!
   parent_category: ProductCategory
-  category_children: [ProductCategory]
-  products: [Product]
+  category_children: [ProductCategory!]
+  products(limit: Int, offset: Int, q: String): [Product!]!
 }
 
 type Collection {
@@ -163,5 +169,6 @@ type Collection {
   metadata: JSON
   created_at: DateTime!
   updated_at: DateTime!
-  products(limit: Int, offset: Int, q: String): [Product!]!
+  deleted_at: DateTime
+  products(limit: Int, offset: Int, q: String): [Product!]
 }

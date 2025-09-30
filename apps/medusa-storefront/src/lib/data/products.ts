@@ -18,7 +18,9 @@ export const listProducts = async ({
   queryParams,
 }: {
   pageParam?: number;
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
+  queryParams?: HttpTypes.FindParams &
+    HttpTypes.StoreProductParams &
+    HttpTypes.StoreProductCategoryParams;
   countryCode?: string;
   regionId?: string;
 }): Promise<{
@@ -50,7 +52,6 @@ export const listProducts = async ({
 
   const variables: GetProductsQueryVariables = {
     region_id: region.id,
-    fields: '+variants.inventory_quantity',
     ...queryParams,
   };
 

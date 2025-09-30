@@ -13,11 +13,10 @@ export const GET_PRODUCTS_QUERY = gql`
     $offset: Int
     $handle: String
     $region_id: String
-    $category_id: String
+    $category_id: [String]
     $collection_id: [String]
     $q: String
     $id: [ID!]
-    $fields: String
   ) {
     products(
       limit: $limit
@@ -28,7 +27,6 @@ export const GET_PRODUCTS_QUERY = gql`
       collection_id: $collection_id
       q: $q
       id: $id
-      fields: $fields
     ) {
       products {
         ...ProductFull
@@ -87,17 +85,6 @@ export const GET_PRODUCT_CATEGORIES_QUERY = gql`
       }
       products {
         ...ProductCore
-        thumbnail
-        variants {
-          id
-          calculated_price {
-            calculated_amount
-            calculated_price {
-              amount
-              currency_code
-            }
-          }
-        }
       }
     }
   }
@@ -124,17 +111,6 @@ export const GET_PRODUCT_CATEGORY_QUERY = gql`
       }
       products {
         ...ProductCore
-        thumbnail
-        variants {
-          id
-          calculated_price {
-            calculated_amount
-            calculated_price {
-              amount
-              currency_code
-            }
-          }
-        }
       }
     }
   }
@@ -148,17 +124,6 @@ export const GET_COLLECTIONS_QUERY = gql`
       ...ProductCollection
       products {
         ...ProductCore
-        thumbnail
-        variants {
-          id
-          calculated_price {
-            calculated_amount
-            calculated_price {
-              amount
-              currency_code
-            }
-          }
-        }
       }
     }
   }
@@ -172,31 +137,9 @@ export const GET_COLLECTION_QUERY = gql`
       ...ProductCollection
       products {
         ...ProductCore
-        description
-        thumbnail
-        images {
-          id
-          url
-        }
-        variants {
-          id
-          title
-          inventory_quantity
-          calculated_price {
-            calculated_amount
-            calculated_price {
-              amount
-              currency_code
-            }
-          }
-        }
-        tags {
-          id
-          value
-        }
       }
     }
   }
   ${PRODUCT_COLLECTION_FRAGMENT}
-  ${PRODUCT_CORE_FRAGMENT}
+  ${PRODUCT_FULL_FRAGMENT}
 `;

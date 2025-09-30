@@ -10,6 +10,7 @@ export const PRODUCT_CORE_FRAGMENT = gql`
     thumbnail
     metadata
     weight
+    collection_id
     length
     height
     width
@@ -20,6 +21,12 @@ export const PRODUCT_CORE_FRAGMENT = gql`
     type_id
     created_at
     updated_at
+    is_giftcard
+    origin_country
+    discountable
+    external_id
+    deleted_at
+    subtitle
   }
 `;
 
@@ -120,6 +127,7 @@ export const PRODUCT_CATEGORY_FRAGMENT = gql`
     metadata
     parent_category_id
     created_at
+    deleted_at
     updated_at
   }
 `;
@@ -132,6 +140,7 @@ export const PRODUCT_COLLECTION_FRAGMENT = gql`
     metadata
     created_at
     updated_at
+    deleted_at
   }
 `;
 
@@ -153,7 +162,6 @@ export const PRODUCT_FULL_FRAGMENT = gql`
     collection {
       ...ProductCollection
     }
-    collection_id
     categories {
       ...ProductCategory
     }

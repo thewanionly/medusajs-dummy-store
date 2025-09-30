@@ -23,6 +23,6 @@
       "@mocks/*": ["__mocks__/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/**/*.graphql"],
   "exclude": ["node_modules", "dist"]
 }
