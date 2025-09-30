@@ -1,7 +1,7 @@
 import { MedusaError } from '@medusajs/framework/utils';
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { CartData, getCartLoyaltyPromotion } from '../../../utils/promo';
+import { CartData, getCartLoyaltyPromotion } from '../../../utils/loyalty';
 
 type GetCartLoyaltyPromoStepInput = {
   cart: CartData;

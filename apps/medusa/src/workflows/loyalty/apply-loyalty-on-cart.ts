@@ -15,12 +15,14 @@ import {
 import {
   CUSTOMER_ID_PROMOTION_RULE_ATTRIBUTE,
   CartData,
-} from '../../utils/promo';
+} from '../../utils/loyalty';
 import { getCartLoyaltyPromoStep } from './steps/get-cart-loyalty-promo';
 import {
   GetCartLoyaltyPromoAmountStepInput,
   getCartLoyaltyPromoAmountStep,
 } from './steps/get-cart-loyalty-promo-amount';
+import { lockPointsStep } from './steps/lock-points';
+import { retrieveLoyaltyPointStep } from './steps/retrieve-loyalty-point';
 import {
   ValidateCustomerExistsStepInput,
   validateCustomerExistsStep,
@@ -137,7 +139,7 @@ export const applyLoyaltyOnCartWorkflow = createWorkflow(
       },
       (data) => {
         const promos = [
-          ...(((data.carts[0] as CartData).promotions
+          ...(((data.carts[0] as unknown as CartData).promotions
             ?.map((promo) => promo?.code)
             .filter(Boolean) || []) as string[]),
           data.promoToCreate.code,
@@ -164,6 +166,16 @@ export const applyLoyaltyOnCartWorkflow = createWorkflow(
         metadata,
       },
     ]);
+
+    const loyaltyPoints = retrieveLoyaltyPointStep({
+      customerId: carts[0].customer_id!,
+    });
+
+    // Lock all loyalty points available by default
+    lockPointsStep({
+      customerId: carts[0].customer_id!,
+      pointsToLock: loyaltyPoints.points,
+    });
 
     // Retrieve cart with updated promotions
     const { data: updatedCarts } = useQueryGraphStep({
