@@ -15,12 +15,12 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@types/*": ["types/*"],
-      "@services/*": ["services/*"],
-      "@graphql/*": ["graphql/*"],
-      "@mocks/*": ["__mocks__/*"]
+      "@types/*": ["./src/types/*"],
+      "@services/*": ["./src/services/*"],
+      "@graphql/*": ["./src/graphql/*"],
+      "@mocks/*": ["./src/__mocks__/*"]
     }
   },
   "include": ["**/*", "src/**/*.graphql"],
