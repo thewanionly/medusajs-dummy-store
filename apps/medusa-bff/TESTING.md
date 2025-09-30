@@ -175,6 +175,16 @@ describe('Product Resolvers', () => {
 
 ### 2. Service Layer Testing
 
+We are using [MSW](https://mswjs.io/docs/) for mocking the Medusa Store REST API's used by our services by intercepting the outgoing network requests.
+
+The mock handlers for the APIs are found in `__mocks__/msw/handlers`. For better organization, we should add handlers per module or feature (e.g. product) in their own file and combine them in the index.ts file insider the `handlers` folder.
+
+The handler files should export `handlers` array which contains the API mocks of the happy path or successful API requests. These handlers are passed into the MSW server in `__mocks__/msw/node` which are set up in `jest.setup.ts`. This makes any network requests to the API endpoints specified in the handler during our tests to be intercepted by our MSW mocks.
+
+For test cases that needs to handle API requests outside of the defined handlers or not in the happy path (e.g. errors), a separate mocked handler should be created and we can use it in our test cases by using `server.use`.
+
+See sample tests using msw:
+
 ```typescript
 import { emptyProductsHandler } from '@mocks/msw/handlers/product';
 import { ProductService } from '@services/medusa/product';
