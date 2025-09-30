@@ -1,9 +1,16 @@
-import { CartDTO, CustomerDTO, PromotionDTO } from '@medusajs/framework/types';
+import {
+  CartDTO,
+  CustomerDTO,
+  OrderLineItemDTO,
+  PromotionDTO,
+} from '@medusajs/framework/types';
 import { OrderDTO } from '@medusajs/framework/types';
+import { transform } from '@medusajs/framework/workflows-sdk';
 
 export type CartData = CartDTO & {
   promotions?: PromotionDTO[];
   customer?: CustomerDTO;
+  items?: OrderLineItemDTO[];
   metadata: {
     loyalty_promo_id?: string;
   };
@@ -57,4 +64,38 @@ export function orderHasLoyaltyPromotion(order: OrderData): boolean {
       );
     }) || false
   );
+}
+
+export function orderHasRedeemedReward(order: OrderData): boolean {
+  return Boolean(
+    order.cart?.items?.find(
+      (item) =>
+        item.metadata?.reward_points_cost &&
+        (item.metadata.reward_points_cost as number) > 0
+    )
+  );
+}
+
+export function getOrderRewardCost(order: OrderData): number {
+  const rewardItems = transform({ order }, (data) => {
+    return data.order.cart?.items?.filter(
+      (item) =>
+        item.metadata?.reward_points_cost &&
+        (item.metadata.reward_points_cost as number) > 0
+    );
+  });
+
+  if (!rewardItems) return 0;
+
+  const rewardsCostList = transform({ rewardItems }, (data) => {
+    return data.rewardItems?.map(
+      (item) => item.metadata?.reward_points_cost as number
+    );
+  });
+
+  const rewardsTotal = transform({ rewardsCostList }, (data) =>
+    data.rewardsCostList?.reduce((acc, curr) => acc + curr, 0)
+  );
+
+  return rewardsTotal;
 }

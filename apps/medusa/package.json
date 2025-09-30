@@ -46,6 +46,7 @@
     "algoliasearch": "^5.35.0",
     "awilix": "^8.0.1",
     "pg": "^8.13.0",
+    "react-hook-form": "7.63.0",
     "zod": "3.25.76"
   },
   "devDependencies": {

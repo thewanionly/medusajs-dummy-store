@@ -7,9 +7,12 @@ import {
 import {
   CartData,
   OrderData,
+  getOrderRewardCost,
   orderHasLoyaltyPromotion,
-} from '../../utils/promo';
+  orderHasRedeemedReward,
+} from '../../utils/loyalty';
 import { addPurchaseAsPointsStep } from './steps/add-purchase-as-points';
+import { deductPointsStep } from './steps/deduct-points';
 import { deductPurchasePointsStep } from './steps/deduct-purchase-points';
 import { getCartLoyaltyPromoStep } from './steps/get-cart-loyalty-promo';
 import {
@@ -35,6 +38,7 @@ export const handleOrderPointsWorkflow = createWorkflow(
         'cart.promotions.rules.*',
         'cart.promotions.rules.values.*',
         'cart.promotions.application_method.*',
+        'cart.items.*',
       ],
       filters: {
         id: order_id,
@@ -71,9 +75,22 @@ export const handleOrderPointsWorkflow = createWorkflow(
       ]);
     });
 
+    when(orders, (order) =>
+      orderHasRedeemedReward(order[0] as unknown as OrderData)
+    ).then(() => {
+      const rewardsCost = getOrderRewardCost(orders[0] as unknown as OrderData);
+
+      deductPointsStep({
+        customer_id: orders[0].customer!.id,
+        points: rewardsCost,
+      });
+    });
+
     when(
       orders,
-      (order) => !orderHasLoyaltyPromotion(order[0] as unknown as OrderData)
+      (order) =>
+        !orderHasLoyaltyPromotion(order[0] as unknown as OrderData) &&
+        !orderHasRedeemedReward(order[0] as unknown as OrderData)
     ).then(() => {
       addPurchaseAsPointsStep({
         customer_id: orders[0].customer!.id,

@@ -17,7 +17,5 @@ export async function GET(
     req.auth_context.actor_id
   );
 
-  res.json({
-    points,
-  });
+  res.json(points);
 }
