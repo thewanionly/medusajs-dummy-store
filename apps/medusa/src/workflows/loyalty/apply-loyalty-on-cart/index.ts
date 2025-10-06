@@ -15,18 +15,18 @@ import {
 import {
   CUSTOMER_ID_PROMOTION_RULE_ATTRIBUTE,
   CartData,
-} from '../../utils/loyalty';
-import { getCartLoyaltyPromoStep } from './steps/get-cart-loyalty-promo';
+} from '../../../utils/loyalty';
+import { getCartLoyaltyPromoStep } from '../steps/get-cart-loyalty-promo';
+import { lockPointsStep } from '../steps/lock-points';
+import {
+  ValidateCustomerExistsStepInput,
+  validateCustomerExistsStep,
+} from '../steps/validate-customer-exists';
 import {
   GetCartLoyaltyPromoAmountStepInput,
   getCartLoyaltyPromoAmountStep,
 } from './steps/get-cart-loyalty-promo-amount';
-import { lockPointsStep } from './steps/lock-points';
 import { retrieveLoyaltyPointStep } from './steps/retrieve-loyalty-point';
-import {
-  ValidateCustomerExistsStepInput,
-  validateCustomerExistsStep,
-} from './steps/validate-customer-exists';
 
 type WorkflowInput = {
   cart_id: string;

@@ -10,15 +10,15 @@ import {
   getOrderRewardCost,
   orderHasLoyaltyPromotion,
   orderHasRedeemedReward,
-} from '../../utils/loyalty';
-import { addPurchaseAsPointsStep } from './steps/add-purchase-as-points';
-import { deductPointsStep } from './steps/deduct-points';
-import { deductPurchasePointsStep } from './steps/deduct-purchase-points';
-import { getCartLoyaltyPromoStep } from './steps/get-cart-loyalty-promo';
+} from '../../../utils/loyalty';
+import { getCartLoyaltyPromoStep } from '../steps/get-cart-loyalty-promo';
 import {
   ValidateCustomerExistsStepInput,
   validateCustomerExistsStep,
-} from './steps/validate-customer-exists';
+} from '../steps/validate-customer-exists';
+import { addPurchaseAsPointsStep } from './steps/add-purchase-as-points';
+import { deductPointsStep } from './steps/deduct-points';
+import { deductPurchasePointsStep } from './steps/deduct-purchase-points';
 
 type WorkflowInput = {
   order_id: string;

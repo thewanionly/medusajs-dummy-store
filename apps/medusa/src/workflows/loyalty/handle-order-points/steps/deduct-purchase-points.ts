@@ -1,7 +1,7 @@
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { LOYALTY_MODULE } from '../../../modules/loyalty';
-import LoyaltyModuleService from '../../../modules/loyalty/service';
+import { LOYALTY_MODULE } from '../../../../modules/loyalty';
+import LoyaltyModuleService from '../../../../modules/loyalty/service';
 
 type DeductPurchasePointsInput = {
   customer_id: string;
