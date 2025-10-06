@@ -1,11 +1,14 @@
+import {
+  GetProductsQueryVariables,
+  Product as ProductType,
+} from '@lib/bff/generated-types/graphql';
 import { listProducts } from '@lib/data/products';
 import { getRegion } from '@lib/data/regions';
-import { HttpTypes } from '@medusajs/types';
 
 import Product from '../product-preview';
 
 type RelatedProductsProps = {
-  product: HttpTypes.StoreProduct;
+  product: ProductType;
   countryCode: string;
 };
 
@@ -20,7 +23,7 @@ export default async function RelatedProducts({
   }
 
   // edit this function to define your related products logic
-  const queryParams: HttpTypes.StoreProductParams = {};
+  const queryParams: GetProductsQueryVariables = {};
   if (region?.id) {
     queryParams.region_id = region.id;
   }
@@ -38,12 +41,12 @@ export default async function RelatedProducts({
     queryParams,
     countryCode,
   }).then(({ response }) => {
-    return response.products.filter(
-      (responseProduct) => responseProduct.id !== product.id
+    return response.products?.filter(
+      (responseProduct) => responseProduct?.id !== product.id
     );
   });
 
-  if (!products.length) {
+  if (!products?.length) {
     return null;
   }
 
@@ -59,9 +62,9 @@ export default async function RelatedProducts({
       </div>
 
       <ul className="grid grid-cols-2 gap-x-6 gap-y-8 small:grid-cols-3 medium:grid-cols-4">
-        {products.map((product) => (
-          <li key={product.id}>
-            <Product region={region} product={product} />
+        {products?.map((product) => (
+          <li key={product?.id}>
+            <Product region={region} product={product as ProductType} />
           </li>
         ))}
       </ul>

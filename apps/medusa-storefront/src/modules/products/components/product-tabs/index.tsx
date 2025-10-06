@@ -1,6 +1,6 @@
 'use client';
 
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 import Back from '@modules/common/icons/back';
 import FastDelivery from '@modules/common/icons/fast-delivery';
 import Refresh from '@modules/common/icons/refresh';
@@ -8,7 +8,7 @@ import Refresh from '@modules/common/icons/refresh';
 import Accordion from './accordion';
 
 type ProductTabsProps = {
-  product: HttpTypes.StoreProduct;
+  product: Product;
 };
 
 const ProductTabs = ({ product }: ProductTabsProps) => {

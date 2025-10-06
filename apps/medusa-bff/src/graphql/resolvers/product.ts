@@ -2,30 +2,77 @@ import { HttpTypes } from '@medusajs/types';
 
 import { GraphQLContext } from '../types/context';
 
-export interface ProductsArgs {
-  limit?: number;
-  offset?: number;
-}
-
-export interface ProductArgs extends HttpTypes.StoreProductParams {
-  id: string;
-}
-
 export const productResolvers = {
   Query: {
     products: async (
       _parent: unknown,
-      args: ProductsArgs,
+      args: HttpTypes.StoreProductParams & { id?: string },
       context: GraphQLContext
     ) => {
       return await context.productService.getProducts(args);
     },
     product: async (
       _parent: unknown,
-      { id, ...params }: ProductArgs,
+      params: HttpTypes.StoreProductParams & { id: string },
       context: GraphQLContext
     ) => {
-      return await context.productService.getProduct(id, params);
+      return await context.productService.getProduct(params.id, params);
+    },
+    productCategories: async (
+      _parent: unknown,
+      args: HttpTypes.FindParams & HttpTypes.StoreProductCategoryListParams,
+      context: GraphQLContext
+    ) => {
+      return await context.categoryService.getCategories(args);
+    },
+    productCategory: async (
+      _parent: unknown,
+      params: HttpTypes.StoreProductCategoryParams & { id: string },
+      context: GraphQLContext
+    ) => {
+      return await context.categoryService.getCategory(params.id, params);
+    },
+    collections: async (
+      _parent: unknown,
+      args: HttpTypes.FindParams & HttpTypes.StoreCollectionFilters,
+      context: GraphQLContext
+    ) => {
+      return await context.collectionService.getCollections(args);
+    },
+    collection: async (
+      _parent: unknown,
+      params: HttpTypes.SelectParams & { id: string },
+      context: GraphQLContext
+    ) => {
+      return await context.collectionService.getCollection(params.id, params);
+    },
+  },
+  Collection: {
+    products: async (
+      parent: HttpTypes.StoreCollection,
+      args: HttpTypes.StoreProductListParams,
+      context: GraphQLContext
+    ) => {
+      return await context.productService
+        .getProducts({
+          ...args,
+          collection_id: [parent.id],
+        })
+        .then((res) => res.products);
+    },
+  },
+  ProductCategory: {
+    products: async (
+      parent: HttpTypes.StoreProductCategory,
+      args: HttpTypes.StoreProductListParams,
+      context: GraphQLContext
+    ) => {
+      return await context.productService
+        .getProducts({
+          ...args,
+          category_id: [parent.id],
+        })
+        .then((res) => res.products);
     },
   },
 };

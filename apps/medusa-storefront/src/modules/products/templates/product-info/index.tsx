@@ -1,9 +1,9 @@
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 import { Heading, Text } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
 type ProductInfoProps = {
-  product: HttpTypes.StoreProduct;
+  product: Product;
 };
 
 const ProductInfo = ({ product }: ProductInfoProps) => {

@@ -1,9 +1,5 @@
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
-
-interface MinPricedProduct extends HttpTypes.StoreProduct {
-  _minPrice?: number;
-}
 
 /**
  * Helper function to sort products by price until the store API supports sorting by price
@@ -12,39 +8,41 @@ interface MinPricedProduct extends HttpTypes.StoreProduct {
  * @returns products sorted by price
  */
 export function sortProducts(
-  products: HttpTypes.StoreProduct[],
+  products: Product[],
   sortBy: SortOptions
-): HttpTypes.StoreProduct[] {
-  let sortedProducts = products as MinPricedProduct[];
-
+): Product[] {
   if (['price_asc', 'price_desc'].includes(sortBy)) {
-    // Precompute the minimum price for each product
-    sortedProducts.forEach((product) => {
+    const productPrices = new Map<Product, number>();
+
+    products.forEach((product) => {
       if (product.variants && product.variants.length > 0) {
-        product._minPrice = Math.min(
+        const minPrice = Math.min(
           ...product.variants.map(
             (variant) => variant?.calculated_price?.calculated_amount || 0
           )
         );
+        productPrices.set(product, minPrice);
       } else {
-        product._minPrice = Infinity;
+        productPrices.set(product, Infinity);
       }
     });
 
     // Sort products based on the precomputed minimum prices
-    sortedProducts.sort((a, b) => {
-      const diff = a._minPrice! - b._minPrice!;
+    return [...products].sort((a, b) => {
+      const priceA = productPrices.get(a) || 0;
+      const priceB = productPrices.get(b) || 0;
+      const diff = priceA - priceB;
       return sortBy === 'price_asc' ? diff : -diff;
     });
   }
 
   if (sortBy === 'created_at') {
-    sortedProducts.sort((a, b) => {
+    return [...products].sort((a, b) => {
       return (
         new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime()
       );
     });
   }
 
-  return sortedProducts;
+  return products;
 }

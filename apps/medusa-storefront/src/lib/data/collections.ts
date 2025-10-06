@@ -1,60 +1,67 @@
 'use server';
 
-import { sdk } from '@lib/config';
-import { HttpTypes } from '@medusajs/types';
-
-import { getCacheOptions } from './cookies';
+import { GET_COLLECTIONS_QUERY, GET_COLLECTION_QUERY } from '@lib/bff';
+import { graphqlFetch } from '@lib/bff/apollo-client';
+import {
+  GetCollectionQuery,
+  GetCollectionQueryVariables,
+  GetCollectionsQuery,
+  GetCollectionsQueryVariables,
+} from '@lib/bff/generated-types/graphql';
 
 export const retrieveCollection = async (id: string) => {
-  const next = {
-    ...(await getCacheOptions('collections')),
-  };
+  try {
+    const data = await graphqlFetch<
+      GetCollectionQuery,
+      GetCollectionQueryVariables
+    >({ query: GET_COLLECTION_QUERY, variables: { id } });
 
-  return sdk.client
-    .fetch<{ collection: HttpTypes.StoreCollection }>(
-      `/store/collections/${id}`,
-      {
-        next,
-        cache: 'force-cache',
-      }
-    )
-    .then(({ collection }) => collection);
+    return data?.collection || null;
+  } catch (error) {
+    console.error('Error fetching collection from BFF:', error);
+    return null;
+  }
 };
 
 export const listCollections = async (
   queryParams: Record<string, string> = {}
-): Promise<{ collections: HttpTypes.StoreCollection[]; count: number }> => {
-  const next = {
-    ...(await getCacheOptions('collections')),
-  };
+) => {
+  try {
+    const limit = parseInt(queryParams.limit || '100');
+    const offset = parseInt(queryParams.offset || '0');
 
-  queryParams.limit = queryParams.limit || '100';
-  queryParams.offset = queryParams.offset || '0';
+    const data = await graphqlFetch<
+      GetCollectionsQuery,
+      GetCollectionsQueryVariables
+    >({
+      query: GET_COLLECTIONS_QUERY,
+      variables: { limit, offset },
+    });
 
-  return sdk.client
-    .fetch<{ collections: HttpTypes.StoreCollection[]; count: number }>(
-      '/store/collections',
-      {
-        query: queryParams,
-        next,
-        cache: 'force-cache',
-      }
-    )
-    .then(({ collections }) => ({ collections, count: collections.length }));
+    return {
+      collections: data?.collections,
+      count: data?.collections?.length || 0,
+    };
+  } catch (error) {
+    console.error('Error fetching collections from BFF:', error);
+    return { collections: [], count: 0 };
+  }
 };
 
-export const getCollectionByHandle = async (
-  handle: string
-): Promise<HttpTypes.StoreCollection> => {
-  const next = {
-    ...(await getCacheOptions('collections')),
-  };
+export const getCollectionByHandle = async (handle: string) => {
+  try {
+    const data = await graphqlFetch<
+      GetCollectionsQuery,
+      GetCollectionsQueryVariables
+    >({
+      query: GET_COLLECTIONS_QUERY,
+      variables: { handle: [handle] },
+    });
 
-  return sdk.client
-    .fetch<HttpTypes.StoreCollectionListResponse>(`/store/collections`, {
-      query: { handle, fields: '*products' },
-      next,
-      cache: 'force-cache',
-    })
-    .then(({ collections }) => collections[0]);
+    const collections = data?.collections || [];
+    return collections.length > 0 ? collections[0] : null;
+  } catch (error) {
+    console.error('Error fetching collection by handle from BFF:', error);
+    return null;
+  }
 };

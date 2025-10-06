@@ -1,10 +1,10 @@
 import Image from 'next/image';
 
-import { HttpTypes } from '@medusajs/types';
+import { ProductImage } from '@lib/bff/generated-types/graphql';
 import { Container } from '@medusajs/ui';
 
 type ImageGalleryProps = {
-  images: HttpTypes.StoreProductImage[];
+  images: ProductImage[];
 };
 
 const ImageGallery = ({ images }: ImageGalleryProps) => {

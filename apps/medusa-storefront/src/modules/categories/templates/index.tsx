@@ -2,7 +2,11 @@ import { Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import { HttpTypes } from '@medusajs/types';
+import {
+  GetProductCategoriesQuery,
+  GetProductCategoryQuery,
+  ProductCategory,
+} from '@lib/bff/generated-types/graphql';
 import InteractiveLink from '@modules/common/components/interactive-link';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import SkeletonProductGrid from '@modules/skeletons/templates/skeleton-product-grid';
@@ -16,7 +20,7 @@ export default function CategoryTemplate({
   page,
   countryCode,
 }: {
-  category: HttpTypes.StoreProductCategory;
+  category: ProductCategory;
   sortBy?: SortOptions;
   page?: string;
   countryCode: string;
@@ -26,10 +30,10 @@ export default function CategoryTemplate({
 
   if (!category || !countryCode) notFound();
 
-  const parents = [] as HttpTypes.StoreProductCategory[];
+  const parents = [] as ProductCategory['parent_category'][];
 
-  const getParents = (category: HttpTypes.StoreProductCategory) => {
-    if (category.parent_category) {
+  const getParents = (category: ProductCategory) => {
+    if (category?.parent_category) {
       parents.push(category.parent_category);
       getParents(category.parent_category);
     }
@@ -47,13 +51,13 @@ export default function CategoryTemplate({
         <div className="text-2xl-semi mb-8 flex flex-row gap-4">
           {parents &&
             parents.map((parent) => (
-              <span key={parent.id} className="text-ui-fg-subtle">
+              <span key={parent?.id} className="text-ui-fg-subtle">
                 <LocalizedClientLink
                   className="mr-4 hover:text-black"
-                  href={`/categories/${parent.handle}`}
+                  href={`/categories/${parent?.handle}`}
                   data-testid="sort-by-link"
                 >
-                  {parent.name}
+                  {parent?.name}
                 </LocalizedClientLink>
                 /
               </span>

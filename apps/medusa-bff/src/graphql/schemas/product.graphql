@@ -1,0 +1,183 @@
+scalar DateTime
+scalar JSON
+
+type Query {
+  products(
+    limit: Int
+    offset: Int
+    region_id: String
+    handle: String
+    category_id: [String]
+    collection_id: [String]
+    q: String
+    id: [ID!]
+    is_giftcard: Boolean
+    tag_id: [String]
+  ): ProductListResponse!
+  product(id: ID!, region_id: String): Product
+  productCategories(
+    limit: Int
+    offset: Int
+    q: String
+    handle: String
+    is_active: Boolean
+    is_internal: Boolean
+    include_descendants_tree: Boolean
+    parent_category_id: String
+  ): [ProductCategory!]!
+  productCategory(id: ID, handle: String): ProductCategory
+  collections(limit: Int, offset: Int, handle: [String]): [Collection!]!
+  collection(id: ID, handle: String): Collection
+}
+
+type ProductListResponse {
+  products: [Product]
+  count: Int!
+  limit: Int
+  offset: Int
+}
+
+type Product {
+  id: ID!
+  title: String!
+  subtitle: String
+  handle: String!
+  description: String
+  status: String
+  thumbnail: String
+  width: Float
+  weight: Float
+  length: Float
+  height: Float
+  origin_country: String
+  hs_code: String
+  mid_code: String
+  material: String
+  collection_id: String
+  type_id: String
+  discountable: Boolean!
+  external_id: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  images: [ProductImage!]
+  is_giftcard: Boolean!
+  tags: [ProductTag!]
+  tag_id: [String!]
+  options: [ProductOption!]
+  variants: [ProductVariant!]
+  collection: Collection
+  categories: [ProductCategory!]
+  metadata: JSON
+  type: ProductType
+}
+type ProductType {
+  id: ID!
+  value: String!
+  metadata: JSON
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type ProductImage {
+  id: ID!
+  url: String!
+  metadata: JSON
+}
+
+type ProductTag {
+  id: ID!
+  value: String!
+  metadata: JSON
+}
+
+type ProductOption {
+  id: ID!
+  title: String!
+  values: [ProductOptionValue!]!
+}
+
+type ProductOptionValue {
+  id: ID!
+  value: String!
+}
+
+type ProductVariant {
+  id: ID!
+  title: String!
+  sku: String
+  barcode: String
+  ean: String
+  upc: String
+  inventory_quantity: Int
+  allow_backorder: Boolean!
+  manage_inventory: Boolean!
+  weight: Float
+  length: Float
+  height: Float
+  width: Float
+  hs_code: String
+  mid_code: String
+  material: String
+  country_of_origin: String
+  metadata: JSON
+  variant_rank: Int
+  product_id: ID!
+  options: [ProductVariantOption!]!
+  calculated_price: CalculatedPrice
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type ProductVariantOption {
+  id: ID!
+  option_id: ID!
+  value: String!
+}
+
+type CalculatedPrice {
+  calculated_amount: Float!
+  is_calculated_price_price_list: Boolean!
+  is_calculated_price_tax_inclusive: Boolean!
+  calculated_price: Money!
+  original_amount: Float!
+  original_price: Money!
+  currency_code: String
+  price_list_id: String
+  price_list_type: String
+  min_quantity: Int
+  max_quantity: Int
+}
+
+type Money {
+  amount: Float
+  currency_code: String
+}
+
+type ProductCategory {
+  id: ID!
+  name: String!
+  description: String
+  handle: String!
+  rank: Int
+  parent_category_id: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  parent_category: ProductCategory
+  category_children: [ProductCategory!]
+  products: [Product!]
+  metadata: JSON
+}
+
+type Collection {
+  id: ID!
+  title: String!
+  handle: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  products: [Product!]
+  metadata: JSON
+}

@@ -1,4 +1,4 @@
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 
 import { getPercentageDiff } from './get-precentage-diff';
 import { convertToLocale } from './money';
@@ -14,15 +14,21 @@ export const getPricesForVariant = (variant: any) => {
       amount: variant.calculated_price.calculated_amount,
       currency_code: variant.calculated_price.currency_code,
     }),
-    original_price_number: variant.calculated_price.original_amount,
+    original_price_number:
+      variant.calculated_price.original_amount ||
+      variant.calculated_price.calculated_amount,
     original_price: convertToLocale({
-      amount: variant.calculated_price.original_amount,
+      amount:
+        variant.calculated_price.original_amount ||
+        variant.calculated_price.calculated_amount,
       currency_code: variant.calculated_price.currency_code,
     }),
     currency_code: variant.calculated_price.currency_code,
-    price_type: variant.calculated_price.calculated_price.price_list_type,
+    price_type:
+      variant.calculated_price.calculated_price?.price_list_type || 'default',
     percentage_diff: getPercentageDiff(
-      variant.calculated_price.original_amount,
+      variant.calculated_price.original_amount ||
+        variant.calculated_price.calculated_amount,
       variant.calculated_price.calculated_amount
     ),
   };
@@ -32,7 +38,7 @@ export function getProductPrice({
   product,
   variantId,
 }: {
-  product: HttpTypes.StoreProduct;
+  product: Product;
   variantId?: string;
 }) {
   if (!product || !product.id) {

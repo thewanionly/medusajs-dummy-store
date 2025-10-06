@@ -1,3 +1,4 @@
+import { Collection } from '@lib/bff/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import ProductRail from '@modules/home/components/featured-products/product-rail';
 
@@ -5,7 +6,7 @@ export default async function FeaturedProducts({
   collections,
   region,
 }: {
-  collections: HttpTypes.StoreCollection[];
+  collections: Collection[];
   region: HttpTypes.StoreRegion;
 }) {
   return collections.map((collection) => (

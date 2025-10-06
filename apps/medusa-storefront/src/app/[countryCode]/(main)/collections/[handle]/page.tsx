@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { getCollectionByHandle, listCollections } from '@lib/data/collections';
 import { listRegions } from '@lib/data/regions';
-import { StoreCollection, StoreRegion } from '@medusajs/types';
+import { StoreRegion } from '@medusajs/types';
 import CollectionTemplate from '@modules/collections/templates';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
 
@@ -15,12 +15,8 @@ type Props = {
   }>;
 };
 
-export const PRODUCT_LIMIT = 12;
-
 export async function generateStaticParams() {
-  const { collections } = await listCollections({
-    fields: '*products',
-  });
+  const { collections } = await listCollections();
 
   if (!collections) {
     return [];
@@ -34,9 +30,7 @@ export async function generateStaticParams() {
         .filter(Boolean) as string[]
   );
 
-  const collectionHandles = collections.map(
-    (collection: StoreCollection) => collection.handle
-  );
+  const collectionHandles = collections.map((collection) => collection.handle);
 
   const staticParams = countryCodes
     ?.map((countryCode: string) =>
@@ -71,9 +65,7 @@ export default async function CollectionPage(props: Props) {
   const params = await props.params;
   const { sortBy, page } = searchParams;
 
-  const collection = await getCollectionByHandle(params.handle).then(
-    (collection: StoreCollection) => collection
-  );
+  const collection = await getCollectionByHandle(params.handle);
 
   if (!collection) {
     notFound();

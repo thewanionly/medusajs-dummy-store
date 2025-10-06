@@ -1,3 +1,4 @@
+import { Product } from '@lib/bff/generated-types/graphql';
 import { listProducts } from '@lib/data/products';
 import { getProductPrice } from '@lib/util/get-product-price';
 import { HttpTypes } from '@medusajs/types';
@@ -12,7 +13,7 @@ export default async function ProductPreview({
   isFeatured,
   region,
 }: {
-  product: HttpTypes.StoreProduct;
+  product: Product;
   isFeatured?: boolean;
   region: HttpTypes.StoreRegion;
 }) {

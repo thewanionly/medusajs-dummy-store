@@ -5,9 +5,7 @@ import LocalizedClientLink from '@modules/common/components/localized-client-lin
 import MedusaCTA from '@modules/layout/components/medusa-cta';
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: '*products',
-  });
+  const { collections } = await listCollections();
   const productCategories = await listCategories();
 
   return (

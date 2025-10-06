@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 
 import { isEqual } from 'lodash';
 
+import { Product } from '@lib/bff/generated-types/graphql';
 import { addToCart } from '@lib/data/cart';
 import { useIntersection } from '@lib/hooks/use-in-view';
 import { HttpTypes } from '@medusajs/types';
@@ -17,7 +18,7 @@ import ProductPrice from '../product-price';
 import MobileActions from './mobile-actions';
 
 type ProductActionsProps = {
-  product: HttpTypes.StoreProduct;
+  product: Product;
   region: HttpTypes.StoreRegion;
   disabled?: boolean;
 };
@@ -43,8 +44,10 @@ export default function ProductActions({
 
   // If there is only 1 variant, preselect the options
   useEffect(() => {
-    if (product.variants?.length === 1) {
-      const variantOptions = optionsAsKeymap(product.variants[0].options);
+    if (product?.variants && product.variants.length === 1) {
+      const variantOptions = optionsAsKeymap(
+        product.variants[0]?.options || null
+      );
       setOptions(variantOptions ?? {});
     }
   }, [product.variants]);
