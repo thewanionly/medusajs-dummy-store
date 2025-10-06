@@ -5,8 +5,8 @@ import {
 } from '@medusajs/framework/workflows-sdk';
 import { useQueryGraphStep } from '@medusajs/medusa/core-flows';
 
+import { linkProductToRewardStep } from '../steps/link-product-to-reward';
 import { createRewardStep } from './steps/create-reward';
-import { linkProductToRewardStep } from './steps/link-product-to-reward';
 
 type CreateRewardWorkflowInput = {
   points_cost: number;

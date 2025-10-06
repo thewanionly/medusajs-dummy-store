@@ -9,7 +9,7 @@ import {
   useQueryGraphStep,
 } from '@medusajs/medusa/core-flows';
 
-import { releasePointsStep } from './steps/release-points';
+import { releasePointsStep } from '../steps/release-points';
 
 type UnredeemRewardWorkflowInput = {
   cart_id: string;
