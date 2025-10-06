@@ -9,7 +9,7 @@ import {
   useQueryGraphStep,
 } from '@medusajs/medusa/core-flows';
 
-import { lockPointsStep } from './steps/lock-points';
+import { lockPointsStep } from '../steps/lock-points';
 import { validateVariantRedeemableStep } from './steps/validate-variant-redeemable';
 
 type RedeemRewardWorkflowInput = {

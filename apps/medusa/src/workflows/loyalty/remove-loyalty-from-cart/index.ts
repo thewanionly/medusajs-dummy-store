@@ -11,9 +11,9 @@ import {
   useQueryGraphStep,
 } from '@medusajs/medusa/core-flows';
 
-import { CartData } from '../../utils/loyalty';
-import { getCartLoyaltyPromoStep } from './steps/get-cart-loyalty-promo';
-import { releasePointsStep } from './steps/release-points';
+import { CartData } from '../../../utils/loyalty';
+import { getCartLoyaltyPromoStep } from '../steps/get-cart-loyalty-promo';
+import { releasePointsStep } from '../steps/release-points';
 
 type WorkflowInput = {
   cart_id: string;
