@@ -34,7 +34,7 @@ Key codegen dependencies:
 Ensure the GraphQL schema exists at:
 
 ```
-src/lib/bff/schema.graphql
+apps/medusa-bff/src/graphql/schemas/
 ```
 
 This file contains the complete GraphQL schema definition including:
