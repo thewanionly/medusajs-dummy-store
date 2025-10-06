@@ -7,19 +7,17 @@ import { useQueryGraphStep } from '@medusajs/medusa/core-flows';
 
 import { Wishlist } from '../../../modules/wishlist/models/wishlist';
 import { validateWishlistExistsStep } from '../steps/validate-wishlist-exists';
-import { createWishlistItemStep } from './steps/create-wishlist-item';
-import { validateVariantWishlistStep } from './steps/validate-variant-wishlist';
-import { validateWishlistSalesChannelStep } from './steps/validate-wishlist-sales-channel';
+import { deleteWishlistItemStep } from './steps/delete-wishlist-item';
+import { validateItemInWishlistStep } from './steps/validate-item-in-wishlist';
 
-type CreateWishlistItemWorkflowInput = {
-  variant_id: string;
+type DeleteWishlistItemWorkflowInput = {
+  wishlist_item_id: string;
   customer_id: string;
-  sales_channel_id: string;
 };
 
-export const createWishlistItemWorkflow = createWorkflow(
-  'create-wishlist-item',
-  (input: CreateWishlistItemWorkflowInput) => {
+export const deleteWishlistItemWorkflow = createWorkflow(
+  'delete-wishlist-item',
+  (input: DeleteWishlistItemWorkflowInput) => {
     const { data } = useQueryGraphStep({
       entity: 'wishlist',
       fields: ['*', 'items.*'],
@@ -34,21 +32,12 @@ export const createWishlistItemWorkflow = createWorkflow(
       wishlists,
     });
 
-    validateWishlistSalesChannelStep({
+    validateItemInWishlistStep({
       wishlist: wishlists[0],
-      sales_channel_id: input.sales_channel_id,
+      wishlist_item_id: input.wishlist_item_id,
     });
 
-    validateVariantWishlistStep({
-      variant_id: input.variant_id,
-      sales_channel_id: input.sales_channel_id,
-      wishlist: wishlists[0],
-    });
-
-    createWishlistItemStep({
-      product_variant_id: input.variant_id,
-      wishlist_id: wishlists[0].id,
-    });
+    deleteWishlistItemStep(input);
 
     // refetch wishlist
     const { data: updatedWishlists } = useQueryGraphStep({
