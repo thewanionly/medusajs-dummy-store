@@ -1,7 +1,7 @@
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 
-export const isSimpleProduct = (product: HttpTypes.StoreProduct): boolean => {
+export const isSimpleProduct = (product: Product): boolean => {
   return (
-    product.options?.length === 1 && product.options[0].values?.length === 1
+    product.options?.length === 1 && product.options[0]?.values?.length === 1
   );
 };

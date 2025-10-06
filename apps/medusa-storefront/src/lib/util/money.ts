@@ -1,7 +1,7 @@
 import { isEmpty } from './isEmpty';
 
 type ConvertToLocaleParams = {
-  amount: number;
+  amount?: number;
   currency_code: string;
   minimumFractionDigits?: number;
   maximumFractionDigits?: number;
@@ -9,7 +9,7 @@ type ConvertToLocaleParams = {
 };
 
 export const convertToLocale = ({
-  amount,
+  amount = 0,
   currency_code,
   minimumFractionDigits,
   maximumFractionDigits,

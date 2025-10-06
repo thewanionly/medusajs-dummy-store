@@ -15,7 +15,7 @@ export const useIntersection = (
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setState(entry.isIntersecting);
+        setState(entry?.isIntersecting || false);
       },
       { rootMargin }
     );

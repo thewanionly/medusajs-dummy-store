@@ -1,4 +1,4 @@
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
 
 /**
@@ -8,11 +8,11 @@ import { SortOptions } from '@modules/store/components/refinement-list/sort-prod
  * @returns products sorted by price
  */
 export function sortProducts(
-  products: HttpTypes.StoreProduct[],
+  products: Product[],
   sortBy: SortOptions
-): HttpTypes.StoreProduct[] {
+): Product[] {
   if (['price_asc', 'price_desc'].includes(sortBy)) {
-    const productPrices = new Map<HttpTypes.StoreProduct, number>();
+    const productPrices = new Map<Product, number>();
 
     products.forEach((product) => {
       if (product.variants && product.variants.length > 0) {

@@ -5,6 +5,7 @@ import { graphqlFetch } from '@lib/bff/apollo-client';
 import {
   GetProductsQuery,
   GetProductsQueryVariables,
+  Product,
 } from '@lib/bff/generated-types/graphql';
 import { sortProducts } from '@lib/util/sort-products';
 import { HttpTypes } from '@medusajs/types';
@@ -18,18 +19,16 @@ export const listProducts = async ({
   queryParams,
 }: {
   pageParam?: number;
-  queryParams?: HttpTypes.FindParams &
-    HttpTypes.StoreProductParams &
-    HttpTypes.StoreProductCategoryParams;
+  queryParams?: GetProductsQueryVariables;
   countryCode?: string;
   regionId?: string;
 }): Promise<{
   response: {
-    products: GetProductsQuery['products']['products'];
+    products: GetProductsQuery['products']['products'] | [];
     count: number;
   };
   nextPage: number | null;
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
+  queryParams?: GetProductsQueryVariables;
 }> => {
   if (!countryCode && !regionId) {
     throw new Error('Country code or region ID is required');
@@ -91,13 +90,13 @@ export const listProductsWithSort = async ({
   countryCode,
 }: {
   page?: number;
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
+  queryParams?: GetProductsQueryVariables;
   sortBy?: SortOptions;
   countryCode: string;
 }): Promise<{
-  response: { products: HttpTypes.StoreProduct[]; count: number };
+  response: { products: Product[]; count: number };
   nextPage: number | null;
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams;
+  queryParams?: GetProductsQueryVariables;
 }> => {
   const limit = queryParams?.limit || 12;
 
@@ -112,8 +111,8 @@ export const listProductsWithSort = async ({
     countryCode,
   });
 
-  const products = (rawProducts ?? []) as HttpTypes.StoreProduct[];
-  const sortedProducts = sortProducts(products, sortBy);
+  const products = rawProducts ?? [];
+  const sortedProducts = sortProducts(products as Product[], sortBy);
 
   const pageParam = (page - 1) * limit;
 

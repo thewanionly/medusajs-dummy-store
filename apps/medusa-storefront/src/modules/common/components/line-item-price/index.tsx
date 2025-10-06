@@ -17,7 +17,8 @@ const LineItemPrice = ({
   const { total, original_total } = item;
   const originalPrice = original_total;
   const currentPrice = total;
-  const hasReducedPrice = currentPrice < originalPrice;
+  const hasReducedPrice =
+    currentPrice && originalPrice && currentPrice < originalPrice;
 
   return (
     <div className="flex flex-col items-end gap-x-2 text-ui-fg-subtle">

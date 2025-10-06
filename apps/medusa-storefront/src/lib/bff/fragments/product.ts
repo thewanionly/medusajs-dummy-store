@@ -9,24 +9,24 @@ export const PRODUCT_CORE_FRAGMENT = gql`
     status
     thumbnail
     metadata
+    width
     weight
-    collection_id
     length
     height
-    width
+    origin_country
     hs_code
     mid_code
     material
-    country_of_origin
+    collection_id
     type_id
-    created_at
-    updated_at
-    is_giftcard
-    origin_country
     discountable
     external_id
+    created_at
+    updated_at
     deleted_at
     subtitle
+    is_giftcard
+    tag_id
   }
 `;
 
@@ -97,7 +97,6 @@ export const PRODUCT_VARIANT_FRAGMENT = gql`
     hs_code
     mid_code
     material
-    country_of_origin
     metadata
     variant_rank
     product_id
@@ -115,20 +114,29 @@ export const PRODUCT_VARIANT_FRAGMENT = gql`
   ${CALCULATED_PRICE_FRAGMENT}
 `;
 
+export const PRODUCT_TYPE_FRAGMENT = gql`
+  fragment ProductType on ProductType {
+    id
+    value
+    created_at
+    updated_at
+    deleted_at
+    metadata
+  }
+`;
+
 export const PRODUCT_CATEGORY_FRAGMENT = gql`
   fragment ProductCategory on ProductCategory {
     id
     name
     description
     handle
-    is_active
-    is_internal
-    rank
-    metadata
     parent_category_id
+    rank
     created_at
-    deleted_at
     updated_at
+    deleted_at
+    metadata
   }
 `;
 
@@ -165,6 +173,9 @@ export const PRODUCT_FULL_FRAGMENT = gql`
     categories {
       ...ProductCategory
     }
+    type {
+      ...ProductType
+    }
   }
   ${PRODUCT_CORE_FRAGMENT}
   ${PRODUCT_IMAGE_FRAGMENT}
@@ -173,4 +184,5 @@ export const PRODUCT_FULL_FRAGMENT = gql`
   ${PRODUCT_VARIANT_FRAGMENT}
   ${PRODUCT_COLLECTION_FRAGMENT}
   ${PRODUCT_CATEGORY_FRAGMENT}
+  ${PRODUCT_TYPE_FRAGMENT}
 `;

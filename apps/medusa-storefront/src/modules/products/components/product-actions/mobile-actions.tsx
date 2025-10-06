@@ -1,6 +1,7 @@
 import React, { Fragment, useMemo } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
+import { Product, ProductVariant } from '@lib/bff/generated-types/graphql';
 import useToggleState from '@lib/hooks/use-toggle-state';
 import { getProductPrice } from '@lib/util/get-product-price';
 import { isSimpleProduct } from '@lib/util/product';
@@ -12,8 +13,8 @@ import X from '@modules/common/icons/x';
 import OptionSelect from './option-select';
 
 type MobileActionsProps = {
-  product: HttpTypes.StoreProduct;
-  variant?: HttpTypes.StoreProductVariant;
+  product: Product;
+  variant?: ProductVariant;
   options: Record<string, string | undefined>;
   updateOptions: (title: string, value: string) => void;
   inStock?: boolean;

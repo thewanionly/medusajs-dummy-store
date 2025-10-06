@@ -6,7 +6,7 @@ export const productResolvers = {
   Query: {
     products: async (
       _parent: unknown,
-      args: HttpTypes.StoreProductParams,
+      args: HttpTypes.StoreProductParams & { id?: string },
       context: GraphQLContext
     ) => {
       return await context.productService.getProducts(args);

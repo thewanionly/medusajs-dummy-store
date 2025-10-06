@@ -11,6 +11,8 @@ type Query {
     collection_id: [String]
     q: String
     id: [ID!]
+    is_giftcard: Boolean
+    tag_id: [String]
   ): ProductListResponse!
   product(id: ID!, region_id: String): Product
   productCategories(
@@ -43,30 +45,39 @@ type Product {
   description: String
   status: String
   thumbnail: String
-  metadata: JSON
+  width: Float
   weight: Float
   length: Float
   height: Float
-  external_id: String
-  width: Float
+  origin_country: String
   hs_code: String
   mid_code: String
   material: String
-  country_of_origin: String
-  type_id: String
   collection_id: String
+  type_id: String
+  discountable: Boolean!
+  external_id: String
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  images: [ProductImage!]!
+  images: [ProductImage!]
   is_giftcard: Boolean!
-  origin_country: String
-  discountable: Boolean
-  tags: [ProductTag!]!
-  options: [ProductOption!]!
-  variants: [ProductVariant!]!
+  tags: [ProductTag!]
+  tag_id: [String!]
+  options: [ProductOption!]
+  variants: [ProductVariant!]
   collection: Collection
   categories: [ProductCategory!]
+  metadata: JSON
+  type: ProductType
+}
+type ProductType {
+  id: ID!
+  value: String!
+  metadata: JSON
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
 }
 
 type ProductImage {
@@ -148,27 +159,25 @@ type ProductCategory {
   id: ID!
   name: String!
   description: String
-  handle: String
-  is_active: Boolean
-  is_internal: Boolean
+  handle: String!
   rank: Int
-  metadata: JSON
   parent_category_id: String
   created_at: DateTime!
-  deleted_at: DateTime
   updated_at: DateTime!
+  deleted_at: DateTime
   parent_category: ProductCategory
   category_children: [ProductCategory!]
-  products(limit: Int, offset: Int, q: String): [Product!]!
+  products: [Product!]
+  metadata: JSON
 }
 
 type Collection {
   id: ID!
   title: String!
   handle: String!
-  metadata: JSON
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  products(limit: Int, offset: Int, q: String): [Product!]
+  products: [Product!]
+  metadata: JSON
 }

@@ -1,3 +1,4 @@
+import { Collection, Product } from '@lib/bff/generated-types/graphql';
 import { listProducts } from '@lib/data/products';
 import { HttpTypes } from '@medusajs/types';
 import { Text } from '@medusajs/ui';
@@ -8,7 +9,7 @@ export default async function ProductRail({
   collection,
   region,
 }: {
-  collection: HttpTypes.StoreCollection;
+  collection: Collection;
   region: HttpTypes.StoreRegion;
 }) {
   const {
@@ -35,8 +36,12 @@ export default async function ProductRail({
       <ul className="grid grid-cols-2 gap-x-6 gap-y-24 small:grid-cols-3 small:gap-y-36">
         {pricedProducts &&
           pricedProducts.map((product) => (
-            <li key={product.id}>
-              <ProductPreview product={product} region={region} isFeatured />
+            <li key={product?.id}>
+              <ProductPreview
+                product={product as Product}
+                region={region}
+                isFeatured
+              />
             </li>
           ))}
       </ul>

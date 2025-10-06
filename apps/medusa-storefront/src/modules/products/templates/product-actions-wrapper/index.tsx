@@ -15,7 +15,7 @@ export default async function ProductActionsWrapper({
   const product = await listProducts({
     queryParams: { id: [id] },
     regionId: region.id,
-  }).then(({ response }) => response.products[0]);
+  }).then(({ response }) => response.products?.[0] ?? null);
 
   if (!product) {
     return null;

@@ -3,7 +3,6 @@ import { gql } from '@apollo/client';
 import {
   PRODUCT_CATEGORY_FRAGMENT,
   PRODUCT_COLLECTION_FRAGMENT,
-  PRODUCT_CORE_FRAGMENT,
   PRODUCT_FULL_FRAGMENT,
 } from '../fragments/product';
 
@@ -16,7 +15,9 @@ export const GET_PRODUCTS_QUERY = gql`
     $category_id: [String]
     $collection_id: [String]
     $q: String
+    $is_giftcard: Boolean
     $id: [ID!]
+    $tag_id: [String!]
   ) {
     products(
       limit: $limit
@@ -27,6 +28,8 @@ export const GET_PRODUCTS_QUERY = gql`
       collection_id: $collection_id
       q: $q
       id: $id
+      is_giftcard: $is_giftcard
+      tag_id: $tag_id
     ) {
       products {
         ...ProductFull
@@ -54,9 +57,6 @@ export const GET_PRODUCT_CATEGORIES_QUERY = gql`
     $offset: Int
     $q: String
     $handle: String
-    $is_active: Boolean
-    $is_internal: Boolean
-    $include_descendants_tree: Boolean
     $parent_category_id: String
   ) {
     productCategories(
@@ -64,32 +64,22 @@ export const GET_PRODUCT_CATEGORIES_QUERY = gql`
       offset: $offset
       q: $q
       handle: $handle
-      is_active: $is_active
-      is_internal: $is_internal
-      include_descendants_tree: $include_descendants_tree
       parent_category_id: $parent_category_id
     ) {
       ...ProductCategory
       parent_category {
-        id
-        name
-        handle
-        parent_category {
-          id
-          name
-          handle
-        }
+        ...ProductCategory
       }
       category_children {
         ...ProductCategory
       }
       products {
-        ...ProductCore
+        ...ProductFull
       }
     }
   }
   ${PRODUCT_CATEGORY_FRAGMENT}
-  ${PRODUCT_CORE_FRAGMENT}
+  ${PRODUCT_FULL_FRAGMENT}
 `;
 
 export const GET_PRODUCT_CATEGORY_QUERY = gql`
@@ -110,12 +100,12 @@ export const GET_PRODUCT_CATEGORY_QUERY = gql`
         ...ProductCategory
       }
       products {
-        ...ProductCore
+        ...ProductFull
       }
     }
   }
   ${PRODUCT_CATEGORY_FRAGMENT}
-  ${PRODUCT_CORE_FRAGMENT}
+  ${PRODUCT_FULL_FRAGMENT}
 `;
 
 export const GET_COLLECTIONS_QUERY = gql`
@@ -123,12 +113,12 @@ export const GET_COLLECTIONS_QUERY = gql`
     collections(limit: $limit, offset: $offset, handle: $handle) {
       ...ProductCollection
       products {
-        ...ProductCore
+        ...ProductFull
       }
     }
   }
   ${PRODUCT_COLLECTION_FRAGMENT}
-  ${PRODUCT_CORE_FRAGMENT}
+  ${PRODUCT_FULL_FRAGMENT}
 `;
 
 export const GET_COLLECTION_QUERY = gql`
@@ -136,7 +126,7 @@ export const GET_COLLECTION_QUERY = gql`
     collection(id: $id, handle: $handle) {
       ...ProductCollection
       products {
-        ...ProductCore
+        ...ProductFull
       }
     }
   }

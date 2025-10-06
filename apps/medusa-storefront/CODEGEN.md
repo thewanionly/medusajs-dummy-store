@@ -9,7 +9,7 @@ The storefront uses GraphQL Code Generator to automatically generate TypeScript 
 ## Prerequisites
 
 - Node.js and pnpm installed
-- GraphQL schema file available at `src/lib/bff/schema.graphql`
+- GraphQL schema files available at `../medusa-bff/src/graphql/schemas/`
 - GraphQL operations defined in TypeScript files within `src/lib/bff/`
 
 ## Step-by-Step Generation Process
@@ -19,7 +19,7 @@ The storefront uses GraphQL Code Generator to automatically generate TypeScript 
 Ensure all required dependencies are installed:
 
 ```bash
-npm install
+pnpm install
 ```
 
 Key codegen dependencies:
@@ -60,13 +60,13 @@ Execute one of the following commands:
 #### One-time Generation
 
 ```bash
-npm run codegen
+pnpm run codegen
 ```
 
 #### Watch Mode (for development)
 
 ```bash
-npm run codegen:watch
+pnpm run codegen:watch
 ```
 
 ### 5. Verify Generated Files
@@ -84,7 +84,7 @@ The codegen configuration is defined in `codegen.ts`:
 ```typescript
 {
   overwrite: true,
-  schema: './src/lib/bff/schema.graphql',
+  schema: '../medusa-bff/src/graphql/schemas/*.graphql',
   documents: ['src/lib/bff/**/*.{ts,tsx}'],
   generates: {
     './src/lib/bff/generated-types/graphql.ts': {
@@ -92,7 +92,7 @@ The codegen configuration is defined in `codegen.ts`:
       config: {
         useTypeImports: true,
         documentMode: 'documentNode',
-        gqlImport: 'graphql-tag#gql',
+        gqlImport: '@apollo/client#gql',
         dedupeFragments: true,
         inlineFragmentTypes: 'combine',
         skipTypename: false,
@@ -118,15 +118,16 @@ The codegen configuration is defined in `codegen.ts`:
 ### File Structure
 
 ```
+../medusa-bff/src/graphql/schemas/
+├── **.graphql             # GraphQL schema definition
 src/lib/bff/
-├── schema.graphql          # GraphQL schema definition
+├── schema.graphql         # GraphQL schema definition
 ├── generated-types/
 │   └── graphql.ts         # Generated TypeScript types
 ├── fragments/
 │   └── product.ts         # GraphQL fragments
 ├── queries/
 │   └── product.ts         # GraphQL queries
-└── apollo-client.ts       # Apollo Client configuration
 ```
 
 ### Best Practices
@@ -137,32 +138,10 @@ src/lib/bff/
 4. **Use meaningful names for queries and mutations**
 5. **Test generated types with TypeScript compiler**
 
-### Common Issues
-
-#### Schema Not Found
-
-- Ensure `schema.graphql` exists at the specified path
-- Check file permissions
-
-#### No Documents Found
-
-- Verify GraphQL operations exist in the specified directories
-- Check file extensions match the pattern
-
-#### Type Conflicts
-
-- Clear generated files and regenerate
-- Check for naming conflicts in schema
-
-#### Apollo Client Issues
-
-- Ensure generated types are compatible with Apollo Client version
-- Check `documentMode` configuration
-
 ### Development Workflow
 
 1. Modify GraphQL schema or operations
-2. Run `npm run codegen` or use watch mode
+2. Run `pnpm run codegen` or use watch mode
 3. Import generated types in your components
 4. Use TypeScript compiler to verify type safety
 

@@ -1,4 +1,4 @@
-import { HttpTypes } from '@medusajs/types';
+import { Product } from '@lib/bff/generated-types/graphql';
 
 import { getPercentageDiff } from './get-precentage-diff';
 import { convertToLocale } from './money';
@@ -38,7 +38,7 @@ export function getProductPrice({
   product,
   variantId,
 }: {
-  product: HttpTypes.StoreProduct;
+  product: Product;
   variantId?: string;
 }) {
   if (!product || !product.id) {

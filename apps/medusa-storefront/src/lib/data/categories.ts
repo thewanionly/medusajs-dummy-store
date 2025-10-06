@@ -14,7 +14,7 @@ export const listCategories = async () => {
       query: GET_PRODUCT_CATEGORIES_QUERY,
     });
 
-    return data?.productCategories;
+    return data?.productCategories || [];
   } catch (error) {
     console.error('Error fetching categories from BFF:', error);
     return [];
@@ -33,7 +33,7 @@ export const getCategoryByHandle = async (handle: string[]) => {
       },
     });
 
-    return data?.productCategories[0];
+    return data?.productCategories?.[0] || null;
   } catch (error) {
     console.error('Error fetching category by handle from BFF:', error);
     return null;
