@@ -6,6 +6,7 @@ import Medusa from '@medusajs/js-sdk';
 import { createClient } from '@sanity/client';
 
 import { AlgoliaSearchService } from './algolia/search';
+import { CartService } from './medusa/cart';
 import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
@@ -80,6 +81,10 @@ export function createContext({
     get algoliaSearchService() {
       if (!_algoliaSearchService) _algoliaSearchService = algoliaService;
       return _algoliaSearchService;
+    },
+    get cartService() {
+      if (!_cartService) _cartService = new CartService(medusa);
+      return _cartService;
     },
   };
 }

@@ -4,6 +4,7 @@ import { Session, SessionData } from 'express-session';
 import Medusa from '@medusajs/js-sdk';
 import { SanityClient } from '@sanity/client';
 import { AlgoliaSearchService } from '@services/algolia/search';
+import { CartService } from '@services/medusa/cart';
 import { CategoryService } from '@services/medusa/category';
 import { CollectionService } from '@services/medusa/collection';
 import { ProductService } from '@services/medusa/product';
@@ -18,4 +19,5 @@ export type GraphQLContext = {
   collectionService: CollectionService;
   sanityClient: SanityClient;
   algoliaSearchService: AlgoliaSearchService;
+  cartService: CartService;
 };

@@ -1,0 +1,22 @@
+type Order {
+  id: ID!
+  region_id: String
+  customer_id: String
+  sales_channel_id: String
+  email: String
+  items: [LineItem!]
+  shipping_methods: [ShippingMethod!]
+  payment_status: String
+  fulfillment_status: String
+  total: Int
+  status: String
+  created_at: String
+  updated_at: String
+}
+
+type ShippingMethod {
+  id: ID!
+  order_id: String
+  name: String
+  amount: Int
+}
