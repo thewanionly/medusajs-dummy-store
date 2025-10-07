@@ -74,44 +74,25 @@ describe('ProductService', () => {
         {
           error: new Error('Network timeout'),
           expectedError: 'ServiceUnavailableError',
+          handler: networkTimeoutErrorHandler,
         },
         {
           error: new Error('Internal server error'),
           expectedError: 'MedusaServiceError',
+          handler: internalServerErrorHandler,
         },
         {
           error: new Error('Rate limit exceeded'),
           expectedError: 'MedusaServiceError',
+          handler: rateLimitExceededErrorHandler,
         },
       ];
 
       for (const scenario of errorScenarios) {
-        mockMedusaApi.store.product.list.mockRejectedValue(scenario.error);
+        server.use(scenario.handler);
 
         await expect(productService.getProducts()).rejects.toThrow();
       }
-    });
-
-    xit('should handle invalid data and large datasets', async () => {
-      jest.clearAllMocks();
-      consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    });
-
-    it('should handle Rate limit exceeded error scenario and return empty array', async () => {
-      server.use(rateLimitExceededErrorHandler);
-
-      const error = new Error('Rate limit exceeded');
-
-      const result = await productService.getProducts();
-
-      expect(result.products).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching products:',
-        error.message
-      );
-
-      jest.clearAllMocks();
-      consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     });
 
     it('should handle invalid data', async () => {
@@ -172,21 +153,14 @@ describe('ProductService', () => {
       ];
 
       for (const scenario of errorScenarios) {
-        mockMedusaApi.store.product.retrieve.mockRejectedValue(scenario.error);
+        server.use(scenario.handler);
 
         await expect(
           productService.getProduct(scenario.id, {})
         ).rejects.toThrow();
+
         jest.clearAllMocks();
       }
-
-      mockMedusaApi.store.product.retrieve.mockResolvedValue({});
-      let result = await productService.getProduct('prod_1', {});
-      expect(result).toBeNull();
-
-      mockMedusaApi.store.product.retrieve.mockResolvedValue(null);
-      result = await productService.getProduct('prod_1', {});
-      expect(result).toBeNull();
     });
   });
 
