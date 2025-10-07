@@ -3,6 +3,29 @@
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { graphqlFetch, graphqlMutation } from '@lib/bff/apollo-client';
+import {
+  CreateCartMutation,
+  CreateCartMutationVariables,
+  CreateLineItemMutation,
+  CreateLineItemMutationVariables,
+  DeleteLineItemMutation,
+  DeleteLineItemMutationVariables,
+  GetCartQuery,
+  GetCartQueryVariables,
+  UpdateCartMutation,
+  UpdateCartMutationVariables,
+  UpdateLineItemMutation,
+  UpdateLineItemMutationVariables,
+} from '@lib/bff/generated-types/graphql';
+import {
+  CREATE_CART_MUTATION,
+  CREATE_LINE_ITEM_MUTATION,
+  DELETE_LINE_ITEM_MUTATION,
+  UPDATE_CART_MUTATION,
+  UPDATE_LINE_ITEM_MUTATION,
+} from '@lib/bff/mutations/cart';
+import { GET_CART_QUERY } from '@lib/bff/queries/cart';
 import { sdk } from '@lib/config';
 import medusaError from '@lib/util/medusa-error';
 import { HttpTypes } from '@medusajs/types';
@@ -22,37 +45,33 @@ import { getRegion } from './regions';
  * @param cartId - optional - The ID of the cart to retrieve.
  * @returns The cart object if found, or null if not found.
  */
-export async function retrieveCart(cartId?: string) {
+export const retrieveCart = async (
+  cartId?: string
+): Promise<GetCartQuery['getCart'] | null> => {
   const id = cartId || (await getCartId());
-
   if (!id) {
     return null;
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  try {
+    const data = await graphqlFetch<GetCartQuery, GetCartQueryVariables>({
+      query: GET_CART_QUERY,
+      variables: { id },
+    });
 
-  const next = {
-    ...(await getCacheOptions('carts')),
-  };
+    return data?.getCart ?? null;
+  } catch (error) {
+    console.error('Failed to fetch cart:', error);
+    return null;
+  }
+};
 
-  return await sdk.client
-    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${id}`, {
-      method: 'GET',
-      query: {
-        fields:
-          '*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name',
-      },
-      headers,
-      next,
-      cache: 'force-cache',
-    })
-    .then(({ cart }) => cart)
-    .catch(() => null);
-}
-
-export async function getOrSetCart(countryCode: string) {
+export const getOrSetCart = async (
+  countryCode: string
+): Promise<
+  CreateCartMutation['createCart'] | UpdateCartMutation['updateCart'] | null
+> => {
+  console.log('⭐ running getOrSetCart');
   const region = await getRegion(countryCode);
 
   if (!region) {
@@ -61,34 +80,59 @@ export async function getOrSetCart(countryCode: string) {
 
   let cart = await retrieveCart();
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
-
   if (!cart) {
-    const cartResp = await sdk.store.cart.create(
-      { region_id: region.id },
-      {},
-      headers
-    );
-    cart = cartResp.cart;
+    const data = await graphqlMutation<
+      CreateCartMutation,
+      CreateCartMutationVariables
+    >({
+      mutation: CREATE_CART_MUTATION,
+      variables: {
+        data: { region_id: region.id },
+      },
+    });
 
-    await setCartId(cart.id);
+    cart = data?.createCart;
+
+    console.log('setting cart id with id: ' + cart?.id);
+
+    await setCartId(cart?.id || '');
 
     const cartCacheTag = await getCacheTag('carts');
     revalidateTag(cartCacheTag);
+
+    if (cart) {
+      const cartCacheTag = await getCacheTag('carts');
+      revalidateTag(cartCacheTag);
+    }
   }
 
-  if (cart && cart?.region_id !== region.id) {
-    await sdk.store.cart.update(cart.id, { region_id: region.id }, {}, headers);
-    const cartCacheTag = await getCacheTag('carts');
-    revalidateTag(cartCacheTag);
+  if (cart && cart.region_id !== region.id) {
+    const data = await graphqlMutation<
+      UpdateCartMutation,
+      UpdateCartMutationVariables
+    >({
+      mutation: UPDATE_CART_MUTATION,
+      variables: {
+        id: cart.id,
+        data: { region_id: region.id },
+      },
+    });
+
+    cart = data?.updateCart ?? cart;
+
+    if (cart) {
+      const cartCacheTag = await getCacheTag('carts');
+      revalidateTag(cartCacheTag);
+    }
   }
 
   return cart;
-}
+};
 
-export async function updateCart(data: HttpTypes.StoreUpdateCart) {
+export const updateCart = async (
+  data: UpdateCartMutationVariables['data']
+): Promise<UpdateCartMutation['updateCart'] | null> => {
+  console.log('⭐ running updateCart');
   const cartId = await getCartId();
 
   if (!cartId) {
@@ -97,25 +141,35 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
     );
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  try {
+    const result = await graphqlMutation<
+      UpdateCartMutation,
+      UpdateCartMutationVariables
+    >({
+      mutation: UPDATE_CART_MUTATION,
+      variables: {
+        id: cartId,
+        data,
+      },
+    });
 
-  return sdk.store.cart
-    .update(cartId, data, {}, headers)
-    .then(async ({ cart }) => {
+    const cart = result?.updateCart ?? null;
+
+    if (cart) {
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
 
       const fulfillmentCacheTag = await getCacheTag('fulfillment');
       revalidateTag(fulfillmentCacheTag);
+    }
 
-      return cart;
-    })
-    .catch(medusaError);
-}
+    return cart;
+  } catch (err) {
+    medusaError(err);
+  }
+};
 
-export async function addToCart({
+export const addToCart = async ({
   variantId,
   quantity,
   countryCode,
@@ -123,9 +177,13 @@ export async function addToCart({
   variantId: string;
   quantity: number;
   countryCode: string;
-}) {
+}): Promise<CreateLineItemMutation['createLineItem'] | null> => {
   if (!variantId) {
     throw new Error('Missing variant ID when adding to cart');
+  }
+
+  if (!countryCode) {
+    throw new Error('Missing country code when adding to cart');
   }
 
   const cart = await getOrSetCart(countryCode);
@@ -134,37 +192,47 @@ export async function addToCart({
     throw new Error('Error retrieving or creating cart');
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
-
-  await sdk.store.cart
-    .createLineItem(
-      cart.id,
-      {
-        variant_id: variantId,
-        quantity,
+  try {
+    const result = await graphqlMutation<
+      CreateLineItemMutation,
+      CreateLineItemMutationVariables
+    >({
+      mutation: CREATE_LINE_ITEM_MUTATION,
+      variables: {
+        cartId: cart.id,
+        data: {
+          variant_id: variantId,
+          quantity,
+        },
       },
-      {},
-      headers
-    )
-    .then(async () => {
+    });
+
+    const lineItem = result?.createLineItem ?? null;
+
+    if (lineItem) {
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
 
       const fulfillmentCacheTag = await getCacheTag('fulfillment');
       revalidateTag(fulfillmentCacheTag);
-    })
-    .catch(medusaError);
-}
+    }
 
-export async function updateLineItem({
+    return lineItem;
+  } catch (error: any) {
+    console.error('GraphQL addToCart error:', error.message);
+    throw error;
+  }
+};
+
+export const updateLineItem = async ({
   lineId,
   quantity,
 }: {
   lineId: string;
   quantity: number;
-}) {
+}): Promise<UpdateLineItemMutation['updateLineItem'] | null> => {
+  console.log('⭐ running updateLineItem');
+
   if (!lineId) {
     throw new Error('Missing lineItem ID when updating line item');
   }
@@ -175,23 +243,41 @@ export async function updateLineItem({
     throw new Error('Missing cart ID when updating line item');
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  try {
+    const result = await graphqlMutation<
+      UpdateLineItemMutation,
+      UpdateLineItemMutationVariables
+    >({
+      mutation: UPDATE_LINE_ITEM_MUTATION,
+      variables: {
+        cartId,
+        lineItemId: lineId,
+        data: { quantity },
+      },
+    });
 
-  await sdk.store.cart
-    .updateLineItem(cartId, lineId, { quantity }, {}, headers)
-    .then(async () => {
+    const lineItem = result?.updateLineItem ?? null;
+
+    if (lineItem) {
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
 
       const fulfillmentCacheTag = await getCacheTag('fulfillment');
       revalidateTag(fulfillmentCacheTag);
-    })
-    .catch(medusaError);
-}
+    }
 
-export async function deleteLineItem(lineId: string) {
+    return lineItem;
+  } catch (error: any) {
+    console.error('GraphQL updateLineItem error:', error.message);
+    throw error;
+  }
+};
+
+export const deleteLineItem = async (
+  lineId: string
+): Promise<DeleteLineItemMutation['deleteLineItem'] | null> => {
+  console.log('⭐ running deleteLineItem');
+
   if (!lineId) {
     throw new Error('Missing lineItem ID when deleting line item');
   }
@@ -202,21 +288,34 @@ export async function deleteLineItem(lineId: string) {
     throw new Error('Missing cart ID when deleting line item');
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  try {
+    const result = await graphqlMutation<
+      DeleteLineItemMutation,
+      DeleteLineItemMutationVariables
+    >({
+      mutation: DELETE_LINE_ITEM_MUTATION,
+      variables: {
+        cartId,
+        lineItemId: lineId,
+      },
+    });
 
-  await sdk.store.cart
-    .deleteLineItem(cartId, lineId, headers)
-    .then(async () => {
+    const deletedLineItem = result?.deleteLineItem ?? null;
+
+    if (deletedLineItem) {
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
 
       const fulfillmentCacheTag = await getCacheTag('fulfillment');
       revalidateTag(fulfillmentCacheTag);
-    })
-    .catch(medusaError);
-}
+    }
+
+    return deletedLineItem;
+  } catch (error: any) {
+    console.error('GraphQL deleteLineItem error:', error.message);
+    throw error;
+  }
+};
 
 export async function setShippingMethod({
   cartId,
