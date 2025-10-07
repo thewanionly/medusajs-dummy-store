@@ -175,22 +175,19 @@ describe('Product Resolvers', () => {
 
 ### 2. Service Layer Testing
 
+We are using [MSW](https://mswjs.io/docs/) for mocking the Medusa Store REST API's used by our services by intercepting the outgoing network requests.
+
+The mock handlers for the APIs are found in `__mocks__/msw/handlers`. For better organization, we should add handlers per module or feature (e.g. product) in their own file and combine them in the index.ts file insider the `handlers` folder.
+
+The handler files should export `handlers` array which contains the API mocks of the happy path or successful API requests. These handlers are passed into the MSW server in `__mocks__/msw/node` which are set up in `jest.setup.ts`. This makes any network requests to the API endpoints specified in the handler during our tests to be intercepted by our MSW mocks.
+
+For test cases that needs to handle API requests outside of the defined handlers or not in the happy path (e.g. errors), a separate mocked handler should be created and we can use it in our test cases by using `server.use`.
+
+See sample tests using msw:
+
 ```typescript
-import { ProductService } from '../product';
-
-const mockMedusaApi = {
-  store: {
-    product: {
-      list: jest.fn(),
-      retrieve: jest.fn(),
-    },
-  },
-};
-
-jest.mock('@medusajs/js-sdk', () => ({
-  __esModule: true,
-  default: jest.fn().mockImplementation(() => mockMedusaApi),
-}));
+import { emptyProductsHandler } from '@mocks/msw/handlers/product';
+import { ProductService } from '@services/medusa/product';
 
 describe('ProductService', () => {
   let productService: ProductService;
@@ -199,8 +196,10 @@ describe('ProductService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    productService = new ProductService('http://localhost:9000', 'test-key');
-    (productService as any).medusa = mockMedusaApi;
+    productService = new ProductService(
+      process.env.MEDUSA_API_URL,
+      process.env.MEDUSA_PUBLISHABLE_KEY
+    );
   });
 
   afterEach(() => {
@@ -208,32 +207,30 @@ describe('ProductService', () => {
   });
 
   describe('getProducts', () => {
-    it('should return products when API call is successful', async () => {
+    it('should handle successful response', async () => {
       const mockProducts = createMockProducts(5);
-      mockMedusaApi.store.product.list.mockResolvedValue({
-        products: mockProducts,
-        count: 5,
-        limit: 20,
-        offset: 0,
-      });
 
+      // this is using msw server (initial request handlers) for Medusa Store API mocks
       const result = await productService.getProducts();
 
-      expect(mockMedusaApi.store.product.list).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(mockProducts);
+      expect(result.products).toEqual(mockProducts);
+      expect(result.products).toHaveLength(5);
+      expect(result.count).toBe(5);
+      expect(result.limit).toBe(20);
+      expect(result.offset).toBe(0);
     });
 
-    it('should handle network errors gracefully', async () => {
-      const networkError = new Error('Network timeout');
-      mockMedusaApi.store.product.list.mockRejectedValue(networkError);
+    it('should handle empty response', async () => {
+      // this is using msw server (runtime request handlers override) for Medusa Store API mocks
+      server.use(emptyProductsHandler);
 
       const result = await productService.getProducts();
 
-      expect(result).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching products:',
-        'Network timeout'
-      );
+      expect(result.products).toEqual([]);
+      expect(result.products).toHaveLength(0);
+      expect(result.count).toBe(0);
+      expect(result.limit).toBe(20);
+      expect(result.offset).toBe(0);
     });
   });
 });

@@ -1,11 +1,39 @@
-module.exports = {
+import type { Config } from 'jest';
+
+import { nodeJestConfig } from '@mds/jest-config/base';
+
+const config: Config = {
+  ...nodeJestConfig,
   preset: 'ts-jest',
-  testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          isolatedModules: true,
+          module: 'commonjs',
+          target: 'ES2020',
+        },
+      },
+    ],
+    '^.+\\.[mc]?jsx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          isolatedModules: true,
+          module: 'commonjs',
+          target: 'ES2020',
+        },
+      },
+    ],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!.*(msw|@mswjs/interceptors|headers-polyfill|until-async))',
+  ],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
@@ -31,7 +59,11 @@ module.exports = {
     '^@graphql/(.*)$': '<rootDir>/src/graphql/$1',
     '^@mocks/(.*)$': '<rootDir>/src/__mocks__/$1',
   },
+  setupFiles: ['<rootDir>/jest.env.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testTimeout: 10000,
   verbose: true,
   collectCoverage: false,
 };
+
+export default config;
