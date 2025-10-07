@@ -124,7 +124,7 @@ type ProductVariant {
   metadata: JSON
   variant_rank: Int
   product_id: ID!
-  options: [ProductVariantOption!]!
+  options: [ProductVariantOption!]
   calculated_price: CalculatedPrice
   created_at: DateTime!
   updated_at: DateTime!
