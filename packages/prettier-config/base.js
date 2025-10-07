@@ -30,5 +30,6 @@ export default {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
+  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   plugins,
 };
