@@ -26,7 +26,6 @@ export const cartResolvers = {
       { id, data }: { id: string; data: UpdateCartInput },
       context: GraphQLContext
     ) => {
-      console.log('🟢 updateCart input:', id, data);
       return await context.cartService.updateCart(id, data);
     },
     createLineItem: async (

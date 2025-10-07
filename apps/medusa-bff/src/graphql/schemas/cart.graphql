@@ -1,0 +1,145 @@
+scalar DateTime
+
+type LineItem {
+  id: ID!
+  title: String
+  quantity: Int!
+  requires_shipping: Boolean
+  is_discountable: Boolean
+  is_tax_inclusive: Boolean
+  unit_price: Int
+  cart: Cart
+  cart_id: String
+  created_at: DateTime
+  product_handle: String
+  thumbnail: String
+  total: Int
+  original_total: Int
+  variant: ProductVariant
+}
+
+type Address {
+  first_name: String
+  last_name: String
+  phone: String
+  address_1: String
+  city: String
+  country_code: String
+  postal_code: String
+}
+
+type Promotion {
+  id: String
+}
+
+type Cart {
+  id: ID!
+  currency_code: String!
+  original_item_total: Int
+  original_item_subtotal: Int
+  original_item_tax_total: Int
+  item_total: Int
+  item_subtotal: Int
+  item_tax_total: Int
+  original_total: Int
+  original_subtotal: Int
+  original_tax_total: Int
+  total: Int
+  subtotal: Int
+  tax_total: Int
+  discount_total: Int
+  discount_tax_total: Int
+  gift_card_total: Int
+  gift_card_tax_total: Int
+  shipping_total: Int
+  shipping_tax_total: Int
+  original_shipping_total: Int
+  original_shipping_subtotal: Int
+  original_shipping_tax_total: Int
+  promotions: [Promotion]
+  email: String
+  items: [LineItem!]
+  region_id: String
+  shipping_address: Address
+  billing_address: Address
+  created_at: String
+  updated_at: String
+  promo_codes: [String]
+  shipping_methods: [ShippingMethod!]
+}
+
+input AddressInput {
+  first_name: String
+  last_name: String
+  phone: String
+  address_1: String
+  city: String
+  country_code: String
+  postal_code: String
+}
+
+input CreateCartInput {
+  region_id: String
+  shipping_address: AddressInput
+  billing_address: AddressInput
+  email: String
+  currency_code: String
+  items: [CreateLineItemInput!]
+  promo_codes: [String]
+}
+
+input UpdateCartInput {
+  region_id: String
+  shipping_address: AddressInput
+  billing_address: AddressInput
+  email: String
+  promo_codes: [String]
+}
+
+type CompleteCartError {
+  message: String!
+  name: String!
+  type: String!
+}
+
+input CreateLineItemInput {
+  variant_id: String!
+  quantity: Int!
+}
+
+input UpdateLineItemInput {
+  quantity: Int!
+}
+
+type StoreLineItemDeleteResponse {
+  id: ID!
+  object: String
+  deleted: Boolean!
+}
+
+type CompleteCartErrorResult {
+  type: String!
+  cart: Cart
+  error: CompleteCartError
+}
+
+type CompleteCartOrderResult {
+  type: String!
+  order: Order
+}
+
+union CompleteCartResponse = CompleteCartErrorResult | CompleteCartOrderResult
+
+extend type Query {
+  getCart(id: ID!): Cart
+}
+
+extend type Mutation {
+  createCart(data: CreateCartInput!): Cart
+  updateCart(id: ID!, data: UpdateCartInput!): Cart
+  createLineItem(cartId: ID!, data: CreateLineItemInput!): Cart
+  updateLineItem(cartId: ID!, lineItemId: ID!, data: UpdateLineItemInput!): Cart
+  deleteLineItem(cartId: ID!, lineItemId: ID!): StoreLineItemDeleteResponse!
+  addShippingMethod(cartId: ID!, optionId: ID!): Cart
+  completeCart(cartId: ID!): CompleteCartResponse
+}
