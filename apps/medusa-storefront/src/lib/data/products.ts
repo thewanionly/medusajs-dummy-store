@@ -1,12 +1,12 @@
 'use server';
 
-import { GET_PRODUCTS_QUERY } from '@lib/bff';
-import { graphqlFetch } from '@lib/bff/apollo-client';
+import { GET_PRODUCTS_QUERY } from '@lib/gql';
+import { graphqlFetch } from '@lib/gql/apollo-client';
 import {
   GetProductsQuery,
   GetProductsQueryVariables,
   Product,
-} from '@lib/bff/generated-types/graphql';
+} from '@lib/gql/generated-types/graphql';
 import { sortProducts } from '@lib/util/sort-products';
 import { HttpTypes } from '@medusajs/types';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';

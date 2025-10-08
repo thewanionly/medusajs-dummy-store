@@ -1,5 +1,5 @@
-import { Product } from '@lib/bff/generated-types/graphql';
 import { listProducts } from '@lib/data/products';
+import { Product } from '@lib/gql/generated-types/graphql';
 import { getProductPrice } from '@lib/util/get-product-price';
 import { HttpTypes } from '@medusajs/types';
 import { Text } from '@medusajs/ui';

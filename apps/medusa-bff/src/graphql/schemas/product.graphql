@@ -33,63 +33,37 @@ type Query {
 type ProductListResponse {
   products: [Product]
   count: Int!
-  limit: Int
-  offset: Int
 }
 
 type Product {
   id: ID!
   title: String!
-  subtitle: String
   handle: String!
   description: String
-  status: String
   thumbnail: String
   width: Float
   weight: Float
   length: Float
   height: Float
-  origin_country: String
-  hs_code: String
-  mid_code: String
+  originCountry: String
   material: String
-  collection_id: String
-  type_id: String
-  discountable: Boolean!
-  external_id: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
   images: [ProductImage!]
-  is_giftcard: Boolean!
   tags: [ProductTag!]
-  tag_id: [String!]
   options: [ProductOption!]
   variants: [ProductVariant!]
   collection: Collection
-  categories: [ProductCategory!]
-  metadata: JSON
-  type: ProductType
-}
-type ProductType {
-  id: ID!
-  value: String!
-  metadata: JSON
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
+  type: String
+  collectionId: String
+  createdAt: DateTime!
 }
 
 type ProductImage {
   id: ID!
   url: String!
-  metadata: JSON
 }
 
 type ProductTag {
   id: ID!
-  value: String!
-  metadata: JSON
 }
 
 type ProductOption {
@@ -105,54 +79,25 @@ type ProductOptionValue {
 
 type ProductVariant {
   id: ID!
-  title: String!
   sku: String
-  barcode: String
-  ean: String
-  upc: String
-  inventory_quantity: Int
-  allow_backorder: Boolean!
-  manage_inventory: Boolean!
-  weight: Float
-  length: Float
-  height: Float
-  width: Float
-  hs_code: String
-  mid_code: String
-  material: String
-  country_of_origin: String
-  metadata: JSON
-  variant_rank: Int
-  product_id: ID!
+  inventoryQuantity: Int
+  allowBackorder: Boolean!
+  manageInventory: Boolean!
   options: [ProductVariantOption!]!
-  calculated_price: CalculatedPrice
-  created_at: DateTime!
-  updated_at: DateTime!
+  price: Price
+  originalPrice: Price
 }
 
 type ProductVariantOption {
   id: ID!
-  option_id: ID!
+  optionId: ID!
   value: String!
 }
 
-type CalculatedPrice {
-  calculated_amount: Float!
-  is_calculated_price_price_list: Boolean!
-  is_calculated_price_tax_inclusive: Boolean!
-  calculated_price: Money!
-  original_amount: Float!
-  original_price: Money!
-  currency_code: String
-  price_list_id: String
-  price_list_type: String
-  min_quantity: Int
-  max_quantity: Int
-}
-
-type Money {
+type Price {
   amount: Float
-  currency_code: String
+  currencyCode: String
+  priceType: String
 }
 
 type ProductCategory {

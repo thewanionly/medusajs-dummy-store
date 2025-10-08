@@ -154,37 +154,19 @@ describe('Product Resolvers', () => {
         tags: [
           {
             id: 'tag_1',
-            value: 'eco-friendly',
-            created_at: '2023-01-01T00:00:00.000Z',
-            updated_at: '2023-01-01T00:00:00.000Z',
-            deleted_at: null,
-            metadata: null,
           },
           {
             id: 'tag_2',
-            value: 'organic',
-            created_at: '2023-01-01T00:00:00.000Z',
-            updated_at: '2023-01-01T00:00:00.000Z',
-            deleted_at: null,
-            metadata: null,
           },
         ],
         images: [
           {
             id: 'img_1',
             url: 'image1.jpg',
-            rank: 0,
-            created_at: '2023-01-01T00:00:00.000Z',
-            updated_at: '2023-01-01T00:00:00.000Z',
-            deleted_at: null,
           },
           {
             id: 'img_2',
             url: 'image2.jpg',
-            rank: 1,
-            created_at: '2023-01-01T00:00:00.000Z',
-            updated_at: '2023-01-01T00:00:00.000Z',
-            deleted_at: null,
           },
         ],
       });
@@ -202,19 +184,9 @@ describe('Product Resolvers', () => {
       expect(result?.tags).toEqual([
         {
           id: 'tag_1',
-          value: 'eco-friendly',
-          created_at: '2023-01-01T00:00:00.000Z',
-          updated_at: '2023-01-01T00:00:00.000Z',
-          deleted_at: null,
-          metadata: null,
         },
         {
           id: 'tag_2',
-          value: 'organic',
-          created_at: '2023-01-01T00:00:00.000Z',
-          updated_at: '2023-01-01T00:00:00.000Z',
-          deleted_at: null,
-          metadata: null,
         },
       ]);
 

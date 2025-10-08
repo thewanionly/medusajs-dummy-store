@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Product, ProductVariant } from '@lib/bff/generated-types/graphql';
+import { Product, ProductVariant } from '@lib/gql/generated-types/graphql';
 import useToggleState from '@lib/hooks/use-toggle-state';
 import { getProductPrice } from '@lib/util/get-product-price';
 import { isSimpleProduct } from '@lib/util/product';

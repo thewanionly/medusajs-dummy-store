@@ -1,4 +1,4 @@
-import { Product } from '@lib/bff/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 import { Heading, Text } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 

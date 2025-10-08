@@ -1,9 +1,9 @@
+import { listProducts } from '@lib/data/products';
+import { getRegion } from '@lib/data/regions';
 import {
   GetProductsQueryVariables,
   Product as ProductType,
-} from '@lib/bff/generated-types/graphql';
-import { listProducts } from '@lib/data/products';
-import { getRegion } from '@lib/data/regions';
+} from '@lib/gql/generated-types/graphql';
 
 import Product from '../product-preview';
 
@@ -27,8 +27,8 @@ export default async function RelatedProducts({
   if (region?.id) {
     queryParams.region_id = region.id;
   }
-  if (product.collection_id) {
-    queryParams.collection_id = [product.collection_id];
+  if (product.collectionId) {
+    queryParams.collection_id = [product.collectionId];
   }
   if (product.tags) {
     queryParams.tag_id = product.tags

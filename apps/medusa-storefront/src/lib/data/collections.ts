@@ -1,13 +1,13 @@
 'use server';
 
-import { GET_COLLECTIONS_QUERY, GET_COLLECTION_QUERY } from '@lib/bff';
-import { graphqlFetch } from '@lib/bff/apollo-client';
+import { GET_COLLECTIONS_QUERY, GET_COLLECTION_QUERY } from '@lib/gql';
+import { graphqlFetch } from '@lib/gql/apollo-client';
 import {
   GetCollectionQuery,
   GetCollectionQueryVariables,
   GetCollectionsQuery,
   GetCollectionsQueryVariables,
-} from '@lib/bff/generated-types/graphql';
+} from '@lib/gql/generated-types/graphql';
 
 export const retrieveCollection = async (id: string) => {
   try {

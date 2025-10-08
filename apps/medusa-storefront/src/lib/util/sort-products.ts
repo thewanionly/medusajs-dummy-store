@@ -1,4 +1,4 @@
-import { Product } from '@lib/bff/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
 
 /**
@@ -17,9 +17,7 @@ export function sortProducts(
     products.forEach((product) => {
       if (product.variants && product.variants.length > 0) {
         const minPrice = Math.min(
-          ...product.variants.map(
-            (variant) => variant?.calculated_price?.calculated_amount || 0
-          )
+          ...product.variants.map((variant) => variant?.price?.amount || 0)
         );
         productPrices.set(product, minPrice);
       } else {
@@ -39,7 +37,7 @@ export function sortProducts(
   if (sortBy === 'created_at') {
     return [...products].sort((a, b) => {
       return (
-        new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime()
+        new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
       );
     });
   }

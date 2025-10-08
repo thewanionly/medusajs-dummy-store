@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { Collection } from '@lib/bff/generated-types/graphql';
+import { Collection } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import SkeletonProductGrid from '@modules/skeletons/templates/skeleton-product-grid';
 import RefinementList from '@modules/store/components/refinement-list';

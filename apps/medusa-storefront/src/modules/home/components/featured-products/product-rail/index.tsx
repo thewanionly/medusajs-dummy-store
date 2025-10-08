@@ -1,5 +1,5 @@
-import { Collection, Product } from '@lib/bff/generated-types/graphql';
 import { listProducts } from '@lib/data/products';
+import { Collection, Product } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import { Text } from '@medusajs/ui';
 import InteractiveLink from '@modules/common/components/interactive-link';

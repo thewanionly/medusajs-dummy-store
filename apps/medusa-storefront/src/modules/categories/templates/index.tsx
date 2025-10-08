@@ -6,7 +6,7 @@ import {
   GetProductCategoriesQuery,
   GetProductCategoryQuery,
   ProductCategory,
-} from '@lib/bff/generated-types/graphql';
+} from '@lib/gql/generated-types/graphql';
 import InteractiveLink from '@modules/common/components/interactive-link';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import SkeletonProductGrid from '@modules/skeletons/templates/skeleton-product-grid';
