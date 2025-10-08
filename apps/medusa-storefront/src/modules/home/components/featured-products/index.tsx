@@ -1,4 +1,4 @@
-import { Collection } from '@lib/bff/generated-types/graphql';
+import { Collection } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import ProductRail from '@modules/home/components/featured-products/product-rail';
 

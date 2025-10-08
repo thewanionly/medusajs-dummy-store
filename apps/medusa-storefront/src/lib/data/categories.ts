@@ -1,9 +1,9 @@
-import { GET_PRODUCT_CATEGORIES_QUERY } from '@lib/bff';
-import { graphqlFetch } from '@lib/bff/apollo-client';
+import { GET_PRODUCT_CATEGORIES_QUERY } from '@lib/gql';
+import { graphqlFetch } from '@lib/gql/apollo-client';
 import {
   GetProductCategoriesQuery,
   GetProductCategoriesQueryVariables,
-} from '@lib/bff/generated-types/graphql';
+} from '@lib/gql/generated-types/graphql';
 
 export const listCategories = async () => {
   try {

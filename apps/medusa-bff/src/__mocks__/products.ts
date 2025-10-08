@@ -1,4 +1,4 @@
-export const createMockProduct = (overrides = {}) => ({
+export const createMockMedusaProduct = (overrides = {}) => ({
   id: 'prod_1',
   title: 'Test Product',
   handle: 'test-product',
@@ -18,7 +18,15 @@ export const createMockProduct = (overrides = {}) => ({
   mid_code: 'MID123',
   material: 'Cotton',
   collection_id: 'coll_1',
+  collection: {
+    id: 'coll_1',
+    title: 'Collection Title',
+    handle: 'Collection Handle',
+  },
   type_id: 'type_1',
+  type: {
+    id: 'type_1',
+  },
   tags: [
     {
       id: 'tag_1',
@@ -117,9 +125,80 @@ export const createMockProduct = (overrides = {}) => ({
   ...overrides,
 });
 
+export const createMockProduct = (overrides = {}) => ({
+  id: 'prod_1',
+  title: 'Test Product',
+  handle: 'test-product',
+  description: 'A test product description',
+  thumbnail: 'https://example.com/thumbnail.jpg',
+  weight: 250,
+  length: 10,
+  height: 5,
+  width: 8,
+  originCountry: 'US',
+  material: 'Cotton',
+  collectionId: 'coll_1',
+  type: 'type_1',
+  createdAt: '2023-01-01T00:00:00.000Z',
+  collection: {
+    id: 'coll_1',
+    title: 'Collection Title',
+    handle: 'Collection Handle',
+  },
+  tags: [
+    {
+      id: 'tag_1',
+    },
+    {
+      id: 'tag_2',
+    },
+  ],
+  images: [
+    {
+      id: 'img_1',
+      url: 'https://example.com/image1.jpg',
+    },
+    {
+      id: 'img_2',
+      url: 'https://example.com/image2.jpg',
+    },
+  ],
+  options: [
+    {
+      id: 'opt_1',
+      title: 'Size',
+      values: [
+        { id: 'val_1', value: 'S' },
+        { id: 'val_2', value: 'M' },
+        { id: 'val_3', value: 'L' },
+      ],
+    },
+  ],
+  variants: [
+    {
+      id: 'var_1',
+      sku: 'PROD-S',
+      allowBackorder: false,
+      manageInventory: true,
+      options: [{ id: 'opt_val_1', optionId: 'opt_1', value: 'S' }],
+      inventoryQuantity: 10,
+    },
+  ],
+  ...overrides,
+});
+
 export const createMockProducts = (count = 3) =>
   Array.from({ length: count }, (_, i) =>
     createMockProduct({
+      id: `prod_${i + 1}`,
+      title: `Test Product ${i + 1}`,
+      handle: `test-product-${i + 1}`,
+    })
+  );
+
+export const createMockMedusaProducts = (count = 3) =>
+  Array.from({ length: count }, (_, i) =>
+    createMockMedusaProduct({
       id: `prod_${i + 1}`,
       title: `Test Product ${i + 1}`,
       handle: `test-product-${i + 1}`,

@@ -1,6 +1,6 @@
 'use client';
 
-import { Product } from '@lib/bff/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 import Back from '@modules/common/icons/back';
 import FastDelivery from '@modules/common/icons/fast-delivery';
 import Refresh from '@modules/common/icons/refresh';
@@ -52,11 +52,11 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
           </div>
           <div>
             <span className="font-semibold">Country of origin</span>
-            <p>{product.origin_country ? product.origin_country : '-'}</p>
+            <p>{product.originCountry ? product.originCountry : '-'}</p>
           </div>
           <div>
             <span className="font-semibold">Type</span>
-            <p>{product.type ? product.type.value : '-'}</p>
+            <p>{product.type || '-'}</p>
           </div>
         </div>
         <div className="flex flex-col gap-y-4">

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { listProducts } from '@lib/data/products';
 import { getRegion } from '@lib/data/regions';
+import { Product } from '@lib/gql/generated-types/graphql';
 import ProductTemplate from '@modules/products/templates';
 
 export type Props = {
@@ -15,7 +16,7 @@ export interface StaticParam {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { handle, countryCode } = params;
+  const { handle, countryCode } = await params;
   const region = await getRegion(countryCode);
 
   if (!region) {
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { countryCode, handle } = params;
+  const { countryCode, handle } = await params;
   const region = await getRegion(countryCode);
 
   if (!region) {
@@ -61,7 +62,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <ProductTemplate
-      product={pricedProduct}
+      product={pricedProduct as Product}
       region={region}
       countryCode={countryCode}
     />

@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 import {
   PRODUCT_CATEGORY_FRAGMENT,
   PRODUCT_COLLECTION_FRAGMENT,
-  PRODUCT_FULL_FRAGMENT,
+  PRODUCT_FRAGMENT,
 } from '../fragments/product';
 
 export const GET_PRODUCTS_QUERY = gql`
@@ -32,23 +32,21 @@ export const GET_PRODUCTS_QUERY = gql`
       tag_id: $tag_id
     ) {
       products {
-        ...ProductFull
+        ...Product
       }
       count
-      offset
-      limit
     }
   }
-  ${PRODUCT_FULL_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_PRODUCT_QUERY = gql`
   query GetProduct($id: ID!, $region_id: String) {
     product(id: $id, region_id: $region_id) {
-      ...ProductFull
+      ...Product
     }
   }
-  ${PRODUCT_FULL_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_PRODUCT_CATEGORIES_QUERY = gql`
@@ -74,12 +72,12 @@ export const GET_PRODUCT_CATEGORIES_QUERY = gql`
         ...ProductCategory
       }
       products {
-        ...ProductFull
+        ...Product
       }
     }
   }
   ${PRODUCT_CATEGORY_FRAGMENT}
-  ${PRODUCT_FULL_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_PRODUCT_CATEGORY_QUERY = gql`
@@ -100,12 +98,12 @@ export const GET_PRODUCT_CATEGORY_QUERY = gql`
         ...ProductCategory
       }
       products {
-        ...ProductFull
+        ...Product
       }
     }
   }
   ${PRODUCT_CATEGORY_FRAGMENT}
-  ${PRODUCT_FULL_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_COLLECTIONS_QUERY = gql`
@@ -113,12 +111,12 @@ export const GET_COLLECTIONS_QUERY = gql`
     collections(limit: $limit, offset: $offset, handle: $handle) {
       ...ProductCollection
       products {
-        ...ProductFull
+        ...Product
       }
     }
   }
   ${PRODUCT_COLLECTION_FRAGMENT}
-  ${PRODUCT_FULL_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_COLLECTION_QUERY = gql`
@@ -126,10 +124,10 @@ export const GET_COLLECTION_QUERY = gql`
     collection(id: $id, handle: $handle) {
       ...ProductCollection
       products {
-        ...ProductFull
+        ...Product
       }
     }
   }
   ${PRODUCT_COLLECTION_FRAGMENT}
-  ${PRODUCT_FULL_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
 `;

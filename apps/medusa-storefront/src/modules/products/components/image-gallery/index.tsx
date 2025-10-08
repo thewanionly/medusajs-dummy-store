@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { ProductImage } from '@lib/bff/generated-types/graphql';
+import { ProductImage } from '@lib/gql/generated-types/graphql';
 import { Container } from '@medusajs/ui';
 
 type ImageGalleryProps = {

@@ -10,7 +10,7 @@ The storefront uses GraphQL Code Generator to automatically generate TypeScript 
 
 - Node.js and pnpm installed
 - GraphQL schema files available at `../medusa-bff/src/graphql/schemas/`
-- GraphQL operations defined in TypeScript files within `src/lib/bff/`
+- GraphQL operations defined in TypeScript files within `src/lib/gql/`
 
 ## Step-by-Step Generation Process
 
@@ -50,7 +50,7 @@ This file contains the complete GraphQL schema definition including:
 Verify that GraphQL operations (queries, mutations, fragments) are defined in:
 
 ```
-src/lib/bff/**/*.{ts,tsx}
+src/lib/gql/**/*.{ts,tsx}
 ```
 
 ### 4. Run Code Generation
@@ -74,7 +74,7 @@ pnpm run codegen:watch
 Check that types are generated at:
 
 ```
-src/lib/bff/generated-types/graphql.ts
+src/lib/gql/generated-types/graphql.ts
 ```
 
 ## Configuration Details
@@ -85,9 +85,9 @@ The codegen configuration is defined in `codegen.ts`:
 {
   overwrite: true,
   schema: '../medusa-bff/src/graphql/schemas/*.graphql',
-  documents: ['src/lib/bff/**/*.{ts,tsx}'],
+  documents: ['src/lib/gql/**/*.{ts,tsx}'],
   generates: {
-    './src/lib/bff/generated-types/graphql.ts': {
+    './src/lib/gql/generated-types/graphql.ts': {
       plugins: ['typescript', 'typescript-operations', 'typed-document-node'],
       config: {
         useTypeImports: true,
@@ -120,7 +120,7 @@ The codegen configuration is defined in `codegen.ts`:
 ```
 ../medusa-bff/src/graphql/schemas/
 ├── **.graphql             # GraphQL schema definition
-src/lib/bff/
+src/lib/gql/
 ├── schema.graphql         # GraphQL schema definition
 ├── generated-types/
 │   └── graphql.ts         # Generated TypeScript types

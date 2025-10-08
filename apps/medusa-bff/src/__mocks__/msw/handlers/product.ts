@@ -1,12 +1,15 @@
 import { HttpResponse, http } from 'msw';
 
-import { createMockProduct, createMockProducts } from '@mocks/products';
+import {
+  createMockMedusaProduct,
+  createMockMedusaProducts,
+} from '@mocks/products';
 
 /* Success (i.e. happy path) handlers */
 export const handlers = [
   http.get(`${process.env.MEDUSA_API_URL}/store/products`, () =>
     HttpResponse.json({
-      products: createMockProducts(5),
+      products: createMockMedusaProducts(5),
       count: 5,
       limit: 20,
       offset: 0,
@@ -14,7 +17,7 @@ export const handlers = [
   ),
   http.get(`${process.env.MEDUSA_API_URL}/store/products/:id`, () =>
     HttpResponse.json({
-      product: createMockProduct(),
+      product: createMockMedusaProduct(),
     })
   ),
 ];
@@ -66,7 +69,7 @@ export const largeDataSetsHandler = http.get(
   `${process.env.MEDUSA_API_URL}/store/products`,
   () =>
     HttpResponse.json({
-      products: createMockProducts(1000),
+      products: createMockMedusaProducts(1000),
       count: 1000,
       limit: 1000,
       offset: 0,

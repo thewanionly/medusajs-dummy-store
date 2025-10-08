@@ -53,8 +53,6 @@ describe('ProductService', () => {
       expect(result.products).toEqual(mockProducts);
       expect(result.products).toHaveLength(5);
       expect(result.count).toBe(5);
-      expect(result.limit).toBe(20);
-      expect(result.offset).toBe(0);
     });
 
     it('should handle empty response', async () => {
@@ -65,8 +63,6 @@ describe('ProductService', () => {
       expect(result.products).toEqual([]);
       expect(result.products).toHaveLength(0);
       expect(result.count).toBe(0);
-      expect(result.limit).toBe(20);
-      expect(result.offset).toBe(0);
     });
 
     it('should throw GraphQL errors for different scenarios', async () => {
@@ -111,8 +107,6 @@ describe('ProductService', () => {
       const result = await productService.getProducts();
       expect(result.products).toHaveLength(1000);
       expect(result.count).toBe(1000);
-      expect(result.limit).toBe(1000);
-      expect(result.offset).toBe(0);
     });
   });
 

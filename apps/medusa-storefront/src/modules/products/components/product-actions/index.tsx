@@ -6,8 +6,8 @@ import { useParams } from 'next/navigation';
 
 import { isEqual } from 'lodash';
 
-import { Product } from '@lib/bff/generated-types/graphql';
 import { addToCart } from '@lib/data/cart';
+import { Product } from '@lib/gql/generated-types/graphql';
 import { useIntersection } from '@lib/hooks/use-in-view';
 import { HttpTypes } from '@medusajs/types';
 import { Button } from '@medusajs/ui';
@@ -27,7 +27,7 @@ const optionsAsKeymap = (
   variantOptions: HttpTypes.StoreProductVariant['options']
 ) => {
   return variantOptions?.reduce((acc: Record<string, string>, varopt: any) => {
-    acc[varopt.option_id] = varopt.value;
+    acc[varopt.optionId] = varopt.value;
     return acc;
   }, {});
 };
@@ -82,19 +82,19 @@ export default function ProductActions({
   // check if the selected variant is in stock
   const inStock = useMemo(() => {
     // If we don't manage inventory, we can always add to cart
-    if (selectedVariant && !selectedVariant.manage_inventory) {
+    if (selectedVariant && !selectedVariant.manageInventory) {
       return true;
     }
 
     // If we allow back orders on the variant, we can add to cart
-    if (selectedVariant?.allow_backorder) {
+    if (selectedVariant?.allowBackorder) {
       return true;
     }
 
     // If there is inventory available, we can add to cart
     if (
-      selectedVariant?.manage_inventory &&
-      (selectedVariant?.inventory_quantity || 0) > 0
+      selectedVariant?.manageInventory &&
+      (selectedVariant?.inventoryQuantity || 0) > 0
     ) {
       return true;
     }

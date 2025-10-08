@@ -1,4 +1,4 @@
-import { Product } from '@lib/bff/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 
 export const isSimpleProduct = (product: Product): boolean => {
   return (

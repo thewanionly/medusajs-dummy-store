@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import { Product } from '@lib/bff/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 import { Breadcrumbs } from '@mds/ui/components/breadcrumbs/breadcrumbs';
 import { HttpTypes } from '@medusajs/types';
 import ImageGallery from '@modules/products/components/image-gallery';
@@ -16,7 +16,7 @@ import SkeletonRelatedProducts from '@modules/skeletons/templates/skeleton-relat
 import ProductActionsWrapper from './product-actions-wrapper';
 
 type ProductTemplateProps = {
-  product: Product;
+  product?: Product | null;
   region: HttpTypes.StoreRegion;
   countryCode: string;
 };

@@ -1,35 +1,30 @@
-import { Product } from '@lib/bff/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 
 import { getPercentageDiff } from './get-precentage-diff';
 import { convertToLocale } from './money';
 
 export const getPricesForVariant = (variant: any) => {
-  if (!variant?.calculated_price?.calculated_amount) {
+  if (!variant?.price?.amount) {
     return null;
   }
 
   return {
-    calculated_price_number: variant.calculated_price.calculated_amount,
+    calculated_price_number: variant.price?.amount,
     calculated_price: convertToLocale({
-      amount: variant.calculated_price.calculated_amount,
-      currency_code: variant.calculated_price.currency_code,
+      amount: variant.price.amount,
+      currency_code: variant.price.currencyCode || '',
     }),
     original_price_number:
-      variant.calculated_price.original_amount ||
-      variant.calculated_price.calculated_amount,
+      variant.originalPrice?.amount || variant.price.amount,
     original_price: convertToLocale({
-      amount:
-        variant.calculated_price.original_amount ||
-        variant.calculated_price.calculated_amount,
-      currency_code: variant.calculated_price.currency_code,
+      amount: variant.originalPrice?.amount || variant.price.amount,
+      currency_code: variant.price.currencyCode || '',
     }),
-    currency_code: variant.calculated_price.currency_code,
-    price_type:
-      variant.calculated_price.calculated_price?.price_list_type || 'default',
+    currency_code: variant.price.currencyCode,
+    price_type: variant.price.priceType || 'default',
     percentage_diff: getPercentageDiff(
-      variant.calculated_price.original_amount ||
-        variant.calculated_price.calculated_amount,
-      variant.calculated_price.calculated_amount
+      variant.originalPrice?.amount || variant.price.amount,
+      variant.price.amount
     ),
   };
 };
@@ -51,12 +46,9 @@ export function getProductPrice({
     }
 
     const cheapestVariant: any = product.variants
-      .filter((v: any) => !!v.calculated_price)
+      .filter((v: any) => !!v.price)
       .sort((a: any, b: any) => {
-        return (
-          a.calculated_price.calculated_amount -
-          b.calculated_price.calculated_amount
-        );
+        return (a.price?.amount ?? 0) - (b.price?.amount ?? 0);
       })[0];
 
     return getPricesForVariant(cheapestVariant);

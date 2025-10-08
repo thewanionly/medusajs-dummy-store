@@ -1,4 +1,4 @@
-import { Product, ProductVariant } from '@lib/bff/generated-types/graphql';
+import { Product, ProductVariant } from '@lib/gql/generated-types/graphql';
 import { getProductPrice } from '@lib/util/get-product-price';
 import { clx } from '@medusajs/ui';
 
