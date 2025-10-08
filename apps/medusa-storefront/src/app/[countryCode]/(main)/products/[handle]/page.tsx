@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { listProducts } from '@lib/data/products';
-import { getRegion, listRegions } from '@lib/data/regions';
+import { getRegion } from '@lib/data/regions';
 import ProductTemplate from '@modules/products/templates';
 
 export type Props = {
@@ -12,50 +12,6 @@ export type Props = {
 export interface StaticParam {
   countryCode: string;
   handle: string;
-}
-
-export async function generateStaticParams(): Promise<StaticParam[]> {
-  try {
-    const regions = await listRegions();
-    const countryCodes = regions
-      ?.flatMap((r) => r.countries?.map((c) => c.iso_2) || [])
-      .filter(Boolean) as string[] | undefined;
-
-    if (!countryCodes || countryCodes.length === 0) {
-      return [];
-    }
-
-    const countryProducts = await Promise.all(
-      countryCodes.map(async (country) => {
-        const { response } = await listProducts({
-          countryCode: country,
-          queryParams: { limit: 100 },
-        });
-        return {
-          country,
-          products: response.products || [],
-        };
-      })
-    );
-
-    return countryProducts
-      .flatMap((countryData) =>
-        (countryData.products || [])
-          .filter((p): p is NonNullable<typeof p> => Boolean(p && p.handle))
-          .map((product) => ({
-            countryCode: countryData.country,
-            handle: product.handle,
-          }))
-      )
-      .filter((param): param is StaticParam => Boolean(param.handle));
-  } catch (error) {
-    console.error(
-      `Failed to generate static paths for product pages: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }.`
-    );
-    return [];
-  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
