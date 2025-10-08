@@ -1,4 +1,5 @@
 import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ProductDTO } from '@medusajs/framework/types';
 import { MedusaError } from '@medusajs/framework/utils';
 
 import { WISHLIST_MODULE } from '@/modules/wishlist';
@@ -11,15 +12,15 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const wishlistModuleService: WishlistModuleService =
     req.scope.resolve(WISHLIST_MODULE);
 
-  const {
-    data: [product],
-  } = await query.graph({
+  const { data } = await query.graph({
     entity: 'product',
     fields: ['variants.*'],
     filters: {
       id,
     },
   });
+
+  const product = data[0] as ProductDTO;
 
   if (!product) {
     throw new MedusaError(
