@@ -6,7 +6,8 @@ import {
 } from '@medusajs/framework';
 import { MedusaError } from '@medusajs/framework/utils';
 
-import { createWishlistItemWorkflow } from '../../../../../../workflows/wishlist/create-wishlist-item';
+import { createWishlistItemWorkflow } from '@/workflows/wishlist/create-wishlist-item';
+
 import { PostStoreCreateWishlistItem } from './validators';
 
 type PostStoreCreateWishlistItemType = z.infer<

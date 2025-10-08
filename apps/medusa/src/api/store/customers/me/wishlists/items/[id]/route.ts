@@ -3,7 +3,7 @@ import {
   MedusaResponse,
 } from '@medusajs/framework';
 
-import { deleteWishlistItemWorkflow } from '../../../../../../../workflows/wishlist/delete-wishlist-item';
+import { deleteWishlistItemWorkflow } from '@/workflows/wishlist/delete-wishlist-item';
 
 export async function DELETE(
   req: AuthenticatedMedusaRequest,

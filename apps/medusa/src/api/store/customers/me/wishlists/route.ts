@@ -4,7 +4,7 @@ import {
 } from '@medusajs/framework/http';
 import { MedusaError } from '@medusajs/framework/utils';
 
-import { createWishlistWorkflow } from '../../../../../workflows/wishlist/create-wishlist';
+import { createWishlistWorkflow } from '@/workflows/wishlist/create-wishlist';
 
 export async function POST(
   req: AuthenticatedMedusaRequest,

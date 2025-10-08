@@ -5,7 +5,8 @@ import {
 } from '@medusajs/framework/workflows-sdk';
 import { useQueryGraphStep } from '@medusajs/medusa/core-flows';
 
-import { Wishlist } from '../../../modules/wishlist/models/wishlist';
+import { Wishlist } from '@/modules/wishlist/models/wishlist';
+
 import { validateWishlistExistsStep } from '../steps/validate-wishlist-exists';
 import { createWishlistItemStep } from './steps/create-wishlist-item';
 import { validateVariantWishlistStep } from './steps/validate-variant-wishlist';

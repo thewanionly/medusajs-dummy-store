@@ -1,8 +1,8 @@
 import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 import { MedusaError } from '@medusajs/framework/utils';
 
-import { WISHLIST_MODULE } from '../../../../../modules/wishlist';
-import WishlistModuleService from '../../../../../modules/wishlist/service';
+import { WISHLIST_MODULE } from '@/modules/wishlist';
+import WishlistModuleService from '@/modules/wishlist/service';
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const { id } = req.params;
