@@ -1,12 +1,18 @@
 'use server';
 
-import { GET_COLLECTIONS_QUERY, GET_COLLECTION_QUERY } from '@lib/gql';
+import {
+  GET_COLLECTIONS_QUERY,
+  GET_COLLECTIONS_SUMMARY_QUERY,
+  GET_COLLECTION_QUERY,
+} from '@lib/gql';
 import { graphqlFetch } from '@lib/gql/apollo-client';
 import {
   GetCollectionQuery,
   GetCollectionQueryVariables,
   GetCollectionsQuery,
   GetCollectionsQueryVariables,
+  GetCollectionsSummaryQuery,
+  GetCollectionsSummaryQueryVariables,
 } from '@lib/gql/generated-types/graphql';
 
 export const retrieveCollection = async (id: string) => {
@@ -40,21 +46,20 @@ export const listCollections = async (
 
     return {
       collections: data?.collections,
-      count: data?.collections?.length || 0,
     };
   } catch (error) {
     console.error('Error fetching collections from BFF:', error);
-    return { collections: [], count: 0 };
+    return { collections: [] };
   }
 };
 
 export const getCollectionByHandle = async (handle: string) => {
   try {
     const data = await graphqlFetch<
-      GetCollectionsQuery,
-      GetCollectionsQueryVariables
+      GetCollectionsSummaryQuery,
+      GetCollectionsSummaryQueryVariables
     >({
-      query: GET_COLLECTIONS_QUERY,
+      query: GET_COLLECTIONS_SUMMARY_QUERY,
       variables: { handle: [handle] },
     });
 

@@ -115,3 +115,28 @@ export const PRODUCT_FRAGMENT = gql`
   ${PRODUCT_VARIANT_FRAGMENT}
   ${PRODUCT_COLLECTION_FRAGMENT}
 `;
+
+export const COLLECTION_PRODUCTS_FRAGMENT = gql`
+  fragment CollectionProducts on CollectionProducts {
+    count
+    items {
+      id
+      title
+      handle
+      thumbnail
+      images {
+        ...ProductImage
+      }
+      variants {
+        price {
+          ...Price
+        }
+        originalPrice {
+          ...Price
+        }
+      }
+    }
+  }
+  ${PRODUCT_IMAGE_FRAGMENT}
+  ${PRICE_FRAGMENT}
+`;

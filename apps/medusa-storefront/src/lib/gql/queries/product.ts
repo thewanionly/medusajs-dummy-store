@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 
 import {
+  COLLECTION_PRODUCTS_FRAGMENT,
   PRODUCT_CATEGORY_FRAGMENT,
   PRODUCT_COLLECTION_FRAGMENT,
   PRODUCT_FRAGMENT,
@@ -107,27 +108,39 @@ export const GET_PRODUCT_CATEGORY_QUERY = gql`
 `;
 
 export const GET_COLLECTIONS_QUERY = gql`
-  query GetCollections($limit: Int, $offset: Int, $handle: [String]) {
+  query GetCollections($limit: Int, $offset: Int) {
+    collections(limit: $limit, offset: $offset) {
+      ...ProductCollection
+      products {
+        ...CollectionProducts
+      }
+    }
+  }
+  ${PRODUCT_COLLECTION_FRAGMENT}
+  ${COLLECTION_PRODUCTS_FRAGMENT}
+`;
+
+export const GET_COLLECTIONS_SUMMARY_QUERY = gql`
+  query GetCollectionsSummary($limit: Int, $offset: Int, $handle: [String]) {
     collections(limit: $limit, offset: $offset, handle: $handle) {
       ...ProductCollection
       products {
-        ...Product
+        count
       }
     }
   }
   ${PRODUCT_COLLECTION_FRAGMENT}
-  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_COLLECTION_QUERY = gql`
-  query GetCollection($id: ID, $handle: String) {
-    collection(id: $id, handle: $handle) {
+  query GetCollection($id: ID) {
+    collection(id: $id) {
       ...ProductCollection
       products {
-        ...Product
+        ...CollectionProducts
       }
     }
   }
-  ${PRODUCT_COLLECTION_FRAGMENT}
+  ${COLLECTION_PRODUCTS_FRAGMENT}
   ${PRODUCT_FRAGMENT}
 `;

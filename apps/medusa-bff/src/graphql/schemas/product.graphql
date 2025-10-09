@@ -27,7 +27,7 @@ type Query {
   ): [ProductCategory!]!
   productCategory(id: ID, handle: String): ProductCategory
   collections(limit: Int, offset: Int, handle: [String]): [Collection!]!
-  collection(id: ID, handle: String): Collection
+  collection(id: ID): Collection
 }
 
 type ProductListResponse {
@@ -120,9 +120,10 @@ type Collection {
   id: ID!
   title: String!
   handle: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  products: [Product!]
-  metadata: JSON
+  products: CollectionProducts
+}
+
+type CollectionProducts {
+  count: Int!
+  items: [Product!]
 }
