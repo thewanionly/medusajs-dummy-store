@@ -1,7 +1,5 @@
-import { listProducts } from '@lib/data/products';
 import { Product } from '@lib/gql/generated-types/graphql';
 import { getProductPrice } from '@lib/util/get-product-price';
-import { HttpTypes } from '@medusajs/types';
 import { Text } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
@@ -11,21 +9,10 @@ import PreviewPrice from './price';
 export default async function ProductPreview({
   product,
   isFeatured,
-  region,
 }: {
   product: Product;
   isFeatured?: boolean;
-  region: HttpTypes.StoreRegion;
 }) {
-  // const pricedProduct = await listProducts({
-  //   regionId: region.id,
-  //   queryParams: { id: [product.id!] },
-  // }).then(({ response }) => response.products[0])
-
-  // if (!pricedProduct) {
-  //   return null
-  // }
-
   const { cheapestPrice } = getProductPrice({
     product,
   });

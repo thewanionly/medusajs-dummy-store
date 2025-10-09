@@ -41,10 +41,10 @@ export const productResolvers = {
     },
     collection: async (
       _parent: unknown,
-      params: HttpTypes.SelectParams & { id: string },
+      params: { id: string },
       context: GraphQLContext
     ) => {
-      return await context.collectionService.getCollection(params.id, params);
+      return await context.collectionService.getCollection(params.id);
     },
   },
   Collection: {
