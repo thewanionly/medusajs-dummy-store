@@ -1,27 +1,14 @@
-import { listProducts } from '@lib/data/products';
 import { Collection, Product } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
 import { Text } from '@medusajs/ui';
 import InteractiveLink from '@modules/common/components/interactive-link';
 import ProductPreview from '@modules/products/components/product-preview';
 
 export default async function ProductRail({
   collection,
-  region,
 }: {
   collection: Collection;
-  region: HttpTypes.StoreRegion;
 }) {
-  const {
-    response: { products: pricedProducts },
-  } = await listProducts({
-    regionId: region.id,
-    queryParams: {
-      collection_id: collection.id,
-    },
-  });
-
-  if (!pricedProducts) {
+  if (!collection.products || collection.products.count === 0) {
     return null;
   }
 
@@ -34,14 +21,10 @@ export default async function ProductRail({
         </InteractiveLink>
       </div>
       <ul className="grid grid-cols-2 gap-x-6 gap-y-24 small:grid-cols-3 small:gap-y-36">
-        {pricedProducts &&
-          pricedProducts.map((product) => (
+        {collection.products.items &&
+          collection.products.items.map((product) => (
             <li key={product?.id}>
-              <ProductPreview
-                product={product as Product}
-                region={region}
-                isFeatured
-              />
+              <ProductPreview product={product as Product} isFeatured />
             </li>
           ))}
       </ul>
