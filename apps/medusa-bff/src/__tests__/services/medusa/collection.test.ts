@@ -70,17 +70,16 @@ describe('CollectionService', () => {
         collection: mockCollection,
       });
 
-      const result = await collectionService.getCollection('col_1', {});
+      const result = await collectionService.getCollection('col_1');
       expect(result).toEqual(mockCollection);
       expect(mockMedusaApi.store.collection.retrieve).toHaveBeenCalledWith(
-        'col_1',
-        {}
+        'col_1'
       );
     });
 
     it('should return null when collection not found', async () => {
       mockMedusaApi.store.collection.retrieve.mockResolvedValue({});
-      const result = await collectionService.getCollection('nonexistent', {});
+      const result = await collectionService.getCollection('nonexistent');
       expect(result).toBeNull();
     });
 
@@ -89,7 +88,7 @@ describe('CollectionService', () => {
         new Error('Collection not found')
       );
       await expect(
-        collectionService.getCollection('invalid', {})
+        collectionService.getCollection('invalid')
       ).rejects.toThrow();
     });
   });

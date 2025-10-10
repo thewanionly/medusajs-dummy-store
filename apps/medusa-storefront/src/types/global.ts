@@ -22,3 +22,14 @@ export type StoreFreeShippingPrice = StorePrice & {
   target_remaining: number;
   remaining_percentage: number;
 };
+
+export type CollectionsSummary = {
+  id: string;
+  title: string;
+  handle: string;
+  products?:
+    | {
+        id: string;
+      }[]
+    | null;
+};

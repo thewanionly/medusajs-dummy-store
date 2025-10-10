@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
-import { Collection } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { CollectionsSummary } from 'types/global';
+
 import SkeletonProductGrid from '@modules/skeletons/templates/skeleton-product-grid';
 import RefinementList from '@modules/store/components/refinement-list';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
@@ -14,7 +14,7 @@ export default function CollectionTemplate({
   countryCode,
 }: {
   sortBy?: SortOptions;
-  collection: Collection;
+  collection: CollectionsSummary;
   page?: string;
   countryCode: string;
 }) {
