@@ -2,8 +2,8 @@ import { CustomerDTO, PromotionDTO } from '@medusajs/framework/types';
 import { MedusaError } from '@medusajs/framework/utils';
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { LOYALTY_MODULE } from '../../../modules/loyalty';
-import LoyaltyModuleService from '../../../modules/loyalty/service';
+import { LOYALTY_MODULE } from '../../../../modules/loyalty';
+import LoyaltyModuleService from '../../../../modules/loyalty/service';
 
 export type GetCartLoyaltyPromoAmountStepInput = {
   cart: {
@@ -23,7 +23,7 @@ export const getCartLoyaltyPromoAmountStep = createStep(
       cart.customer.id
     );
 
-    if (loyaltyPoints <= 0) {
+    if (loyaltyPoints.points <= 0) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
         'Customer has no loyalty points'
@@ -31,7 +31,9 @@ export const getCartLoyaltyPromoAmountStep = createStep(
     }
 
     const promoDiscountAmount =
-      await loyaltyModuleService.calculateAmountFromPoints(loyaltyPoints);
+      await loyaltyModuleService.calculateAmountFromPoints(
+        loyaltyPoints.points
+      );
 
     const amount = Math.min(promoDiscountAmount, cart.total);
 

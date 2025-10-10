@@ -1,7 +1,7 @@
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { LOYALTY_MODULE } from '../../../modules/loyalty';
-import LoyaltyModuleService from '../../../modules/loyalty/service';
+import { LOYALTY_MODULE } from '../../../../modules/loyalty';
+import LoyaltyModuleService from '../../../../modules/loyalty/service';
 
 type DeductPurchasePointsInput = {
   customer_id: string;
@@ -16,6 +16,8 @@ export const deductPurchasePointsStep = createStep(
 
     const pointsToDeduct =
       await loyaltyModuleService.calculatePointsRequired(amount);
+
+    await loyaltyModuleService.releasePoints(customer_id, pointsToDeduct);
 
     const result = await loyaltyModuleService.deductPoints(
       customer_id,

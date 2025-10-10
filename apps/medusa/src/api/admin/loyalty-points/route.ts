@@ -10,9 +10,9 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
   if (!customerId) res.json({ points: null });
 
-  const points = await loyaltyModuleService.getPoints(customerId as string);
-
-  res.json({
-    points,
+  const points = await loyaltyModuleService.listLoyaltyPoints({
+    customer_id: customerId,
   });
+
+  res.json(points[0]);
 }

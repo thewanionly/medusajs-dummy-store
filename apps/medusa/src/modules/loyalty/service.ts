@@ -2,6 +2,7 @@ import { InferTypeOf } from '@medusajs/framework/types';
 import { MedusaError, MedusaService } from '@medusajs/framework/utils';
 
 import LoyaltyPoint from './models/loyalty-point';
+import Reward from './models/reward';
 
 type LoyaltyPoint = InferTypeOf<typeof LoyaltyPoint>;
 
@@ -15,6 +16,7 @@ const DEFAULT_LOYALTY_OPTIONS: LoyaltyOptions = {
 
 class LoyaltyModuleService extends MedusaService({
   LoyaltyPoint,
+  Reward,
 }) {
   private options: LoyaltyOptions;
 
@@ -64,12 +66,17 @@ class LoyaltyModuleService extends MedusaService({
     });
   }
 
-  async getPoints(customerId: string): Promise<number> {
+  async getPoints(
+    customerId: string
+  ): Promise<{ points: number; lockedPoints: number }> {
     const points = await this.listLoyaltyPoints({
       customer_id: customerId,
     });
 
-    return points[0]?.points || 0;
+    return {
+      points: points[0]?.points || 0,
+      lockedPoints: points[0].locked_points || 0,
+    };
   }
 
   /**
@@ -129,6 +136,90 @@ class LoyaltyModuleService extends MedusaService({
     const points = discountAmount;
 
     return points;
+  }
+
+  async lockPoints(
+    customerId: string,
+    pointsToLock: number
+  ): Promise<LoyaltyPoint> {
+    if (pointsToLock <= 0) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Cannot lock zero or negative points'
+      );
+    }
+
+    const loyaltyPoint = await this.listLoyaltyPoints({
+      customer_id: customerId,
+    });
+
+    if (loyaltyPoint.length < 1) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_FOUND,
+        'Customer has no loyalty points information'
+      );
+    }
+
+    if (loyaltyPoint[0].points < pointsToLock) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Not enough loyalty points available'
+      );
+    }
+
+    const newData = {
+      points: loyaltyPoint[0].points - pointsToLock,
+      locked_points: loyaltyPoint[0].locked_points + pointsToLock,
+    };
+
+    const updatedLoyaltyPoint = await this.updateLoyaltyPoints({
+      id: loyaltyPoint[0].id,
+      ...newData,
+    });
+
+    return updatedLoyaltyPoint;
+  }
+
+  async releasePoints(
+    customerId: string,
+    pointsToRelease: number
+  ): Promise<LoyaltyPoint> {
+    if (pointsToRelease <= 0) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Cannot release zero or negative points'
+      );
+    }
+
+    const loyaltyPoint = await this.listLoyaltyPoints({
+      customer_id: customerId,
+    });
+
+    if (loyaltyPoint.length < 1) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_FOUND,
+        'Customer has no loyalty points information'
+      );
+    }
+
+    if (loyaltyPoint[0].locked_points < pointsToRelease) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Not enough locked points to release'
+      );
+    }
+
+    const newData = {
+      points: loyaltyPoint[0].points + pointsToRelease,
+      locked_points: loyaltyPoint[0].locked_points - pointsToRelease,
+    };
+
+    const updatedLoyaltyPoint = await this.updateLoyaltyPoints({
+      id: loyaltyPoint[0].id,
+      ...newData,
+    });
+
+    return updatedLoyaltyPoint;
   }
 }
 
