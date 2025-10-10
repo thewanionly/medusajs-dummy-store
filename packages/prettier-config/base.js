@@ -25,10 +25,12 @@ export default {
     '^(react$)|^(react/(.*)$)',
     '^(next$)|^(next/(.*)$)',
     '<THIRD_PARTY_MODULES>',
-    '^@(.*)$',
+    '^@[a-zA-Z0-9_-]+/(.*)$', // external or internal scoped packages
+    '^@/(.*)$', // local alias
     '^([./])|^([../])',
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
+  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   plugins,
 };
