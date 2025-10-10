@@ -1,6 +1,6 @@
 import { HttpResponse } from 'msw';
 
-import { mockedProduct } from '../../data/product';
+import { mockedProducts } from '../../data/product';
 import { medusaBff } from '../apis';
 
 export const handlers = [
@@ -8,8 +8,8 @@ export const handlers = [
     return HttpResponse.json({
       data: {
         products: {
-          products: [mockedProduct],
-          count: 1,
+          products: mockedProducts,
+          count: mockedProducts.length,
           limit: 50,
           offset: 0,
         },
