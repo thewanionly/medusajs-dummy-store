@@ -28,6 +28,13 @@ type Address {
   postal_code: String
 }
 
+type Region {
+  id: ID!
+  name: String!
+  currency_code: String!
+  automatic_taxes: Boolean
+}
+
 type Promotion {
   id: String
 }
@@ -66,6 +73,7 @@ type Cart {
   updated_at: String
   promo_codes: [String]
   shipping_methods: [ShippingMethod!]
+  region: Region
 }
 
 input AddressInput {

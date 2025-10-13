@@ -32,6 +32,15 @@ export const ADDRESS_FRAGMENT = gql`
   }
 `;
 
+export const REGION_FRAGMENT = gql`
+  fragment RegionFields on Region {
+    id
+    name
+    currency_code
+    automatic_taxes
+  }
+`;
+
 export const SHIPPING_METHODS_FRAGMENT = gql`
   fragment ShippingMethodFields on ShippingMethod {
     id
@@ -58,7 +67,11 @@ export const CART_FRAGMENT = gql`
     billing_address {
       ...AddressFields
     }
+    region {
+      ...RegionFields
+    }
   }
   ${LINE_ITEM_FRAGMENT}
   ${ADDRESS_FRAGMENT}
+  ${REGION_FRAGMENT}
 `;
