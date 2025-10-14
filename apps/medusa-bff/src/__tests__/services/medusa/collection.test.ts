@@ -37,9 +37,9 @@ describe('CollectionService', () => {
 
       const result = await collectionService.getCollections();
       expect(result).toEqual(mockCollections);
-      expect(mockMedusaApi.store.collection.list).toHaveBeenCalledWith(
-        undefined
-      );
+      expect(mockMedusaApi.store.collection.list).toHaveBeenCalledWith({
+        fields: 'id,title,handle',
+      });
     });
 
     it('should handle empty collection response', async () => {
@@ -73,7 +73,8 @@ describe('CollectionService', () => {
       const result = await collectionService.getCollection('col_1');
       expect(result).toEqual(mockCollection);
       expect(mockMedusaApi.store.collection.retrieve).toHaveBeenCalledWith(
-        'col_1'
+        'col_1',
+        { fields: 'id,title,handle' }
       );
     });
 

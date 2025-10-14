@@ -9,7 +9,10 @@ export class CollectionService extends MedusaBaseService {
     params?: HttpTypes.FindParams & HttpTypes.StoreCollectionFilters
   ): Promise<Collection[]> {
     try {
-      const { collections } = await this.medusa.store.collection.list(params);
+      const { collections } = await this.medusa.store.collection.list({
+        ...params,
+        fields: 'id,title,handle',
+      });
 
       return collections?.map(({ id, title, handle }) => ({
         id,
@@ -23,7 +26,9 @@ export class CollectionService extends MedusaBaseService {
 
   async getCollection(id: string): Promise<Collection | null> {
     try {
-      const { collection } = await this.medusa.store.collection.retrieve(id);
+      const { collection } = await this.medusa.store.collection.retrieve(id, {
+        fields: 'id,title,handle',
+      });
       if (!collection) return null;
 
       const { id: collectionId, title, handle } = collection;
