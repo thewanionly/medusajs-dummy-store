@@ -4,7 +4,7 @@ import { HttpResponse } from 'msw';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import { medusaBff } from '../../mocks/msw/apis';
-import { handlers } from '../../mocks/msw/handlers';
+import { handlers } from '../../mocks/msw/handlers/storybook';
 import ProductCard from './ProductCard';
 
 const meta = {
