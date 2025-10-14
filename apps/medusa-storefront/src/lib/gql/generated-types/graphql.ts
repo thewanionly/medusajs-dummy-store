@@ -152,7 +152,7 @@ export type Query = {
 };
 
 export type Query_CollectionArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
 };
 
 export type Query_CollectionsArgs = {
@@ -441,7 +441,7 @@ export type GetCollectionsSummaryQuery = {
 };
 
 export type GetCollectionQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
 }>;
 
 export type GetCollectionQuery = {
@@ -2890,7 +2890,10 @@ export const GetCollectionDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
         },
       ],
       selectionSet: {
