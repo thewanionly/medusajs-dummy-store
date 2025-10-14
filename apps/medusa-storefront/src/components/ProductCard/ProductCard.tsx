@@ -7,7 +7,7 @@ import { getProductPrice } from '@lib/util/get-product-price';
 import { Button } from '@medusajs/ui';
 import Thumbnail from '@modules/products/components/thumbnail';
 
-import { listProducts } from './ProductCard.services';
+import { addToCart, listProducts } from './ProductCard.services';
 
 interface ProductCardProps {
   handle: string;
@@ -36,6 +36,7 @@ const checkIfInStock = (variant?: ProductVariant): boolean => {
 
 export default function ProductCard({ handle, countryCode }: ProductCardProps) {
   const [product, setProduct] = useState<Product>();
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,16 +71,25 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
 
   const inStock = checkIfInStock(firstVariant);
 
-  // TODO:
-  // async function handleAddToCart() {
-  //   'use server';
-  //   if (!firstVariant) return;
-  //   await addToCart({
-  //     variantId: firstVariant.id,
-  //     quantity: 1,
-  //     countryCode,
-  //   });
-  // }
+  const handleAddToCart = async () => {
+    if (!firstVariant) return;
+
+    setIsAdding(true);
+
+    await addToCart({
+      variantId: firstVariant.id,
+      quantity: 1,
+      countryCode,
+    });
+
+    setIsAdding(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    handleAddToCart();
+  };
 
   return (
     <div className="flex max-w-sm flex-col gap-3 rounded-lg border p-4">
@@ -97,16 +107,13 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
               Price: {variantPrice.calculated_price}
             </div>
           )}
-          <form
-            // action={handleAddToCart}
-            className="mt-2 flex w-full flex-col"
-          >
+          <form onSubmit={handleSubmit} className="mt-2 flex w-full flex-col">
             <Button
-              // onClick={handleAddToCart}
+              type="submit"
               disabled={!inStock}
               variant="primary"
               className="h-10 w-full"
-              // isLoading={isAdding}
+              isLoading={isAdding}
               data-testid="add-product-button"
             >
               {!inStock ? 'Out of stock' : 'Add to cart'}
