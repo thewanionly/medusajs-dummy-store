@@ -1,4 +1,4 @@
-import { outOfStockProduct } from 'mocks/data/products';
+import { outOfStockProduct } from 'mocks/data/storybook/products';
 import { HttpResponse } from 'msw';
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
