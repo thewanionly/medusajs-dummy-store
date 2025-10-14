@@ -1,6 +1,6 @@
 import { HttpResponse } from 'msw';
 
-import { mockedProducts } from '../../../data/products';
+import { mockedProducts } from '../../../data/storybook/products';
 import { medusaBff } from '../../apis';
 
 export const handlers = [
