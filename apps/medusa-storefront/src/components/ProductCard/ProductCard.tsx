@@ -31,7 +31,12 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
   }, [countryCode, handle]);
 
   if (!product) {
-    return <div>Product not found</div>;
+    return (
+      <div className="flex max-w-sm flex-col gap-3 rounded-lg border p-4">
+        <Thumbnail size="square" />
+        <h3 className="text-lg font-semibold">Product not found</h3>
+      </div>
+    );
   }
 
   // Get the first variant for the UI & Add to Cart
