@@ -10,8 +10,6 @@ export const handlers = [
         products: {
           products: mockedProducts,
           count: mockedProducts.length,
-          limit: 50,
-          offset: 0,
         },
       },
     });
