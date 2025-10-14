@@ -1,3 +1,4 @@
+import { outOfStockProduct } from 'mocks/data/products';
 import { HttpResponse } from 'msw';
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
@@ -35,6 +36,28 @@ export const Error: Story = {
                 message: 'Not found',
               },
             ],
+          });
+        }),
+      ],
+    },
+  },
+};
+
+export const OutOfStock: Story = {
+  args: { handle: 'mens-tree-gliders-thunder-green', countryCode: 'dk' },
+  parameters: {
+    msw: {
+      handlers: [
+        medusaBff.query('GetProducts', () => {
+          return HttpResponse.json({
+            data: {
+              products: {
+                products: [outOfStockProduct],
+                count: 1,
+                limit: 50,
+                offset: 0,
+              },
+            },
           });
         }),
       ],
