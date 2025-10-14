@@ -133,7 +133,7 @@ export const GET_COLLECTIONS_SUMMARY_QUERY = gql`
 `;
 
 export const GET_COLLECTION_QUERY = gql`
-  query GetCollection($id: ID) {
+  query GetCollection($id: ID!) {
     collection(id: $id) {
       ...ProductCollection
       products {

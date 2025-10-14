@@ -27,7 +27,7 @@ type Query {
   ): [ProductCategory!]!
   productCategory(id: ID, handle: String): ProductCategory
   collections(limit: Int, offset: Int, handle: [String]): [Collection!]!
-  collection(id: ID): Collection
+  collection(id: ID!): Collection
 }
 
 type ProductListResponse {
