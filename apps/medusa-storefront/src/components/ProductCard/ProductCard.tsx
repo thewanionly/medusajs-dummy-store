@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Product } from '@lib/gql/generated-types/graphql';
+import { Product, ProductVariant } from '@lib/gql/generated-types/graphql';
 import { getProductPrice } from '@lib/util/get-product-price';
+import { Button } from '@medusajs/ui';
 import Thumbnail from '@modules/products/components/thumbnail';
 
 import { listProducts } from './ProductCard.services';
@@ -12,6 +13,26 @@ interface ProductCardProps {
   handle: string;
   countryCode: string;
 }
+
+const checkIfInStock = (variant?: ProductVariant): boolean => {
+  // If we don't manage inventory, we can always add to cart
+  if (variant && !variant.manageInventory) {
+    return true;
+  }
+
+  // If we allow back orders on the variant, we can add to cart
+  if (variant?.allowBackorder) {
+    return true;
+  }
+
+  // If there is inventory available, we can add to cart
+  if (variant?.manageInventory && (variant?.inventoryQuantity || 0) > 0) {
+    return true;
+  }
+
+  // Otherwise, we can't add to cart
+  return false;
+};
 
 export default function ProductCard({ handle, countryCode }: ProductCardProps) {
   const [product, setProduct] = useState<Product>();
@@ -47,6 +68,8 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
     variantId: firstVariant?.id,
   });
 
+  const inStock = checkIfInStock(firstVariant);
+
   // TODO:
   // async function handleAddToCart() {
   //   'use server';
@@ -78,12 +101,16 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
             // action={handleAddToCart}
             className="mt-2 flex w-full flex-col"
           >
-            <button
-              type="submit"
-              className="rounded bg-black px-4 py-2 text-white hover:bg-gray-700 focus:outline-none"
+            <Button
+              // onClick={handleAddToCart}
+              disabled={!inStock}
+              variant="primary"
+              className="h-10 w-full"
+              // isLoading={isAdding}
+              data-testid="add-product-button"
             >
-              Add to Cart
-            </button>
+              {!inStock ? 'Out of stock' : 'Add to cart'}
+            </Button>
           </form>
         </>
       ) : (
