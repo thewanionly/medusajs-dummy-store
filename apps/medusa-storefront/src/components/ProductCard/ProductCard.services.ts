@@ -108,3 +108,48 @@ export const listProducts = async ({
     };
   }
 };
+
+// cart
+
+export const createCart = async (countryCode: string) => {
+  const region = await getRegion(countryCode);
+
+  if (!region) {
+    throw new Error(`Region not found for country code: ${countryCode}`);
+  }
+
+  const cartResp = await sdk.store.cart.create({ region_id: region.id }, {});
+
+  return cartResp.cart;
+};
+
+export const addToCart = async ({
+  variantId,
+  quantity,
+  countryCode,
+}: {
+  variantId: string;
+  quantity: number;
+  countryCode: string;
+}) => {
+  if (!variantId) {
+    throw new Error('Missing variant ID when adding to cart');
+  }
+
+  const cart = await createCart(countryCode);
+
+  if (!cart) {
+    throw new Error('Error retrieving or creating cart');
+  }
+
+  await sdk.store.cart
+    .createLineItem(
+      cart.id,
+      {
+        variant_id: variantId,
+        quantity,
+      },
+      {}
+    )
+    .catch(medusaError);
+};
