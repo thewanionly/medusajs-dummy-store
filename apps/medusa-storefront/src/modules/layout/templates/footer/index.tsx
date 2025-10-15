@@ -31,12 +31,12 @@ export default async function Footer() {
                   data-testid="footer-categories"
                 >
                   {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
+                    if (c.parentCategory) {
                       return;
                     }
 
                     const children =
-                      c.category_children?.map((child) => ({
+                      c.categoryChildren?.map((child) => ({
                         name: child.name,
                         handle: child.handle,
                         id: child.id,

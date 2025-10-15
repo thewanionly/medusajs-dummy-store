@@ -25,7 +25,7 @@ type Query {
     include_descendants_tree: Boolean
     parent_category_id: String
   ): [ProductCategory!]!
-  productCategory(id: ID, handle: String): ProductCategory
+  productCategory(id: ID!): ProductCategory
   collections(limit: Int, offset: Int, handle: [String]): [Collection!]!
   collection(id: ID!): Collection
 }
@@ -105,25 +105,19 @@ type ProductCategory {
   name: String!
   description: String
   handle: String!
-  rank: Int
-  parent_category_id: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  parent_category: ProductCategory
-  category_children: [ProductCategory!]
-  products: [Product!]
-  metadata: JSON
+  parentCategory: ProductCategory
+  categoryChildren: [ProductCategory!]
+  products: ProductList
 }
 
 type Collection {
   id: ID!
   title: String!
   handle: String!
-  products: CollectionProducts
+  products: ProductList
 }
 
-type CollectionProducts {
+type ProductList {
   count: Int!
   items: [Product!]
 }

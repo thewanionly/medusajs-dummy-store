@@ -60,12 +60,6 @@ export const PRODUCT_CATEGORY_FRAGMENT = gql`
     name
     description
     handle
-    parent_category_id
-    rank
-    created_at
-    updated_at
-    deleted_at
-    metadata
   }
 `;
 
@@ -117,7 +111,7 @@ export const PRODUCT_FRAGMENT = gql`
 `;
 
 export const COLLECTION_PRODUCTS_FRAGMENT = gql`
-  fragment CollectionProducts on CollectionProducts {
+  fragment CollectionProducts on ProductList {
     count
     items {
       id

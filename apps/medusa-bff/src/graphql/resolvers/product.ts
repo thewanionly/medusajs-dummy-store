@@ -30,7 +30,7 @@ export const productResolvers = {
       params: HttpTypes.StoreProductCategoryParams & { id: string },
       context: GraphQLContext
     ) => {
-      return await context.categoryService.getCategory(params.id, params);
+      return await context.categoryService.getCategory(params.id);
     },
     collections: async (
       _parent: unknown,
@@ -72,7 +72,7 @@ export const productResolvers = {
           ...args,
           category_id: [parent.id],
         })
-        .then((res) => res.products);
+        .then(({ products, count }) => ({ items: products, count }));
     },
   },
 };

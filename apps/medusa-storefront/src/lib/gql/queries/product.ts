@@ -66,45 +66,39 @@ export const GET_PRODUCT_CATEGORIES_QUERY = gql`
       parent_category_id: $parent_category_id
     ) {
       ...ProductCategory
-      parent_category {
+      parentCategory {
         ...ProductCategory
       }
-      category_children {
+      categoryChildren {
         ...ProductCategory
       }
       products {
-        ...Product
+        count
       }
     }
   }
   ${PRODUCT_CATEGORY_FRAGMENT}
-  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_PRODUCT_CATEGORY_QUERY = gql`
-  query GetProductCategory($id: ID, $handle: String) {
-    productCategory(id: $id, handle: $handle) {
+  query GetProductCategory($id: ID!) {
+    productCategory(id: $id) {
       ...ProductCategory
-      parent_category {
-        id
-        name
-        handle
-        parent_category {
-          id
-          name
-          handle
+      parentCategory {
+        ...ProductCategory
+        parentCategory {
+          ...ProductCategory
         }
       }
-      category_children {
+      categoryChildren {
         ...ProductCategory
       }
       products {
-        ...Product
+        count
       }
     }
   }
   ${PRODUCT_CATEGORY_FRAGMENT}
-  ${PRODUCT_FRAGMENT}
 `;
 
 export const GET_COLLECTIONS_QUERY = gql`
