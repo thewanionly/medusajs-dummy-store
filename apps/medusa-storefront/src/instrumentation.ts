@@ -1,8 +1,5 @@
 export async function register() {
-  if (
-    process.env.NEXT_PUBLIC_ENABLE_API_MOCKING === 'true' &&
-    process.env.NEXT_RUNTIME === 'nodejs'
-  ) {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
     const { server } = await import('./mocks/msw/node');
 
     server.listen();
