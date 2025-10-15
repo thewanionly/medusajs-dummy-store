@@ -1,8 +1,5 @@
 import { ExecArgs } from '@medusajs/framework/types';
-import {
-  ContainerRegistrationKeys,
-  Modules,
-} from '@medusajs/framework/utils';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 import {
   createApiKeysWorkflow,
   createProductCategoriesWorkflow,
@@ -329,6 +326,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
   });
 
   logger.info('Finished seeding product categories.');
-  logger.info('⚠️  Skipping product seeding - products will be added manually.');
-  logger.info('ℹ️  Add your first product through the admin dashboard to test Sanity sync.');
+  logger.info(
+    '⚠️  Skipping product seeding - products will be added manually.'
+  );
 }

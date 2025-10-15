@@ -1,44 +1,25 @@
 import { defineConfig, loadEnv } from '@medusajs/framework/utils';
 
-
-
-
-
 loadEnv(process.env.NODE_ENV || 'development', process.cwd());
-const {
-  MEDUSA_BACKEND_URL,
-  MEDUSA_DISABLE_ADMIN,
-   MEDUSA_DATABASE_URL,
-  MEDUSA_WORKER_MODE,
-  MEDUSA_STORE_CORS,
-  MEDUSA_ADMIN_CORS,
-  MEDUSA_AUTH_CORS,
-  MEDUSA_JWT_SECRET,
-  MEDUSA_COOKIE_SECRET,
-  SANITY_API_TOKEN,
-  SANITY_API_VERSION,
-  SANITY_PROJECT_ID,
- SANITY_STUDIO_URL,
-  SANITY_DATASET,
-} = process.env;
+
 module.exports = defineConfig({
   projectConfig: {
-    databaseUrl: MEDUSA_DATABASE_URL,
-    workerMode: MEDUSA_WORKER_MODE as
+    databaseUrl: process.env.DATABASE_URL,
+    workerMode: process.env.MEDUSA_WORKER_MODE as
       | 'shared'
       | 'worker'
       | 'server',
     http: {
-      storeCors: MEDUSA_STORE_CORS!,
-      adminCors: MEDUSA_ADMIN_CORS!,
-      authCors: MEDUSA_AUTH_CORS!,
-      jwtSecret: MEDUSA_JWT_SECRET || 'supersecret',
-      cookieSecret: MEDUSA_COOKIE_SECRET || 'supersecret',
+      storeCors: process.env.STORE_CORS!,
+      adminCors: process.env.ADMIN_CORS!,
+      authCors: process.env.AUTH_CORS!,
+      jwtSecret: process.env.JWT_SECRET || 'supersecret',
+      cookieSecret: process.env.COOKIE_SECRET || 'supersecret',
     },
   },
   admin: {
-    backendUrl: MEDUSA_BACKEND_URL,
-    disable: MEDUSA_DISABLE_ADMIN === 'true',
+    backendUrl: process.env.MEDUSA_BACKEND_URL,
+    disable: process.env.DISABLE_MEDUSA_ADMIN === 'true',
   },
   modules: [
     {
@@ -61,20 +42,6 @@ module.exports = defineConfig({
       resolve: '@mds/medusa-plugin-shopify',
       options: {
         baseUrl: process.env.SHOPIFY_BASE_URL,
-      },
-    },
-  ],
-});
-      resolve: "./src/modules/sanity",
-      options: {
-        api_token: SANITY_API_TOKEN,
-        project_id: SANITY_PROJECT_ID,
-        api_version: SANITY_API_VERSION,
-        dataset: SANITY_DATASET,
-        studio_url: SANITY_STUDIO_URL ,
-        type_map: {
-          product: "product",
-        },
       },
     },
   ],

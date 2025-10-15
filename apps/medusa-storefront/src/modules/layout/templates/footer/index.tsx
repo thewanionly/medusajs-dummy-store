@@ -1,16 +1,12 @@
 import { listCategories } from '@lib/data/categories';
 import { listCollections } from '@lib/data/collections';
-import { getSiteSettings, urlFor } from '@lib/sanity-client';
 import { Text, clx } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import MedusaCTA from '@modules/layout/components/medusa-cta';
-import Image from 'next/image';
 
 export default async function Footer() {
   const { collections } = await listCollections();
   const productCategories = await listCategories();
-  
-  const siteSettings = await getSiteSettings();
 
   return (
     <footer className="w-full border-t border-ui-border-base">
@@ -21,13 +17,11 @@ export default async function Footer() {
               href="/"
               className="txt-compact-xlarge-plus uppercase text-ui-fg-subtle hover:text-ui-fg-base"
             >
-              {siteSettings?.title || 'Medusa Store'}
+              Medusa Store
             </LocalizedClientLink>
-            {siteSettings?.description && (
-              <Text className="txt-small mt-2 text-ui-fg-subtle max-w-xs">
-                {siteSettings.description}
-              </Text>
-            )}
+            <Text className="txt-small mt-2 max-w-xs text-ui-fg-subtle">
+              Your one-stop shop for amazing products
+            </Text>
           </div>
           <div className="text-small-regular grid grid-cols-2 gap-10 sm:grid-cols-4 md:gap-x-16">
             {productCategories && productCategories?.length > 0 && (
@@ -113,37 +107,7 @@ export default async function Footer() {
                 </ul>
               </div>
             )}
-            
-            {/* Sanity Social Media Links */}
-            {siteSettings?.socialMedia && siteSettings.socialMedia.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-ui-fg-base txt-small-plus">Follow Us</span>
-                <ul className="txt-small grid grid-cols-1 gap-y-2 text-ui-fg-subtle">
-                  {siteSettings.socialMedia.slice(0, 5).map((social) => (
-                    <li key={social.platform} className="flex items-center gap-2">
-                      {social.logo && (
-                        <Image
-                          src={urlFor(social.logo).width(16).height(16).url()}
-                          alt={social.platform}
-                          width={16}
-                          height={16}
-                          className="opacity-70"
-                        />
-                      )}
-                      <a
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-ui-fg-base"
-                      >
-                        {social.platform}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            
+
             <div className="flex flex-col gap-y-2">
               <span className="txt-ui-fg-base txt-small-plus">Help</span>
               <ul className="txt-small grid grid-cols-1 gap-y-2 text-ui-fg-subtle">
@@ -185,7 +149,7 @@ export default async function Footer() {
         </div>
         <div className="mb-16 flex w-full justify-between text-ui-fg-muted">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} {siteSettings?.title || 'Medusa Store'}. All rights reserved.
+            © {new Date().getFullYear()} Medusa Store. All rights reserved.
           </Text>
           <MedusaCTA />
         </div>
