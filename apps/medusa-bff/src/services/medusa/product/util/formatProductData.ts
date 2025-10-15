@@ -1,6 +1,5 @@
+import type { Product } from '@graphql/generated/graphql';
 import { HttpTypes } from '@medusajs/types';
-
-import { Product } from '../../../../types/products';
 
 export const formatProductData = (
   product?: HttpTypes.StoreProduct
@@ -43,13 +42,14 @@ export const formatProductData = (
     return {
       id: variantId,
       sku,
-      options: variantOptions?.map(({ id, option_id, value }) => ({
-        id,
-        optionId: option_id,
-        value,
-      })),
-      manageInventory,
-      allowBackorder,
+      options:
+        variantOptions?.map(({ id, option_id, value }) => ({
+          id,
+          optionId: option_id || '',
+          value,
+        })) || [],
+      manageInventory: !!manageInventory,
+      allowBackorder: !!allowBackorder,
       inventoryQuantity,
       ...(calculatedPrice && {
         price: {

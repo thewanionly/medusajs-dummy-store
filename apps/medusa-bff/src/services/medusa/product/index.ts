@@ -1,8 +1,8 @@
+import type { Product } from '@graphql/generated/graphql';
 import type { HttpTypes } from '@medusajs/types';
 
 import { MedusaBaseService } from '..';
 import { handleMedusaError } from '../../../lib/error-utils';
-import { Product } from '../../../types/products';
 import { formatProductData } from './util/formatProductData';
 
 export interface ProductsData {
