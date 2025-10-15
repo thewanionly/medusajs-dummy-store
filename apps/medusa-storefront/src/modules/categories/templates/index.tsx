@@ -2,11 +2,7 @@ import { Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import {
-  GetProductCategoriesQuery,
-  GetProductCategoryQuery,
-  ProductCategory,
-} from '@lib/gql/generated-types/graphql';
+import { ProductCategory } from '@lib/gql/generated-types/graphql';
 import InteractiveLink from '@modules/common/components/interactive-link';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import SkeletonProductGrid from '@modules/skeletons/templates/skeleton-product-grid';
@@ -30,12 +26,12 @@ export default function CategoryTemplate({
 
   if (!category || !countryCode) notFound();
 
-  const parents = [] as ProductCategory['parent_category'][];
+  const parents = [] as ProductCategory['parentCategory'][];
 
   const getParents = (category: ProductCategory) => {
-    if (category?.parent_category) {
-      parents.push(category.parent_category);
-      getParents(category.parent_category);
+    if (category?.parentCategory) {
+      parents.push(category.parentCategory);
+      getParents(category.parentCategory);
     }
   };
 
@@ -69,10 +65,10 @@ export default function CategoryTemplate({
             <p>{category.description}</p>
           </div>
         )}
-        {category.category_children && (
+        {category.categoryChildren && category.categoryChildren.length > 0 && (
           <div className="text-base-large mb-8">
             <ul className="grid grid-cols-1 gap-2">
-              {category.category_children?.map((c) => (
+              {category.categoryChildren?.map((c) => (
                 <li key={c.id}>
                   <InteractiveLink href={`/categories/${c.handle}`}>
                     {c.name}
@@ -85,7 +81,7 @@ export default function CategoryTemplate({
         <Suspense
           fallback={
             <SkeletonProductGrid
-              numberOfProducts={category.products?.length ?? 8}
+              numberOfProducts={category.products?.count ?? 8}
             />
           }
         >

@@ -1,6 +1,7 @@
 import { CollectionService } from '@services/medusa/collection';
 
 import { mockMedusaApi } from '../../../__mocks__/products';
+import { COLLECTION_FIELDS } from '../../../constants/medusa';
 
 jest.mock('@medusajs/js-sdk', () => ({
   __esModule: true,
@@ -38,7 +39,7 @@ describe('CollectionService', () => {
       const result = await collectionService.getCollections();
       expect(result).toEqual(mockCollections);
       expect(mockMedusaApi.store.collection.list).toHaveBeenCalledWith({
-        fields: 'id,title,handle',
+        fields: COLLECTION_FIELDS,
       });
     });
 
@@ -74,7 +75,7 @@ describe('CollectionService', () => {
       expect(result).toEqual(mockCollection);
       expect(mockMedusaApi.store.collection.retrieve).toHaveBeenCalledWith(
         'col_1',
-        { fields: 'id,title,handle' }
+        { fields: COLLECTION_FIELDS }
       );
     });
 
