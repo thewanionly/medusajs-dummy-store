@@ -70,10 +70,12 @@ pnpm start
 ### Available Scripts
 
 - `pnpm run dev` - Start development server with hot reload
-- `pnpm run build` - Build the project for production
+- `pnpm run build` - Build the project for production (includes codegen)
 - `pnpm start` - Start the production server
 - `pnpm run lint` - Run ESLint
 - `pnpm run check-types` - Run TypeScript type checking
+- `pnpm run codegen` - Generate TypeScript types from GraphQL schema
+- `pnpm run codegen:watch` - Watch mode for type generation during development
 
 ## Project Structure
 
@@ -87,9 +89,11 @@ References
 src/
 ├── index.ts                    # Apollo Server setup and configuration
 ├── graphql/
+│   ├── generated/
+│   │   └── graphql.ts         # Auto-generated TypeScript types
 │   ├── schemas/
 │   │   ├── base.ts            # Base GraphQL schema definitions
-│   │   ├── product.ts         # Product-specific type definitions
+│   │   ├── product.graphql    # Product-specific GraphQL schema
 │   │   └── index.ts           # Combined schema exports
 │   ├── resolvers/
 │   │   ├── product.ts         # Product query resolvers
@@ -103,6 +107,72 @@ src/
     │   └── index.ts           # Main Medusa API client
     └── index.ts               # Service layer exports
 ```
+
+## GraphQL Code Generation
+
+This project uses GraphQL Code Generator to automatically generate TypeScript types from the GraphQL schema. This eliminates the need for manual type definitions and ensures type safety between your schema and resolvers.
+
+### Configuration
+
+The codegen configuration is defined in `codegen.ts`:
+
+```typescript
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: 'src/graphql/schemas/**/*.graphql',
+  generates: {
+    'src/graphql/generated/graphql.ts': {
+      plugins: ['typescript', 'typescript-resolvers'],
+      config: {
+        useTypeImports: true,
+        contextType: '../types/context#GraphQLContext',
+        skipTypename: true,
+        scalars: {
+          JSON: '{ [key: string]: unknown }',
+          DateTime: 'string',
+        },
+        enumsAsTypes: true,
+      },
+    },
+  },
+  hooks: {
+    afterAllFileWrite: ['prettier --write'],
+  },
+};
+
+export default config;
+```
+
+### Usage
+
+Generate types from your GraphQL schema:
+
+```bash
+# Generate types once
+pnpm run codegen
+
+# Watch for schema changes and regenerate automatically
+pnpm run codegen:watch
+```
+
+The generated types are automatically included in the build process, so running `pnpm run build` will also generate the latest types.
+
+### Generated Types
+
+The codegen generates TypeScript types for:
+
+- **GraphQL Types**: All types defined in your `.graphql` schema files
+- **Resolver Types**: Properly typed resolvers with context and argument types
+- **Scalar Types**: Custom scalar mappings (JSON, DateTime)
+- **Context Types**: Integration with your GraphQL context interface
+
+### Benefits
+
+- **Type Safety**: Automatic type checking between schema and resolvers
+- **Auto-completion**: IDE support for GraphQL operations
+- **Refactoring**: Safe renaming and restructuring of GraphQL types
+- **Documentation**: Generated types serve as living documentation
 
 ## Writing Schema, Resolvers and Services
 
@@ -149,24 +219,22 @@ Resolvers handle the business logic for your GraphQL operations. Create resolver
 
 ```typescript
 // src/graphql/resolvers/example.ts
-import { Context } from '../types/context';
+import type { Resolvers } from '@graphql/generated/graphql';
 
-export const exampleResolvers = {
+import { GraphQLContext } from '../types/context';
+
+export const exampleResolvers: Resolvers<GraphQLContext> = {
   Query: {
-    examples: async (_: unknown, __: unknown, context: Context) => {
-      return context.services.example.getAll();
+    examples: async (_parent, _args, context) => {
+      return context.exampleService.getAll();
     },
-    example: async (_: unknown, { id }: { id: string }, context: Context) => {
-      return context.services.example.getById(id);
+    example: async (_parent, { id }, context) => {
+      return context.exampleService.getById(id);
     },
   },
   Mutation: {
-    createExample: async (
-      _: unknown,
-      { input }: { input: CreateExampleInput },
-      context: Context
-    ) => {
-      return context.services.example.create(input);
+    createExample: async (_parent, { input }, context) => {
+      return context.exampleService.create(input);
     },
   },
 };
@@ -190,6 +258,8 @@ Services contain the business logic and external API calls. Create service files
 
 ```typescript
 // src/services/example.ts
+import type { CreateExampleInput, Example } from '@graphql/generated/graphql';
+
 export class ExampleService {
   private apiClient: any;
 
@@ -197,7 +267,7 @@ export class ExampleService {
     this.apiClient = apiClient;
   }
 
-  async getAll() {
+  async getAll(): Promise<Example[]> {
     try {
       const response = await this.apiClient.get('/examples');
       return response.data;
@@ -206,7 +276,7 @@ export class ExampleService {
     }
   }
 
-  async getById(id: string) {
+  async getById(id: string): Promise<Example | null> {
     try {
       const response = await this.apiClient.get(`/examples/${id}`);
       return response.data;
@@ -215,7 +285,7 @@ export class ExampleService {
     }
   }
 
-  async create(input: CreateExampleInput) {
+  async create(input: CreateExampleInput): Promise<Example> {
     try {
       const response = await this.apiClient.post('/examples', input);
       return response.data;
@@ -244,18 +314,20 @@ Add your service types to the GraphQL context:
 
 ```typescript
 // src/graphql/types/context.ts
-export interface Context {
-  services: {
-    medusa: MedusaServices;
-    example: ExampleService; // Add your service type here
-  };
+export interface GraphQLContext {
+  productService: ProductService;
+  collectionService: CollectionService;
+  categoryService: CategoryService;
+  exampleService: ExampleService; // Add your service type here
 }
 ```
 
 ### Best Practices
 
 - **Error Handling**: Always wrap service calls in try-catch blocks
-- **Type Safety**: Use TypeScript interfaces for all inputs and outputs
+- **Type Safety**: Use generated TypeScript types from `@graphql/generated/graphql`
+- **Code Generation**: Run `pnpm run codegen` after schema changes
 - **Naming**: Use consistent naming conventions (camelCase for fields, PascalCase for types)
 - **Documentation**: Add descriptions to your GraphQL schema fields
 - **Testing**: Write unit tests for your resolvers and services
+- **Schema-First**: Define your GraphQL schema first, then implement resolvers and services

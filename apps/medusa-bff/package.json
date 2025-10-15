@@ -5,10 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc && tsc-alias",
+    "build": "pnpm run codegen && tsc && tsc-alias",
     "start": "node dist/src/index.js",
     "lint": "eslint src --ext .ts,.tsx",
     "check-types": "tsc --noEmit",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:watch": "graphql-codegen --config codegen.ts --watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -33,6 +35,9 @@
     "graphql-scalars": "^1.24.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^6.0.0",
+    "@graphql-codegen/typescript": "^5.0.0",
+    "@graphql-codegen/typescript-resolvers": "^5.1.0",
     "@mds/eslint-config": "workspace:*",
     "@mds/jest-config": "workspace:*",
     "@mds/prettier-config": "workspace:*",
