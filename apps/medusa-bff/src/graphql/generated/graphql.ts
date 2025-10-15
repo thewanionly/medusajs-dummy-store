@@ -46,13 +46,8 @@ export type Scalars = {
 export type Collection = {
   handle: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  products?: Maybe<CollectionProducts>;
+  products?: Maybe<ProductList>;
   title: Scalars['String']['output'];
-};
-
-export type CollectionProducts = {
-  count: Scalars['Int']['output'];
-  items?: Maybe<Array<Product>>;
 };
 
 export type Price = {
@@ -84,24 +79,23 @@ export type Product = {
 };
 
 export type ProductCategory = {
-  category_children?: Maybe<Array<ProductCategory>>;
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
+  categoryChildren?: Maybe<Array<ProductCategory>>;
   description?: Maybe<Scalars['String']['output']>;
   handle: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  metadata?: Maybe<Scalars['JSON']['output']>;
   name: Scalars['String']['output'];
-  parent_category?: Maybe<ProductCategory>;
-  parent_category_id?: Maybe<Scalars['String']['output']>;
-  products?: Maybe<Array<Product>>;
-  rank?: Maybe<Scalars['Int']['output']>;
-  updated_at: Scalars['DateTime']['output'];
+  parentCategory?: Maybe<ProductCategory>;
+  products?: Maybe<ProductList>;
 };
 
 export type ProductImage = {
   id: Scalars['ID']['output'];
   url: Scalars['String']['output'];
+};
+
+export type ProductList = {
+  count: Scalars['Int']['output'];
+  items?: Maybe<Array<Product>>;
 };
 
 export type ProductListResponse = {
@@ -177,8 +171,7 @@ export type QueryProductCategoriesArgs = {
 };
 
 export type QueryProductCategoryArgs = {
-  handle?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
 };
 
 export type QueryProductsArgs = {
@@ -315,7 +308,6 @@ export type DirectiveResolverFn<
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Collection: ResolverTypeWrapper<Collection>;
-  CollectionProducts: ResolverTypeWrapper<CollectionProducts>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -325,6 +317,7 @@ export type ResolversTypes = {
   Product: ResolverTypeWrapper<Product>;
   ProductCategory: ResolverTypeWrapper<ProductCategory>;
   ProductImage: ResolverTypeWrapper<ProductImage>;
+  ProductList: ResolverTypeWrapper<ProductList>;
   ProductListResponse: ResolverTypeWrapper<ProductListResponse>;
   ProductOption: ResolverTypeWrapper<ProductOption>;
   ProductOptionValue: ResolverTypeWrapper<ProductOptionValue>;
@@ -339,7 +332,6 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Collection: Collection;
-  CollectionProducts: CollectionProducts;
   DateTime: Scalars['DateTime']['output'];
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
@@ -349,6 +341,7 @@ export type ResolversParentTypes = {
   Product: Product;
   ProductCategory: ProductCategory;
   ProductImage: ProductImage;
+  ProductList: ProductList;
   ProductListResponse: ProductListResponse;
   ProductOption: ProductOption;
   ProductOptionValue: ProductOptionValue;
@@ -367,24 +360,11 @@ export type CollectionResolvers<
   handle?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   products?: Resolver<
-    Maybe<ResolversTypes['CollectionProducts']>,
+    Maybe<ResolversTypes['ProductList']>,
     ParentType,
     ContextType
   >;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-};
-
-export type CollectionProductsResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['CollectionProducts'] = ResolversParentTypes['CollectionProducts'],
-> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  items?: Resolver<
-    Maybe<Array<ResolversTypes['Product']>>,
-    ParentType,
-    ContextType
-  >;
 };
 
 export interface DateTimeScalarConfig
@@ -482,14 +462,8 @@ export type ProductCategoryResolvers<
   ParentType extends
     ResolversParentTypes['ProductCategory'] = ResolversParentTypes['ProductCategory'],
 > = {
-  category_children?: Resolver<
+  categoryChildren?: Resolver<
     Maybe<Array<ResolversTypes['ProductCategory']>>,
-    ParentType,
-    ContextType
-  >;
-  created_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  deleted_at?: Resolver<
-    Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
@@ -500,25 +474,17 @@ export type ProductCategoryResolvers<
   >;
   handle?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  metadata?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  parent_category?: Resolver<
+  parentCategory?: Resolver<
     Maybe<ResolversTypes['ProductCategory']>,
     ParentType,
     ContextType
   >;
-  parent_category_id?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
   products?: Resolver<
-    Maybe<Array<ResolversTypes['Product']>>,
+    Maybe<ResolversTypes['ProductList']>,
     ParentType,
     ContextType
   >;
-  rank?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  updated_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
 };
 
 export type ProductImageResolvers<
@@ -528,6 +494,19 @@ export type ProductImageResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type ProductListResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['ProductList'] = ResolversParentTypes['ProductList'],
+> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  items?: Resolver<
+    Maybe<Array<ResolversTypes['Product']>>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type ProductListResponseResolvers<
@@ -648,7 +627,7 @@ export type QueryResolvers<
     Maybe<ResolversTypes['ProductCategory']>,
     ParentType,
     ContextType,
-    Partial<QueryProductCategoryArgs>
+    RequireFields<QueryProductCategoryArgs, 'id'>
   >;
   products?: Resolver<
     ResolversTypes['ProductListResponse'],
@@ -660,13 +639,13 @@ export type QueryResolvers<
 
 export type Resolvers<ContextType = GraphQLContext> = {
   Collection?: CollectionResolvers<ContextType>;
-  CollectionProducts?: CollectionProductsResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
   Price?: PriceResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductCategory?: ProductCategoryResolvers<ContextType>;
   ProductImage?: ProductImageResolvers<ContextType>;
+  ProductList?: ProductListResolvers<ContextType>;
   ProductListResponse?: ProductListResponseResolvers<ContextType>;
   ProductOption?: ProductOptionResolvers<ContextType>;
   ProductOptionValue?: ProductOptionValueResolvers<ContextType>;
