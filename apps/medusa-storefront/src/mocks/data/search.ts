@@ -1,7 +1,7 @@
 const searchHits = [
   {
     id: 'prod_01K4YQHYATT2PSHKYYMAVFVMX9',
-    title: 'Circular T-shirt MOCKED',
+    title: 'Circular T-shirt',
     description:
       '<p>Made with Cradle to Cradle Certified® inks and organic cotton, this tee was designed to decompose safely when it eventually returns to the earth. </p>',
     handle: 'circular-t-shirt-meteorite-black-summer-sand',

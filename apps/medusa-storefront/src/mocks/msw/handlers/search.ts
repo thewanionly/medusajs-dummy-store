@@ -1,13 +1,16 @@
-import { HttpResponse, delay, http } from 'msw';
+import { HttpResponse, delay } from 'msw';
 
 import { searchResults } from '../../data/search';
+import { medusaBff } from '../apis';
 
 export const handlers = [
-  http.post('http://localhost:9000/store/products/search', async () => {
+  medusaBff.query('SearchProducts', async () => {
     await delay(1000);
 
     return HttpResponse.json({
-      results: searchResults,
+      data: {
+        search: searchResults,
+      },
     });
   }),
 ];

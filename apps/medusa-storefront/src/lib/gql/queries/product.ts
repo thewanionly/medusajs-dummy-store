@@ -40,6 +40,116 @@ export const GET_PRODUCTS_QUERY = gql`
   ${PRODUCT_FRAGMENT}
 `;
 
+export const SEARCH_PRODUCTS_QUERY = gql`
+  query SearchProducts($query: String!) {
+    search(query: $query) {
+      hits {
+        id
+        title
+        description
+        handle
+        thumbnail
+        categories {
+          id
+          name
+          handle
+        }
+        tags {
+          id
+          value
+          metadata
+          created_at
+          updated_at
+          deleted_at
+        }
+        objectID
+        _highlightResult {
+          id {
+            value
+            matchLevel
+            matchedWords
+          }
+          title {
+            value
+            matchLevel
+            fullyHighlighted
+            matchedWords
+          }
+          description {
+            value
+            matchLevel
+            matchedWords
+          }
+          handle {
+            value
+            matchLevel
+            fullyHighlighted
+            matchedWords
+          }
+          thumbnail {
+            value
+            matchLevel
+            matchedWords
+          }
+          tags {
+            id {
+              value
+              matchLevel
+              matchedWords
+            }
+            value {
+              value
+              matchLevel
+              matchedWords
+            }
+            created_at {
+              value
+              matchLevel
+              matchedWords
+            }
+            updated_at {
+              value
+              matchLevel
+              matchedWords
+            }
+          }
+        }
+      }
+      nbHits
+      page
+      nbPages
+      hitsPerPage
+      exhaustiveNbHits
+      exhaustiveTypo
+      exhaustive {
+        nbHits
+        typo
+      }
+      query
+      params
+      index
+      renderingContent
+      processingTimeMS
+      processingTimingsMS {
+        _request {
+          roundTrip
+        }
+        afterFetch {
+          format {
+            highlighting
+            total
+          }
+        }
+        fetch {
+          total
+        }
+        total
+      }
+      serverTimeMS
+    }
+  }
+`;
+
 export const GET_PRODUCT_QUERY = gql`
   query GetProduct($id: ID!, $region_id: String) {
     product(id: $id, region_id: $region_id) {

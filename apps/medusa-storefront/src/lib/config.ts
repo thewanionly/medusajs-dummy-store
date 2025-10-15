@@ -5,6 +5,8 @@ import {
 
 import Medusa from '@medusajs/js-sdk';
 
+import { SEARCH_PRODUCTS_QUERY, graphqlFetch } from './gql';
+
 // Defaults to standard port for Medusa server
 const DEFAULT_MEDUSA_BACKEND_URL = 'http://localhost:9000';
 
@@ -49,11 +51,23 @@ export const searchClient: SearchClient = {
 
     if (!query) return EMPTY_SEARCH_RESULTS;
 
-    return await sdk.client.fetch(`/store/products/search`, {
-      method: 'POST',
-      body: {
-        query,
-      },
-    });
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = await graphqlFetch<any, any>({
+        query: SEARCH_PRODUCTS_QUERY,
+        variables: {
+          query,
+        },
+      });
+
+      return {
+        results: data.search,
+      };
+    } catch (error) {
+      console.error('Error fetching search results from BFF:', error);
+      return {
+        results: null,
+      };
+    }
   },
 };
