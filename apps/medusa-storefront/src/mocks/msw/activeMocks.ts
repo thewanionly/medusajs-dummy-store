@@ -1,5 +1,5 @@
 export const activeGqlMocks = {
-  GetUser: false,
+  GetProducts: false,
 };
 
 export const activeHttpMocks = {};

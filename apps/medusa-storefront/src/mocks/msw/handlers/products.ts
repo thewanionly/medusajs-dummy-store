@@ -1,12 +1,12 @@
 import { HttpResponse, passthrough } from 'msw';
 
-import { mockedProducts } from '../../data/product';
+import { mockedProducts } from '../../data/products';
 import { activeGqlMocks } from '../activeMocks';
 import { medusaBff } from '../apis';
 
 export const handlers = [
   medusaBff.query('GetProducts', () => {
-    if (!activeGqlMocks.GetUser) {
+    if (!activeGqlMocks.GetProducts) {
       return passthrough();
     }
 
