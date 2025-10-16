@@ -1,11 +1,12 @@
+import Medusa from '@medusajs/js-sdk';
+import { mockMedusa } from '@mocks/medusa';
 import { CollectionService } from '@services/medusa/collection';
 
-import { mockMedusaApi } from '../../../__mocks__/products';
 import { COLLECTION_FIELDS } from '../../../constants/medusa';
 
 jest.mock('@medusajs/js-sdk', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(() => mockMedusaApi),
+  default: jest.fn().mockImplementation(() => mockMedusa),
 }));
 
 describe('CollectionService', () => {
@@ -15,11 +16,8 @@ describe('CollectionService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    collectionService = new CollectionService(
-      'http://localhost:9000',
-      'test-key'
-    );
-    (collectionService as any).medusa = mockMedusaApi;
+    collectionService = new CollectionService(mockMedusa as unknown as Medusa);
+    (collectionService as any).medusa = mockMedusa;
   });
 
   afterEach(() => {
@@ -32,19 +30,19 @@ describe('CollectionService', () => {
         { id: 'col_1', title: 'Summer Collection', handle: 'summer' },
         { id: 'col_2', title: 'Winter Collection', handle: 'winter' },
       ];
-      mockMedusaApi.store.collection.list.mockResolvedValue({
+      mockMedusa.store.collection.list.mockResolvedValue({
         collections: mockCollections,
       });
 
       const result = await collectionService.getCollections();
       expect(result).toEqual(mockCollections);
-      expect(mockMedusaApi.store.collection.list).toHaveBeenCalledWith({
+      expect(mockMedusa.store.collection.list).toHaveBeenCalledWith({
         fields: COLLECTION_FIELDS,
       });
     });
 
     it('should handle empty collection response', async () => {
-      mockMedusaApi.store.collection.list.mockResolvedValue({
+      mockMedusa.store.collection.list.mockResolvedValue({
         collections: [],
       });
 
@@ -53,7 +51,7 @@ describe('CollectionService', () => {
     });
 
     it('should throw error on failure', async () => {
-      mockMedusaApi.store.collection.list.mockRejectedValue(
+      mockMedusa.store.collection.list.mockRejectedValue(
         new Error('Collection fetch failed')
       );
       await expect(collectionService.getCollections()).rejects.toThrow();
@@ -67,26 +65,26 @@ describe('CollectionService', () => {
         title: 'Summer Collection',
         handle: 'summer',
       };
-      mockMedusaApi.store.collection.retrieve.mockResolvedValue({
+      mockMedusa.store.collection.retrieve.mockResolvedValue({
         collection: mockCollection,
       });
 
       const result = await collectionService.getCollection('col_1');
       expect(result).toEqual(mockCollection);
-      expect(mockMedusaApi.store.collection.retrieve).toHaveBeenCalledWith(
+      expect(mockMedusa.store.collection.retrieve).toHaveBeenCalledWith(
         'col_1',
         { fields: COLLECTION_FIELDS }
       );
     });
 
     it('should return null when collection not found', async () => {
-      mockMedusaApi.store.collection.retrieve.mockResolvedValue({});
+      mockMedusa.store.collection.retrieve.mockResolvedValue({});
       const result = await collectionService.getCollection('nonexistent');
       expect(result).toBeNull();
     });
 
     it('should throw error on failure', async () => {
-      mockMedusaApi.store.collection.retrieve.mockRejectedValue(
+      mockMedusa.store.collection.retrieve.mockRejectedValue(
         new Error('Collection not found')
       );
       await expect(

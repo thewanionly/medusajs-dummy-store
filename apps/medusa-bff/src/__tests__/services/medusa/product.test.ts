@@ -1,3 +1,4 @@
+import Medusa from '@medusajs/js-sdk';
 import {
   emptyProductsHandler,
   internalServerErrorHandler,
@@ -14,6 +15,15 @@ import { server } from '@mocks/msw/node';
 import { createMockProduct, createMockProducts } from '@mocks/products';
 import { ProductService } from '@services/medusa/product';
 
+const medusaWithKey = new Medusa({
+  baseUrl: process.env.MEDUSA_API_URL || 'http://localhost:9000',
+  apiKey: process.env.MEDUSA_PUBLISHABLE_KEY,
+});
+
+const medusaWithoutKey = new Medusa({
+  baseUrl: process.env.MEDUSA_API_URL || 'http://localhost:9000',
+});
+
 describe('ProductService', () => {
   let productService: ProductService;
   let consoleSpy: jest.SpyInstance;
@@ -21,10 +31,7 @@ describe('ProductService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    productService = new ProductService(
-      process.env.MEDUSA_API_URL,
-      process.env.MEDUSA_PUBLISHABLE_KEY
-    );
+    productService = new ProductService(medusaWithKey);
   });
 
   afterEach(() => {
@@ -33,11 +40,8 @@ describe('ProductService', () => {
 
   describe('constructor', () => {
     it('should initialize correctly with and without publishable key', () => {
-      const serviceWithKey = new ProductService(
-        process.env.MEDUSA_API_URL,
-        process.env.MEDUSA_PUBLISHABLE_KEY
-      );
-      const serviceWithoutKey = new ProductService(process.env.MEDUSA_API_URL);
+      const serviceWithKey = new ProductService(medusaWithKey);
+      const serviceWithoutKey = new ProductService(medusaWithoutKey);
 
       expect(serviceWithKey).toBeInstanceOf(ProductService);
       expect(serviceWithoutKey).toBeInstanceOf(ProductService);

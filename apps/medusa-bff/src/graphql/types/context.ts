@@ -1,9 +1,3 @@
-import { CategoryService } from '@services/medusa/category';
-import { CollectionService } from '@services/medusa/collection';
-import { ProductService } from '@services/medusa/product';
+import { createContext } from '@services/index';
 
-export interface GraphQLContext {
-  productService: ProductService;
-  collectionService: CollectionService;
-  categoryService: CategoryService;
-}
+export type GraphQLContext = ReturnType<typeof createContext>;
