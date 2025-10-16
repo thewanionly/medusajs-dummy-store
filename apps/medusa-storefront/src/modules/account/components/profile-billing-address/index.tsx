@@ -3,6 +3,7 @@
 import React, { useActionState, useEffect, useMemo } from 'react';
 
 import { addCustomerAddress, updateCustomerAddress } from '@lib/data/customer';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import Input from '@modules/common/components/input';
 import NativeSelect from '@modules/common/components/native-select';
@@ -10,7 +11,7 @@ import NativeSelect from '@modules/common/components/native-select';
 import AccountInfo from '../account-info';
 
 type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer;
+  customer: Customer;
   regions: HttpTypes.StoreRegion[];
 };
 
@@ -34,7 +35,7 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
   const [successState, setSuccessState] = React.useState(false);
 
   const billingAddress = customer.addresses?.find(
-    (addr) => addr.is_default_billing
+    (addr) => addr?.isDefaultBilling
   );
 
   const initialState: Record<string, any> = {
@@ -68,21 +69,21 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
 
     const country =
       regionOptions?.find(
-        (country) => country?.value === billingAddress.country_code
-      )?.label || billingAddress.country_code?.toUpperCase();
+        (country) => country?.value === billingAddress.countryCode
+      )?.label || billingAddress.countryCode?.toUpperCase();
 
     return (
       <div className="flex flex-col font-semibold" data-testid="current-info">
         <span>
-          {billingAddress.first_name} {billingAddress.last_name}
+          {billingAddress.firstName} {billingAddress.lastName}
         </span>
         <span>{billingAddress.company}</span>
         <span>
-          {billingAddress.address_1}
-          {billingAddress.address_2 ? `, ${billingAddress.address_2}` : ''}
+          {billingAddress.address1}
+          {billingAddress.address2 ? `, ${billingAddress.address2}` : ''}
         </span>
         <span>
-          {billingAddress.postal_code}, {billingAddress.city}
+          {billingAddress.postalCode}, {billingAddress.city}
         </span>
         <span>{country}</span>
       </div>
@@ -105,14 +106,14 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
             <Input
               label="First name"
               name="first_name"
-              defaultValue={billingAddress?.first_name || undefined}
+              defaultValue={billingAddress?.firstName || undefined}
               required
               data-testid="billing-first-name-input"
             />
             <Input
               label="Last name"
               name="last_name"
-              defaultValue={billingAddress?.last_name || undefined}
+              defaultValue={billingAddress?.lastName || undefined}
               required
               data-testid="billing-last-name-input"
             />
@@ -126,21 +127,21 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
           <Input
             label="Address"
             name="address_1"
-            defaultValue={billingAddress?.address_1 || undefined}
+            defaultValue={billingAddress?.address1 || undefined}
             required
             data-testid="billing-address-1-input"
           />
           <Input
             label="Apartment, suite, etc."
             name="address_2"
-            defaultValue={billingAddress?.address_2 || undefined}
+            defaultValue={billingAddress?.address2 || undefined}
             data-testid="billing-address-2-input"
           />
           <div className="grid grid-cols-[144px_1fr] gap-x-2">
             <Input
               label="Postal code"
               name="postal_code"
-              defaultValue={billingAddress?.postal_code || undefined}
+              defaultValue={billingAddress?.postalCode || undefined}
               required
               data-testid="billing-postcal-code-input"
             />
@@ -160,7 +161,7 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
           />
           <NativeSelect
             name="country_code"
-            defaultValue={billingAddress?.country_code || undefined}
+            defaultValue={billingAddress?.countryCode || undefined}
             required
             data-testid="billing-country-code-select"
           >

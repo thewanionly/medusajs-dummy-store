@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useActionState, useEffect } from 'react';
+import React from 'react';
 
-import { HttpTypes } from '@medusajs/types';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { toast } from '@medusajs/ui';
 import Input from '@modules/common/components/input';
 
 import AccountInfo from '../account-info';
 
 type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer;
+  customer: Customer;
 };
 
 const ProfilePassword: React.FC<MyInformationProps> = ({ customer }) => {

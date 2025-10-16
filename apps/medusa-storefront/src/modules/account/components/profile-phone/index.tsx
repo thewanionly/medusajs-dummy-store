@@ -3,13 +3,13 @@
 import React, { useActionState, useEffect } from 'react';
 
 import { updateCustomer } from '@lib/data/customer';
-import { HttpTypes } from '@medusajs/types';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import Input from '@modules/common/components/input';
 
 import AccountInfo from '../account-info';
 
 type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer;
+  customer: Customer;
 };
 
 const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {

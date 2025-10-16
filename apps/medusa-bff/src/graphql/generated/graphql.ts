@@ -50,6 +50,45 @@ export type Collection = {
   title: Scalars['String']['output'];
 };
 
+export type Customer = {
+  addresses?: Maybe<Array<Maybe<CustomerAddress>>>;
+  companyName?: Maybe<Scalars['String']['output']>;
+  defaultBillingAddressId?: Maybe<Scalars['String']['output']>;
+  defaultShippingAddressId?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerAddress = {
+  address1?: Maybe<Scalars['String']['output']>;
+  address2?: Maybe<Scalars['String']['output']>;
+  addressName?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  company?: Maybe<Scalars['String']['output']>;
+  countryCode?: Maybe<Scalars['String']['output']>;
+  customerId?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isDefaultBilling?: Maybe<Scalars['Boolean']['output']>;
+  isDefaultShipping?: Maybe<Scalars['Boolean']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+  postalCode?: Maybe<Scalars['String']['output']>;
+  province?: Maybe<Scalars['String']['output']>;
+};
+
+export type Mutation = {
+  login?: Maybe<Token>;
+};
+
+export type MutationLoginArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type Price = {
   amount?: Maybe<Scalars['Float']['output']>;
   currencyCode?: Maybe<Scalars['String']['output']>;
@@ -138,6 +177,7 @@ export type ProductVariantOption = {
 export type Query = {
   collection?: Maybe<Collection>;
   collections: Array<Collection>;
+  me?: Maybe<Customer>;
   product?: Maybe<Product>;
   productCategories: Array<ProductCategory>;
   productCategory?: Maybe<ProductCategory>;
@@ -185,6 +225,10 @@ export type QueryProductsArgs = {
   q?: InputMaybe<Scalars['String']['input']>;
   region_id?: InputMaybe<Scalars['String']['input']>;
   tag_id?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Token = {
+  token?: Maybe<Scalars['String']['output']>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -308,11 +352,14 @@ export type DirectiveResolverFn<
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Collection: ResolverTypeWrapper<Collection>;
+  Customer: ResolverTypeWrapper<Customer>;
+  CustomerAddress: ResolverTypeWrapper<CustomerAddress>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Price: ResolverTypeWrapper<Price>;
   Product: ResolverTypeWrapper<Product>;
   ProductCategory: ResolverTypeWrapper<ProductCategory>;
@@ -326,17 +373,21 @@ export type ResolversTypes = {
   ProductVariantOption: ResolverTypeWrapper<ProductVariantOption>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Token: ResolverTypeWrapper<Token>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Collection: Collection;
+  Customer: Customer;
+  CustomerAddress: CustomerAddress;
   DateTime: Scalars['DateTime']['output'];
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
+  Mutation: Record<PropertyKey, never>;
   Price: Price;
   Product: Product;
   ProductCategory: ProductCategory;
@@ -350,6 +401,7 @@ export type ResolversParentTypes = {
   ProductVariantOption: ProductVariantOption;
   Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
+  Token: Token;
 };
 
 export type CollectionResolvers<
@@ -367,6 +419,92 @@ export type CollectionResolvers<
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type CustomerResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Customer'] = ResolversParentTypes['Customer'],
+> = {
+  addresses?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['CustomerAddress']>>>,
+    ParentType,
+    ContextType
+  >;
+  companyName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  defaultBillingAddressId?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  defaultShippingAddressId?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
+export type CustomerAddressResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['CustomerAddress'] = ResolversParentTypes['CustomerAddress'],
+> = {
+  address1?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  addressName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  company?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  countryCode?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  customerId?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  firstName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isDefaultBilling?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType
+  >;
+  isDefaultShipping?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType
+  >;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postalCode?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
 export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
@@ -376,6 +514,19 @@ export interface JsonScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
+
+export type MutationResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
+> = {
+  login?: Resolver<
+    Maybe<ResolversTypes['Token']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationLoginArgs, 'email' | 'password'>
+  >;
+};
 
 export type PriceResolvers<
   ContextType = GraphQLContext,
@@ -611,6 +762,7 @@ export type QueryResolvers<
     ContextType,
     Partial<QueryCollectionsArgs>
   >;
+  me?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
   product?: Resolver<
     Maybe<ResolversTypes['Product']>,
     ParentType,
@@ -637,10 +789,21 @@ export type QueryResolvers<
   >;
 };
 
+export type TokenResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Token'] = ResolversParentTypes['Token'],
+> = {
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = GraphQLContext> = {
   Collection?: CollectionResolvers<ContextType>;
+  Customer?: CustomerResolvers<ContextType>;
+  CustomerAddress?: CustomerAddressResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Price?: PriceResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductCategory?: ProductCategoryResolvers<ContextType>;
@@ -653,4 +816,5 @@ export type Resolvers<ContextType = GraphQLContext> = {
   ProductVariant?: ProductVariantResolvers<ContextType>;
   ProductVariantOption?: ProductVariantOptionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Token?: TokenResolvers<ContextType>;
 };

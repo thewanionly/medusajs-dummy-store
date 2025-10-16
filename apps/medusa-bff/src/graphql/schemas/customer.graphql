@@ -1,0 +1,41 @@
+type Query {
+  me: Customer
+}
+
+type Mutation {
+  login(email: String!, password: String!): Token
+}
+
+type Token {
+  token: String
+}
+
+type Customer {
+  id: String!
+  email: String
+  defaultBillingAddressId: String
+  defaultShippingAddressId: String
+  companyName: String
+  firstName: String
+  lastName: String
+  addresses: [CustomerAddress]
+  phone: String
+}
+
+type CustomerAddress {
+  id: String!
+  addressName: String
+  isDefaultShipping: Boolean
+  isDefaultBilling: Boolean
+  customerId: String
+  company: String
+  firstName: String
+  lastName: String
+  address1: String
+  address2: String
+  city: String
+  countryCode: String
+  province: String
+  postalCode: String
+  phone: String
+}
