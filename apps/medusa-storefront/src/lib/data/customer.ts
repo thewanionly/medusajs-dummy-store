@@ -4,12 +4,22 @@ import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { sdk } from '@lib/config';
+import { graphqlFetch } from '@lib/gql';
+import { graphqlMutation } from '@lib/gql/apollo-client';
+import {
+  Customer,
+  GetCustomerQuery,
+  GetCustomerQueryVariables,
+  LoginMutation,
+  LoginMutationVariables,
+} from '@lib/gql/generated-types/graphql';
+import { LOGIN_MUTATION } from '@lib/gql/mutations/customer';
+import { GET_CUSTOMER_QUERY } from '@lib/gql/queries/customer';
 import medusaError from '@lib/util/medusa-error';
 import { HttpTypes } from '@medusajs/types';
 
 import {
   getAuthHeaders,
-  getCacheOptions,
   getCacheTag,
   getCartId,
   removeAuthToken,
@@ -17,33 +27,21 @@ import {
   setAuthToken,
 } from './cookies';
 
-export const retrieveCustomer =
-  async (): Promise<HttpTypes.StoreCustomer | null> => {
-    const authHeaders = await getAuthHeaders();
+export const retrieveCustomer = async (): Promise<Customer | null> => {
+  const customer = await graphqlFetch<
+    GetCustomerQuery,
+    GetCustomerQueryVariables
+  >({
+    query: GET_CUSTOMER_QUERY,
+  })
+    .then((response) => response?.me ?? null)
+    .catch(() => {
+      // TODO: Error handling
+      return null;
+    });
 
-    if (!authHeaders) return null;
-
-    const headers = {
-      ...authHeaders,
-    };
-
-    const next = {
-      ...(await getCacheOptions('customers')),
-    };
-
-    return await sdk.client
-      .fetch<{ customer: HttpTypes.StoreCustomer }>(`/store/customers/me`, {
-        method: 'GET',
-        query: {
-          fields: '*orders',
-        },
-        headers,
-        next,
-        cache: 'force-cache',
-      })
-      .then(({ customer }) => customer)
-      .catch(() => null);
-  };
+  return customer;
+};
 
 export const updateCustomer = async (body: HttpTypes.StoreUpdateCustomer) => {
   const headers = {
@@ -111,13 +109,24 @@ export async function login(_currentState: unknown, formData: FormData) {
   const password = formData.get('password') as string;
 
   try {
-    await sdk.auth
-      .login('customer', 'emailpass', { email, password })
-      .then(async (token) => {
-        await setAuthToken(token as string);
-        const customerCacheTag = await getCacheTag('customers');
-        revalidateTag(customerCacheTag);
-      });
+    const loginResponse = await graphqlMutation<
+      LoginMutation,
+      LoginMutationVariables
+    >({
+      mutation: LOGIN_MUTATION,
+      variables: {
+        email,
+        password,
+      },
+    });
+
+    const token = loginResponse?.login?.token;
+
+    if (token) {
+      await setAuthToken(token as string);
+      const customerCacheTag = await getCacheTag('customers');
+      revalidateTag(customerCacheTag);
+    }
   } catch (error: any) {
     return error.toString();
   }
