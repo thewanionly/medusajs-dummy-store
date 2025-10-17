@@ -14,6 +14,7 @@ import {
   CartRedeemReward,
   CartUnredeemReward,
 } from './store/carts/[id]/redeem-reward/validators';
+import { PostStoreCreateWishlistItem } from './store/customers/me/wishlists/items/validators';
 import { SearchSchema } from './store/products/search/route';
 
 export const GetRewardsSchema = createFindParams();
@@ -59,6 +60,11 @@ export default defineMiddlewares({
       matcher: '/store/carts/:id/redeem-reward',
       method: 'DELETE',
       middlewares: [validateAndTransformBody(CartUnredeemReward)],
+    },
+    {
+      matcher: '/store/customers/me/wishlists/items',
+      method: 'POST',
+      middlewares: [validateAndTransformBody(PostStoreCreateWishlistItem)],
     },
   ],
 });

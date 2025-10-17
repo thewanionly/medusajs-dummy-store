@@ -36,6 +36,9 @@ module.exports = defineConfig({
         conversionRate: process.env.LOYALTY_CONVERSION_RATE,
       },
     },
+    {
+      resolve: './src/modules/wishlist',
+    },
   ],
   plugins: [
     {

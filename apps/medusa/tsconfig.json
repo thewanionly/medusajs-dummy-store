@@ -14,7 +14,10 @@
     "forceConsistentCasingInFileNames": true,
     "checkJs": false,
     "strictNullChecks": true,
-    "noUncheckedIndexedAccess": false
+    "noUncheckedIndexedAccess": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "ts-node": {
     "swc": true
