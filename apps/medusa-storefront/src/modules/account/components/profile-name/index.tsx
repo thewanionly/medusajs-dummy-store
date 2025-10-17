@@ -3,13 +3,13 @@
 import React, { useActionState, useEffect } from 'react';
 
 import { updateCustomer } from '@lib/data/customer';
-import { HttpTypes } from '@medusajs/types';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import Input from '@modules/common/components/input';
 
 import AccountInfo from '../account-info';
 
 type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer;
+  customer: Customer;
 };
 
 const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
@@ -49,7 +49,7 @@ const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
     <form action={formAction} className="w-full overflow-visible">
       <AccountInfo
         label="Name"
-        currentInfo={`${customer.first_name} ${customer.last_name}`}
+        currentInfo={`${customer.firstName} ${customer.lastName}`}
         isSuccess={successState}
         isError={!!state?.error}
         clearState={clearState}
@@ -60,14 +60,14 @@ const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
             label="First name"
             name="first_name"
             required
-            defaultValue={customer.first_name ?? ''}
+            defaultValue={customer.firstName ?? ''}
             data-testid="first-name-input"
           />
           <Input
             label="Last name"
             name="last_name"
             required
-            defaultValue={customer.last_name ?? ''}
+            defaultValue={customer.lastName ?? ''}
             data-testid="last-name-input"
           />
         </div>

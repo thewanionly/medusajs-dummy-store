@@ -2,7 +2,7 @@
 
 import React, { useActionState, useEffect } from 'react';
 
-import { HttpTypes } from '@medusajs/types';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import Input from '@modules/common/components/input';
 
 import AccountInfo from '../account-info';
@@ -10,7 +10,7 @@ import AccountInfo from '../account-info';
 // import { updateCustomer } from "@lib/data/customer"
 
 type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer;
+  customer: Customer;
 };
 
 const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
@@ -64,7 +64,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
             type="email"
             autoComplete="email"
             required
-            defaultValue={customer.email}
+            defaultValue={customer.email ?? undefined}
             data-testid="email-input"
           />
         </div>
