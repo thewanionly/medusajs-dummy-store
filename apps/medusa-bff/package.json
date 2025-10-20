@@ -18,13 +18,17 @@
     "test:coverage:threshold": "jest --coverage --passWithNoTests",
     "ci": "npm run lint && npm run check-types && npm run test:coverage:threshold && npm run build",
     "pre-commit": "npm run lint && npm run check-types && npm run test",
-    "validate": "npm run lint && npm run check-types && npm run test:coverage:threshold"
+    "validate": "npm run lint && npm run check-types && npm run test:coverage:threshold",
+    "publish-schema": "rover subgraph publish ${APOLLO_GRAPH_REF} --name bff --schema-path schema.graphql --routing-url ${BFF_URL:-http://localhost:4000/graphql}",
+    "generate-schema": "rover subgraph introspect ${BFF_URL:-http://localhost:4000/graphql} > schema.graphql"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@apollo/subgraph": "^2.11.3",
+    "@graphql-tools/merge": "^9.1.1",
     "@medusajs/js-sdk": "2.10.3",
     "@medusajs/types": "2.10.3",
-    "@graphql-tools/merge": "^9.1.1",
+    "@sanity/client": "^7.12.0",
     "apollo-server-express": "^3.12.1",
     "axios": "^1.6.0",
     "cors": "^2.8.5",

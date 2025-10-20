@@ -10,6 +10,7 @@ import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 import { resolvers } from '@graphql/resolvers';
 import { typeDefs } from '@graphql/schemas';
 import { createContext } from '@services/index';
@@ -23,6 +24,7 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
     plugins: [
       process.env.NODE_ENV === 'production'
         ? ApolloServerPluginLandingPageProductionDefault({
@@ -52,6 +54,15 @@ async function startServer() {
 
   app.use(
     '/graphql',
+  const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',');
+
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>({
+      origin: allowedOrigins,
+      credentials: true,
+    }),
+    express.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => createContext({ req, res }),
     })

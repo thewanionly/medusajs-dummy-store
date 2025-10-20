@@ -7,6 +7,7 @@ import Medusa from '@medusajs/js-sdk';
 import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
+import { SanityFooterService } from './sanity/footer';
 
 export function createContext({
   req,
@@ -59,5 +60,9 @@ export function createContext({
         _collectionService = new CollectionService(medusa);
       return _collectionService;
     },
+    productService: new ProductService(baseUrl, publishableKey),
+    categoryService: new CategoryService(baseUrl, publishableKey),
+    collectionService: new CollectionService(baseUrl, publishableKey),
+    sanityFooterService: new SanityFooterService(),
   };
 }

@@ -5,6 +5,7 @@ import Medusa from '@medusajs/js-sdk';
 import { CategoryService } from '@services/medusa/category';
 import { CollectionService } from '@services/medusa/collection';
 import { ProductService } from '@services/medusa/product';
+import { SanityFooterService } from '@services/sanity/footer';
 
 export type GraphQLContext = {
   req: express.Request;
@@ -15,3 +16,5 @@ export type GraphQLContext = {
   categoryService: CategoryService;
   collectionService: CollectionService;
 };
+  sanityFooterService: SanityFooterService;
+}
