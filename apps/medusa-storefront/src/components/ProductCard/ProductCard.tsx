@@ -1,58 +1,36 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { Product, ProductVariant } from '@lib/gql/generated-types/graphql';
-import { getProductPrice } from '@lib/util/get-product-price';
+import { c } from '@apollo/client/react/internal/compiler-runtime';
 import { Button } from '@medusajs/ui';
 import Thumbnail from '@modules/products/components/thumbnail';
 
 import { addToCart, listProducts } from './ProductCard.services';
 
 interface ProductCardProps {
-  handle: string;
+  title: string;
+  thumbnail: string;
+  variantId: string;
+  size: string;
+  price: string;
+  inStock: boolean;
   countryCode: string;
 }
 
-const checkIfInStock = (variant?: ProductVariant): boolean => {
-  // If we don't manage inventory, we can always add to cart
-  if (variant && !variant.manageInventory) {
-    return true;
-  }
-
-  // If we allow back orders on the variant, we can add to cart
-  if (variant?.allowBackorder) {
-    return true;
-  }
-
-  // If there is inventory available, we can add to cart
-  if (variant?.manageInventory && (variant?.inventoryQuantity || 0) > 0) {
-    return true;
-  }
-
-  // Otherwise, we can't add to cart
-  return false;
-};
-
-export default function ProductCard({ handle, countryCode }: ProductCardProps) {
-  const [product, setProduct] = useState<Product>();
+export default function ProductCard({
+  title,
+  thumbnail,
+  variantId,
+  price,
+  size,
+  inStock,
+  countryCode,
+}: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // Fetch product by handle for the region
-      const productData = await listProducts({
-        countryCode,
-        queryParams: { handle },
-      }).then(({ response }) => response.products?.[0]);
-
-      setProduct(productData as Product);
-    };
-
-    fetchData();
-  }, [countryCode, handle]);
-
-  if (!product) {
+  if (!title) {
     return (
       <div className="flex max-w-sm flex-col gap-3 rounded-lg border p-4">
         <Thumbnail size="square" />
@@ -61,28 +39,21 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
     );
   }
 
-  // Get the first variant for the UI & Add to Cart
-  const firstVariant = product.variants?.[0];
-
-  const { variantPrice } = getProductPrice({
-    product: product as Product,
-    variantId: firstVariant?.id,
-  });
-
-  const inStock = checkIfInStock(firstVariant);
-
   const handleAddToCart = async () => {
-    if (!firstVariant) return;
-
     setIsAdding(true);
-
-    await addToCart({
-      variantId: firstVariant.id,
-      quantity: 1,
-      countryCode,
-    });
-
-    setIsAdding(false);
+    setError(null);
+    try {
+      await addToCart({
+        variantId,
+        quantity: 1,
+        countryCode,
+      });
+    } catch (err: any) {
+      console.log(err);
+      setError('Failed to add product to cart.');
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,36 +64,27 @@ export default function ProductCard({ handle, countryCode }: ProductCardProps) {
 
   return (
     <div className="flex max-w-sm flex-col gap-3 rounded-lg border p-4">
-      <Thumbnail
-        thumbnail={product.thumbnail}
-        images={product.images}
-        size="square"
-      />
-      <h3 className="text-lg font-semibold">{product.title}</h3>
-      {firstVariant ? (
-        <>
-          <div className="text-sm">Size: {firstVariant.options[0]?.value}</div>
-          {variantPrice && (
-            <div className="text-sm">
-              Price: {variantPrice.calculated_price}
-            </div>
-          )}
-          <form onSubmit={handleSubmit} className="mt-2 flex w-full flex-col">
-            <Button
-              type="submit"
-              disabled={!inStock}
-              variant="primary"
-              className="h-10 w-full"
-              isLoading={isAdding}
-              data-testid="add-product-button"
-            >
-              {!inStock ? 'Out of stock' : 'Add to cart'}
-            </Button>
-          </form>
-        </>
-      ) : (
-        <div className="text-red-500">No variants available</div>
+      <Thumbnail thumbnail={thumbnail} size="square" />
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <div className="text-sm">Size: {size}</div>
+      <div className="text-sm">Price: {price}</div>
+      {error && (
+        <div className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-600">
+          {error}
+        </div>
       )}
+      <form onSubmit={handleSubmit} className="mt-2 flex w-full flex-col">
+        <Button
+          type="submit"
+          disabled={!inStock}
+          variant="primary"
+          className="h-10 w-full"
+          isLoading={isAdding}
+          data-testid="add-product-button"
+        >
+          {!inStock ? 'Out of stock' : 'Add to cart'}
+        </Button>
+      </form>
     </div>
   );
 }
