@@ -12,5 +12,15 @@ export const mockMedusa = {
       list: jest.fn(),
       retrieve: jest.fn(),
     },
+    customer: {
+      list: jest.fn(),
+      retrieve: jest.fn(),
+    },
+  },
+  auth: {
+    login: jest.fn(),
+  },
+  client: {
+    setToken: jest.fn(),
   },
 };
