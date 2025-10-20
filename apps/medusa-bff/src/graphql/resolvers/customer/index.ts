@@ -1,6 +1,5 @@
-import { transformCustomer } from 'src/lib/customer';
-
-import { GraphQLContext } from '../types/context';
+import { GraphQLContext } from '../../types/context';
+import { transformCustomer } from './util/transforms';
 
 export const customerResolvers = {
   Query: {
