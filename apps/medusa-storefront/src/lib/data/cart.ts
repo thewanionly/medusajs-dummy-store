@@ -314,26 +314,6 @@ export const deleteLineItem = async (
   }
 };
 
-// export async function setShippingMethod({
-//   cartId,
-//   shippingMethodId,
-// }: {
-//   cartId: string;
-//   shippingMethodId: string;
-// }) {
-//   const headers = {
-//     ...(await getAuthHeaders()),
-//   };
-
-//   return sdk.store.cart
-//     .addShippingMethod(cartId, { option_id: shippingMethodId }, {}, headers)
-//     .then(async () => {
-//       const cartCacheTag = await getCacheTag('carts');
-//       revalidateTag(cartCacheTag);
-//     })
-//     .catch(medusaError);
-// }
-
 export const setShippingMethod = async ({
   cartId,
   optionId,
