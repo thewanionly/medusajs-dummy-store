@@ -1,3 +1,5 @@
+import 'storybook/test';
+
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import {
@@ -22,6 +24,17 @@ const commonArgs = {
   description: 'Log in to access an enhanced shopping experience.',
 };
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+//@ts-ignore
+const commonPlay = async ({ canvas, userEvent }) => {
+  await userEvent.type(canvas.getByTestId('email-input'), 'john.doe@gmail.com');
+  await sleep(300);
+  await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+  await sleep(300);
+  await userEvent.click(canvas.getByTestId('sign-in-button'));
+};
+
 export const Default: Story = {
   args: commonArgs,
   parameters: {
@@ -29,6 +42,7 @@ export const Default: Story = {
       handlers: customerHandlers,
     },
   },
+  play: commonPlay,
 };
 
 export const InvalidCredentials: Story = {
@@ -38,6 +52,7 @@ export const InvalidCredentials: Story = {
       handlers: [invalidCredentials],
     },
   },
+  play: commonPlay,
 };
 
 export const AccountLocked: Story = {
@@ -47,6 +62,7 @@ export const AccountLocked: Story = {
       handlers: [accountLocked],
     },
   },
+  play: commonPlay,
 };
 
 export const RateLimited: Story = {
@@ -56,6 +72,7 @@ export const RateLimited: Story = {
       handlers: [rateLimited],
     },
   },
+  play: commonPlay,
 };
 
 export const ServerError: Story = {
@@ -65,4 +82,5 @@ export const ServerError: Story = {
       handlers: [serverError],
     },
   },
+  play: commonPlay,
 };

@@ -69,7 +69,6 @@ export default function LoginForm({ title, description }: LoginFormProps) {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={error} data-testid="login-error-message" />
         <Button
           size="large"
           className="mt-2 w-full"
@@ -79,6 +78,7 @@ export default function LoginForm({ title, description }: LoginFormProps) {
         >
           Log in
         </Button>
+        <ErrorMessage error={error} data-testid="login-error-message" />
       </form>
     </div>
   );
