@@ -1,30 +1,36 @@
 import { productResolvers } from '@graphql/resolvers/product';
+import { GraphQLContext } from '@graphql/types/context';
+import Medusa from '@medusajs/js-sdk';
+import { mockMedusa } from '@mocks/medusa';
 import { createMockProduct, createMockProducts } from '@mocks/products';
+import { CategoryService } from '@services/medusa/category';
+import { CollectionService } from '@services/medusa/collection';
 import { ProductService } from '@services/medusa/product';
 
 describe('Product Resolvers', () => {
   let mockProductService: jest.Mocked<ProductService>;
-  let mockCategoryService: { getCategories: jest.Mock; getCategory: jest.Mock };
-  let mockCollectionService: {
-    getCollections: jest.Mock;
-    getCollection: jest.Mock;
-  };
-  let mockContext: any;
+  let mockCategoryService: jest.Mocked<CategoryService>;
+  let mockCollectionService: jest.Mocked<CollectionService>;
+  let mockContext: GraphQLContext;
 
   beforeEach(() => {
     mockProductService = {
       getProducts: jest.fn(),
       getProduct: jest.fn(),
     } as unknown as jest.Mocked<ProductService>;
+
     mockCategoryService = {
       getCategories: jest.fn(),
       getCategory: jest.fn(),
-    };
+    } as unknown as jest.Mocked<CategoryService>;
+
     mockCollectionService = {
       getCollections: jest.fn(),
       getCollection: jest.fn(),
-    };
+    } as unknown as jest.Mocked<CollectionService>;
+
     mockContext = {
+      medusa: mockMedusa as unknown as Medusa,
       productService: mockProductService,
       categoryService: mockCategoryService,
       collectionService: mockCollectionService,
