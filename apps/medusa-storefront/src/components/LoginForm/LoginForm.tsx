@@ -1,12 +1,11 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useState } from 'react';
 
+import { sdk } from '@lib/config';
+import { Button } from '@medusajs/ui';
 import ErrorMessage from '@modules/checkout/components/error-message';
-import { SubmitButton } from '@modules/checkout/components/submit-button';
 import Input from '@modules/common/components/input';
-
-import { login } from './LoginForm.services';
 
 interface LoginFormProps {
   title: string;
@@ -14,7 +13,31 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ title, description }: LoginFormProps) {
-  const [message, formAction] = useActionState(login, null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleLogin = async (email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await sdk.auth.login('customer', 'emailpass', { email, password });
+    } catch (err: any) {
+      console.error(err);
+      setError(err?.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    handleLogin(email, password);
+  };
 
   return (
     <div
@@ -25,8 +48,8 @@ export default function LoginForm({ title, description }: LoginFormProps) {
       <p className="text-base-regular mb-8 text-center text-ui-fg-base">
         {description}
       </p>
-      <form className="w-full" action={formAction}>
-        <div className="flex w-full flex-col gap-y-2">
+      <form className="w-full" onSubmit={handleSubmit}>
+        <div className="mb-4 flex w-full flex-col gap-y-2">
           <Input
             label="Email"
             name="email"
@@ -45,10 +68,16 @@ export default function LoginForm({ title, description }: LoginFormProps) {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="login-error-message" />
-        <SubmitButton data-testid="sign-in-button" className="mt-6 w-full">
+        <ErrorMessage error={error} data-testid="login-error-message" />
+        <Button
+          size="large"
+          className="mt-2 w-full"
+          type="submit"
+          isLoading={isLoading}
+          data-testid="sign-in-button"
+        >
           Log in
-        </SubmitButton>
+        </Button>
       </form>
     </div>
   );

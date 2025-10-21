@@ -49,7 +49,7 @@ export default function ProductCard({
         countryCode,
       });
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
       setError('Failed to add product to cart.');
     } finally {
       setIsAdding(false);
