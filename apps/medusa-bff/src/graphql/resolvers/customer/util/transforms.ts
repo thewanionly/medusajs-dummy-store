@@ -2,7 +2,7 @@ import { Customer, CustomerAddress } from '@graphql/generated/graphql';
 import { StoreCustomer } from '@medusajs/types';
 import { BaseCustomerAddress } from '@medusajs/types/dist/http/customer/common';
 
-function transformCustomerAddress(
+export function transformCustomerAddress(
   address: BaseCustomerAddress
 ): CustomerAddress {
   return {
