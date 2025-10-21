@@ -3,7 +3,8 @@
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { graphqlFetch, graphqlMutation } from '@lib/bff/apollo-client';
+import { sdk } from '@lib/config';
+import { graphqlFetch, graphqlMutation } from '@lib/gql/apollo-client';
 import {
   AddShippingMethodMutation,
   AddShippingMethodMutationVariables,
@@ -19,7 +20,7 @@ import {
   UpdateCartMutationVariables,
   UpdateLineItemMutation,
   UpdateLineItemMutationVariables,
-} from '@lib/bff/generated-types/graphql';
+} from '@lib/gql/generated-types/graphql';
 import {
   ADD_SHIPPING_METHOD_MUTATION,
   CREATE_CART_MUTATION,
@@ -27,9 +28,8 @@ import {
   DELETE_LINE_ITEM_MUTATION,
   UPDATE_CART_MUTATION,
   UPDATE_LINE_ITEM_MUTATION,
-} from '@lib/bff/mutations/cart';
-import { GET_CART_QUERY } from '@lib/bff/queries/cart';
-import { sdk } from '@lib/config';
+} from '@lib/gql/mutations/cart';
+import { GET_CART_QUERY } from '@lib/gql/queries/cart';
 import medusaError from '@lib/util/medusa-error';
 import { HttpTypes } from '@medusajs/types';
 
