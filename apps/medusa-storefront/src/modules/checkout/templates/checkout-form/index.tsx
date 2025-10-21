@@ -28,11 +28,8 @@ export default async function CheckoutForm({
   return (
     <div className="grid w-full grid-cols-1 gap-y-8">
       <Addresses cart={cart} customer={customer} />
-
       <Shipping cart={cart} availableShippingMethods={shippingMethods} />
-
       <Payment cart={cart} availablePaymentMethods={paymentMethods} />
-
       <Review cart={cart} />
     </div>
   );

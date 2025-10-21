@@ -1,6 +1,5 @@
 import type { HttpTypes } from '@medusajs/types';
 
-import { CreateCartInput, UpdateCartInput } from '../../services/medusa/cart';
 import { GraphQLContext } from '../types/context';
 
 export const cartResolvers = {
@@ -16,14 +15,14 @@ export const cartResolvers = {
   Mutation: {
     createCart: async (
       _parent: any,
-      { data }: { data: CreateCartInput },
+      { data }: { data: HttpTypes.StoreCreateCart },
       context: GraphQLContext
     ) => {
       return await context.cartService.createCart(data);
     },
     updateCart: async (
       _parent: any,
-      { id, data }: { id: string; data: UpdateCartInput },
+      { id, data }: { id: string; data: HttpTypes.StoreUpdateCart },
       context: GraphQLContext
     ) => {
       return await context.cartService.updateCart(id, data);

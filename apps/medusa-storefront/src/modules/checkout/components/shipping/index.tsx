@@ -135,7 +135,7 @@ const Shipping: React.FC<ShippingProps> = ({
       return id;
     });
 
-    await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
+    await setShippingMethod({ cartId: cart.id, optionId: id })
       .catch((err) => {
         setShippingMethodId(currentId);
 

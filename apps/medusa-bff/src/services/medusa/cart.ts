@@ -2,48 +2,12 @@ import type { HttpTypes } from '@medusajs/types';
 
 import { MedusaBaseService } from '.';
 
-export interface CreateCartInput {
-  shipping_address?: AddressInput;
-  billing_address?: AddressInput;
-  email?: string;
-  region_id?: string;
-  currency_code?: string;
-  items?: CreateLineItemInput[];
-  promo_codes?: string[];
-}
-
-export interface UpdateCartInput {
-  shipping_address?: AddressInput;
-  billing_address?: AddressInput;
-  email?: string;
-  region_id?: string;
-  currency_code?: string;
-  promo_codes?: string[];
-}
-
-interface AddressInput {
-  first_name?: string;
-  last_name?: string;
-  phone?: string;
-  company?: string;
-  address_1?: string;
-  address_2?: string;
-  city?: string;
-  country_code?: string;
-  province?: string;
-  postal_code?: string;
-}
-
-interface CreateLineItemInput {
-  variant_id: string;
-  quantity: number;
-}
-
 export class CartService extends MedusaBaseService {
   async getCart(id: string): Promise<HttpTypes.StoreCart | null> {
     try {
       const response = await this.medusa.store.cart.retrieve(id, {
-        fields: '+items.*,items.variant.*,items.variant.product.*',
+        fields:
+          '+items.*,items.variant.*,items.variant.product.*,+shipping_methods.*',
       });
       return response.cart || null;
     } catch (error: unknown) {
@@ -52,7 +16,9 @@ export class CartService extends MedusaBaseService {
     }
   }
 
-  async createCart(data: CreateCartInput): Promise<HttpTypes.StoreCart | null> {
+  async createCart(
+    data: HttpTypes.StoreCreateCart
+  ): Promise<HttpTypes.StoreCart | null> {
     try {
       const response = await this.medusa.store.cart.create(data);
       return response.cart || null;
@@ -133,7 +99,7 @@ export class CartService extends MedusaBaseService {
       const response = await this.medusa.store.cart.addShippingMethod(cartId, {
         option_id: optionId,
       });
-      return response;
+      return response.cart;
     } catch (error: unknown) {
       console.error('Error adding shipping method:', (error as Error).message);
       return null;

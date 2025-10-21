@@ -1,4 +1,22 @@
 scalar DateTime
+scalar JSON
+
+enum PaymentStatus {
+  canceled
+  not_paid
+  awaiting
+  authorized
+  partially_authorized
+}
+
+enum PaymentSessionStatus {
+  authorized
+  captured
+  canceled
+  pending
+  requires_more
+  error
+}
 
 type LineItem {
   id: ID!
@@ -12,6 +30,7 @@ type LineItem {
   cart_id: String
   created_at: DateTime
   product_handle: String
+  product_title: String
   thumbnail: String
   total: Int
   original_total: Int
@@ -28,15 +47,60 @@ type Address {
   postal_code: String
 }
 
+type Promotion {
+  id: String
+}
+
+type Country {
+  id: ID
+  iso_2: String
+  iso_3: String
+  num_code: String
+  name: String
+  display_name: String
+}
+
 type Region {
   id: ID!
   name: String!
   currency_code: String!
   automatic_taxes: Boolean
+  created_at: DateTime
+  updated_at: DateTime
+  countries: [Country]
 }
 
-type Promotion {
+type ShippingMethod {
   id: String
+  cart_id: String
+  name: String
+  amount: Int
+  is_tax_inclusive: Boolean
+  created_at: DateTime
+  updated_at: DateTime
+  shipping_option_id: String
+}
+
+type PaymentCollection {
+  id: String
+  currency_code: String
+  amount: Int
+  status: PaymentStatus
+  payment_providers: [PaymentProviders]
+  payment_sessions: [PaymentSessions]
+}
+
+type PaymentProviders {
+  id: String
+}
+
+type PaymentSessions {
+  id: String
+  amount: Int
+  currency_code: String
+  provider_id: String
+  data: JSON
+  status: PaymentSessionStatus
 }
 
 type Cart {
@@ -59,6 +123,7 @@ type Cart {
   gift_card_total: Int
   gift_card_tax_total: Int
   shipping_total: Int
+  shipping_subtotal: Int
   shipping_tax_total: Int
   original_shipping_total: Int
   original_shipping_subtotal: Int
@@ -69,18 +134,23 @@ type Cart {
   region_id: String
   shipping_address: Address
   billing_address: Address
-  created_at: String
-  updated_at: String
+  created_at: DateTime
+  updated_at: DateTime
   promo_codes: [String]
   shipping_methods: [ShippingMethod!]
   region: Region
+  payment_collection: PaymentCollection
 }
 
 input AddressInput {
+  customer_id: String
   first_name: String
   last_name: String
   phone: String
   address_1: String
+  address_2: String
+  company: String
+  province: String
   city: String
   country_code: String
   postal_code: String
