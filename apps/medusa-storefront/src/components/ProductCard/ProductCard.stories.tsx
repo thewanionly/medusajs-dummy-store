@@ -40,6 +40,14 @@ const mockedProductCardProps = {
   inStock: true,
 };
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+//@ts-ignore
+const commonPlay = async ({ canvas, userEvent }) => {
+  await sleep(300);
+  await userEvent.click(canvas.getByTestId('add-product-button'));
+};
+
 export const Default: Story = {
   args: { ...mockedProductCardProps, countryCode: 'dk' },
   parameters: {
@@ -47,6 +55,7 @@ export const Default: Story = {
       handlers,
     },
   },
+  play: commonPlay,
 };
 
 export const ErrorATB: Story = {
@@ -76,6 +85,7 @@ export const ErrorATB: Story = {
       ],
     },
   },
+  play: commonPlay,
 };
 
 export const OutOfStock: Story = {
