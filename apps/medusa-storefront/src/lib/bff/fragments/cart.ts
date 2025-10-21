@@ -11,6 +11,7 @@ export const LINE_ITEM_FRAGMENT = gql`
     created_at
     thumbnail
     product_handle
+    product_title
     total
     original_total
     variant {
@@ -32,21 +33,60 @@ export const ADDRESS_FRAGMENT = gql`
   }
 `;
 
+export const SHIPPING_METHODS_FRAGMENT = gql`
+  fragment ShippingMethodFields on ShippingMethod {
+    id
+    cart_id
+    name
+    amount
+    is_tax_inclusive
+    shipping_option_id
+  }
+`;
+
+export const PAYMENT_COLLECTION_FRAGMENT = gql`
+  fragment PaymentCollectionFields on PaymentCollection {
+    id
+    currency_code
+    amount
+    status
+    payment_providers {
+      id
+    }
+    payment_sessions {
+      id
+      amount
+      currency_code
+      provider_id
+      data
+      status
+    }
+  }
+`;
+
+export const COUNTRY_FRAGMENT = gql`
+  fragment CountryFields on Country {
+    id
+    iso_2
+    iso_3
+    name
+    display_name
+  }
+`;
+
 export const REGION_FRAGMENT = gql`
   fragment RegionFields on Region {
     id
     name
     currency_code
     automatic_taxes
+    created_at
+    updated_at
+    countries {
+      ...CountryFields
+    }
   }
-`;
-
-export const SHIPPING_METHODS_FRAGMENT = gql`
-  fragment ShippingMethodFields on ShippingMethod {
-    id
-    name
-    amount
-  }
+  ${COUNTRY_FRAGMENT}
 `;
 
 export const CART_FRAGMENT = gql`
@@ -56,6 +96,10 @@ export const CART_FRAGMENT = gql`
     email
     total
     subtotal
+    tax_total
+    discount_total
+    gift_card_total
+    shipping_subtotal
     original_total
     currency_code
     items {
@@ -70,8 +114,16 @@ export const CART_FRAGMENT = gql`
     region {
       ...RegionFields
     }
+    shipping_methods {
+      ...ShippingMethodFields
+    }
+    payment_collection {
+      ...PaymentCollectionFields
+    }
   }
   ${LINE_ITEM_FRAGMENT}
   ${ADDRESS_FRAGMENT}
   ${REGION_FRAGMENT}
+  ${SHIPPING_METHODS_FRAGMENT}
+  ${PAYMENT_COLLECTION_FRAGMENT}
 `;

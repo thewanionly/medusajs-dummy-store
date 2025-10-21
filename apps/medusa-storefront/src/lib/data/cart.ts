@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation';
 
 import { graphqlFetch, graphqlMutation } from '@lib/bff/apollo-client';
 import {
+  AddShippingMethodMutation,
+  AddShippingMethodMutationVariables,
   CreateCartMutation,
   CreateCartMutationVariables,
   CreateLineItemMutation,
@@ -19,6 +21,7 @@ import {
   UpdateLineItemMutationVariables,
 } from '@lib/bff/generated-types/graphql';
 import {
+  ADD_SHIPPING_METHOD_MUTATION,
   CREATE_CART_MUTATION,
   CREATE_LINE_ITEM_MUTATION,
   DELETE_LINE_ITEM_MUTATION,
@@ -71,7 +74,6 @@ export const getOrSetCart = async (
 ): Promise<
   CreateCartMutation['createCart'] | UpdateCartMutation['updateCart'] | null
 > => {
-  console.log('⭐ running getOrSetCart');
   const region = await getRegion(countryCode);
 
   if (!region) {
@@ -132,7 +134,6 @@ export const getOrSetCart = async (
 export const updateCart = async (
   data: UpdateCartMutationVariables['data']
 ): Promise<UpdateCartMutation['updateCart'] | null> => {
-  console.log('⭐ running updateCart');
   const cartId = await getCartId();
 
   if (!cartId) {
@@ -231,8 +232,6 @@ export const updateLineItem = async ({
   lineId: string;
   quantity: number;
 }): Promise<UpdateLineItemMutation['updateLineItem'] | null> => {
-  console.log('⭐ running updateLineItem');
-
   if (!lineId) {
     throw new Error('Missing lineItem ID when updating line item');
   }
@@ -276,8 +275,6 @@ export const updateLineItem = async ({
 export const deleteLineItem = async (
   lineId: string
 ): Promise<DeleteLineItemMutation['deleteLineItem'] | null> => {
-  console.log('⭐ running deleteLineItem');
-
   if (!lineId) {
     throw new Error('Missing lineItem ID when deleting line item');
   }
@@ -317,25 +314,63 @@ export const deleteLineItem = async (
   }
 };
 
-export async function setShippingMethod({
+// export async function setShippingMethod({
+//   cartId,
+//   shippingMethodId,
+// }: {
+//   cartId: string;
+//   shippingMethodId: string;
+// }) {
+//   const headers = {
+//     ...(await getAuthHeaders()),
+//   };
+
+//   return sdk.store.cart
+//     .addShippingMethod(cartId, { option_id: shippingMethodId }, {}, headers)
+//     .then(async () => {
+//       const cartCacheTag = await getCacheTag('carts');
+//       revalidateTag(cartCacheTag);
+//     })
+//     .catch(medusaError);
+// }
+
+export const setShippingMethod = async ({
   cartId,
-  shippingMethodId,
+  optionId,
 }: {
   cartId: string;
-  shippingMethodId: string;
-}) {
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  optionId: string;
+}): Promise<AddShippingMethodMutation['addShippingMethod'] | null> => {
+  if (!cartId) {
+    throw new Error('Missing cart ID when setting shipping method');
+  }
 
-  return sdk.store.cart
-    .addShippingMethod(cartId, { option_id: shippingMethodId }, {}, headers)
-    .then(async () => {
+  try {
+    const result = await graphqlMutation<
+      AddShippingMethodMutation,
+      AddShippingMethodMutationVariables
+    >({
+      mutation: ADD_SHIPPING_METHOD_MUTATION,
+      variables: {
+        cartId,
+        optionId,
+      },
+    });
+
+    console.log('addShippingMethod result:', JSON.stringify(result, null, 2));
+    const updatedCart = result?.addShippingMethod;
+
+    if (updatedCart) {
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
-    })
-    .catch(medusaError);
-}
+    }
+
+    return updatedCart;
+  } catch (error: any) {
+    console.error('GraphQL setShippingMethod error:', error.message);
+    throw error;
+  }
+};
 
 export async function initiatePaymentSession(
   cart: HttpTypes.StoreCart,

@@ -13,10 +13,3 @@ type Order {
   created_at: String
   updated_at: String
 }
-
-type ShippingMethod {
-  id: ID!
-  order_id: String
-  name: String
-  amount: Int
-}
