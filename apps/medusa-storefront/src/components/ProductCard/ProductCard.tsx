@@ -28,6 +28,7 @@ export default function ProductCard({
   countryCode,
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (!title) {
@@ -42,15 +43,18 @@ export default function ProductCard({
   const handleAddToCart = async () => {
     setIsAdding(true);
     setError(null);
+
     try {
       await addToCart({
         variantId,
         quantity: 1,
         countryCode,
       });
+      setIsSuccessful(true);
     } catch (err: any) {
       console.error(err);
       setError('Failed to add product to cart.');
+      setIsSuccessful(false);
     } finally {
       setIsAdding(false);
     }
@@ -71,6 +75,11 @@ export default function ProductCard({
       {error && (
         <div className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-600">
           {error}
+        </div>
+      )}
+      {isSuccessful && (
+        <div className="rounded border border-green-200 bg-green-50 p-2 text-sm text-green-700">
+          <span>Successfully added product to cart</span>
         </div>
       )}
       <form onSubmit={handleSubmit} className="mt-2 flex w-full flex-col">
