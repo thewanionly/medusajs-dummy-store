@@ -26,3 +26,36 @@ export const invalidCredentials = http.post(
     );
   }
 );
+
+export const accountLocked = http.post(
+  'http://localhost:9000/auth/customer/emailpass',
+  async () => {
+    await delay(1000);
+
+    return HttpResponse.json({ message: 'Account locked' }, { status: 403 });
+  }
+);
+
+export const rateLimited = http.post(
+  'http://localhost:9000/auth/customer/emailpass',
+  async () => {
+    await delay(1000);
+
+    return HttpResponse.json(
+      { message: 'Too many login attempts' },
+      { status: 429 }
+    );
+  }
+);
+
+export const serverError = http.post(
+  'http://localhost:9000/auth/customer/emailpass',
+  async () => {
+    await delay(1000);
+
+    return HttpResponse.json(
+      { message: 'Something went wrong. Please try again.' },
+      { status: 500 }
+    );
+  }
+);

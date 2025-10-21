@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import {
+  accountLocked,
   handlers as customerHandlers,
   invalidCredentials,
+  rateLimited,
+  serverError,
 } from '../../mocks/msw/handlers/storybook/customer';
 import LoginForm from './LoginForm';
 
@@ -33,6 +36,33 @@ export const InvalidCredentials: Story = {
   parameters: {
     msw: {
       handlers: [invalidCredentials],
+    },
+  },
+};
+
+export const AccountLocked: Story = {
+  args: commonArgs,
+  parameters: {
+    msw: {
+      handlers: [accountLocked],
+    },
+  },
+};
+
+export const RateLimited: Story = {
+  args: commonArgs,
+  parameters: {
+    msw: {
+      handlers: [rateLimited],
+    },
+  },
+};
+
+export const ServerError: Story = {
+  args: commonArgs,
+  parameters: {
+    msw: {
+      handlers: [serverError],
     },
   },
 };

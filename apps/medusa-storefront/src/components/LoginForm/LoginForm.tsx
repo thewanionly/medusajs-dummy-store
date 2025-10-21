@@ -21,9 +21,10 @@ export default function LoginForm({ title, description }: LoginFormProps) {
     setError(null);
     try {
       await sdk.auth.login('customer', 'emailpass', { email, password });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
-      setError(err?.message);
+      setError(err?.message || 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
