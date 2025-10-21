@@ -11,3 +11,18 @@ export const handlers = [
     });
   }),
 ];
+
+export const invalidCredentials = http.post(
+  'http://localhost:9000/auth/customer/emailpass',
+  async () => {
+    await delay(1000);
+
+    return HttpResponse.json(
+      {
+        type: 'unauthorized',
+        message: 'Invalid email or password',
+      },
+      { status: 401 }
+    );
+  }
+);

@@ -1,2 +1,1 @@
-export const mockedToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXItaWQtMTIzIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzYxMDMxNjY4LCJleHAiOjE3OTI1Njc2Njh9.uFZffd2VDTT37wweXBdSoe03PfGbLvCWyj7pAm0ck3d';
+export const mockedToken = 'mocked-token';
