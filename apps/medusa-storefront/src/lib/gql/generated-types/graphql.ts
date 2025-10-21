@@ -31,6 +31,71 @@ export type Scalars = {
   JSON: { input: any; output: any };
 };
 
+export type Address = {
+  __typename?: 'Address';
+  address_1?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country_code?: Maybe<Scalars['String']['output']>;
+  first_name?: Maybe<Scalars['String']['output']>;
+  last_name?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+  postal_code?: Maybe<Scalars['String']['output']>;
+};
+
+export type AddressInput = {
+  address_1?: InputMaybe<Scalars['String']['input']>;
+  address_2?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  company?: InputMaybe<Scalars['String']['input']>;
+  country_code?: InputMaybe<Scalars['String']['input']>;
+  customer_id?: InputMaybe<Scalars['String']['input']>;
+  first_name?: InputMaybe<Scalars['String']['input']>;
+  last_name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  postal_code?: InputMaybe<Scalars['String']['input']>;
+  province?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Cart = {
+  __typename?: 'Cart';
+  billing_address?: Maybe<Address>;
+  created_at?: Maybe<Scalars['DateTime']['output']>;
+  currency_code: Scalars['String']['output'];
+  discount_tax_total?: Maybe<Scalars['Int']['output']>;
+  discount_total?: Maybe<Scalars['Int']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  gift_card_tax_total?: Maybe<Scalars['Int']['output']>;
+  gift_card_total?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['ID']['output'];
+  item_subtotal?: Maybe<Scalars['Int']['output']>;
+  item_tax_total?: Maybe<Scalars['Int']['output']>;
+  item_total?: Maybe<Scalars['Int']['output']>;
+  items?: Maybe<Array<LineItem>>;
+  original_item_subtotal?: Maybe<Scalars['Int']['output']>;
+  original_item_tax_total?: Maybe<Scalars['Int']['output']>;
+  original_item_total?: Maybe<Scalars['Int']['output']>;
+  original_shipping_subtotal?: Maybe<Scalars['Int']['output']>;
+  original_shipping_tax_total?: Maybe<Scalars['Int']['output']>;
+  original_shipping_total?: Maybe<Scalars['Int']['output']>;
+  original_subtotal?: Maybe<Scalars['Int']['output']>;
+  original_tax_total?: Maybe<Scalars['Int']['output']>;
+  original_total?: Maybe<Scalars['Int']['output']>;
+  payment_collection?: Maybe<PaymentCollection>;
+  promo_codes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  promotions?: Maybe<Array<Maybe<Promotion>>>;
+  region?: Maybe<Region>;
+  region_id?: Maybe<Scalars['String']['output']>;
+  shipping_address?: Maybe<Address>;
+  shipping_methods?: Maybe<Array<ShippingMethod>>;
+  shipping_subtotal?: Maybe<Scalars['Int']['output']>;
+  shipping_tax_total?: Maybe<Scalars['Int']['output']>;
+  shipping_total?: Maybe<Scalars['Int']['output']>;
+  subtotal?: Maybe<Scalars['Int']['output']>;
+  tax_total?: Maybe<Scalars['Int']['output']>;
+  total?: Maybe<Scalars['Int']['output']>;
+  updated_at?: Maybe<Scalars['DateTime']['output']>;
+};
+
 export type Collection = {
   __typename?: 'Collection';
   handle: Scalars['String']['output'];
@@ -131,6 +196,26 @@ export type LinkMark = {
   target?: Maybe<Scalars['String']['output']>;
 };
 
+export type LineItem = {
+  __typename?: 'LineItem';
+  cart?: Maybe<Cart>;
+  cart_id?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  is_discountable?: Maybe<Scalars['Boolean']['output']>;
+  is_tax_inclusive?: Maybe<Scalars['Boolean']['output']>;
+  original_total?: Maybe<Scalars['Int']['output']>;
+  product_handle?: Maybe<Scalars['String']['output']>;
+  product_title?: Maybe<Scalars['String']['output']>;
+  quantity: Scalars['Int']['output'];
+  requires_shipping?: Maybe<Scalars['Boolean']['output']>;
+  thumbnail?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  total?: Maybe<Scalars['Int']['output']>;
+  unit_price?: Maybe<Scalars['Int']['output']>;
+  variant?: Maybe<ProductVariant>;
+};
+
 export type LogoutResponse = {
   __typename?: 'LogoutResponse';
   success?: Maybe<Scalars['Boolean']['output']>;
@@ -140,6 +225,11 @@ export type MarkDef = IconLinkMark | LinkMark;
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addShippingMethod?: Maybe<Cart>;
+  completeCart?: Maybe<CompleteCartResponse>;
+  createCart?: Maybe<Cart>;
+  createLineItem?: Maybe<Cart>;
+  deleteLineItem: StoreLineItemDeleteResponse;
   login?: Maybe<Token>;
   logout?: Maybe<LogoutResponse>;
 };
@@ -237,11 +327,11 @@ export type ProductTag = {
 
 export type ProductVariant = {
   __typename?: 'ProductVariant';
-  allowBackorder: Scalars['Boolean']['output'];
+  allowBackorder?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['ID']['output'];
   inventoryQuantity?: Maybe<Scalars['Int']['output']>;
-  manageInventory: Scalars['Boolean']['output'];
-  options: Array<ProductVariantOption>;
+  manageInventory?: Maybe<Scalars['Boolean']['output']>;
+  options?: Maybe<Array<Maybe<ProductVariantOption>>>;
   originalPrice?: Maybe<Price>;
   price?: Maybe<Price>;
   sku?: Maybe<Scalars['String']['output']>;
@@ -254,10 +344,16 @@ export type ProductVariantOption = {
   value: Scalars['String']['output'];
 };
 
+export type Promotion = {
+  __typename?: 'Promotion';
+  id?: Maybe<Scalars['String']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   collection?: Maybe<Collection>;
   collections: Array<Collection>;
+  getCart?: Maybe<Cart>;
   footer?: Maybe<Footer>;
   me?: Maybe<Customer>;
   product?: Maybe<Product>;
@@ -275,6 +371,10 @@ export type Query_CollectionsArgs = {
   handle?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Query_GetCartArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type Query_ProductArgs = {
@@ -385,9 +485,157 @@ export type TextBlock = {
   style?: Maybe<Scalars['String']['output']>;
 };
 
+export type Region = {
+  __typename?: 'Region';
+  automatic_taxes?: Maybe<Scalars['Boolean']['output']>;
+  countries?: Maybe<Array<Maybe<Country>>>;
+  created_at?: Maybe<Scalars['DateTime']['output']>;
+  currency_code: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  updated_at?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type ShippingMethod = {
+  __typename?: 'ShippingMethod';
+  amount?: Maybe<Scalars['Int']['output']>;
+  cart_id?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  is_tax_inclusive?: Maybe<Scalars['Boolean']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  shipping_option_id?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type StoreLineItemDeleteResponse = {
+  __typename?: 'StoreLineItemDeleteResponse';
+  deleted: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  object?: Maybe<Scalars['String']['output']>;
+};
+
 export type Token = {
   __typename?: 'Token';
   token?: Maybe<Scalars['String']['output']>;
+};
+
+export type UpdateCartInput = {
+  billing_address?: InputMaybe<AddressInput>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  promo_codes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  region_id?: InputMaybe<Scalars['String']['input']>;
+  shipping_address?: InputMaybe<AddressInput>;
+};
+
+export type UpdateLineItemInput = {
+  quantity: Scalars['Int']['input'];
+};
+
+export type CartItemFieldsFragment = {
+  __typename?: 'LineItem';
+  id: string;
+  title?: string | null;
+  quantity: number;
+  unit_price?: number | null;
+  created_at?: any | null;
+  thumbnail?: string | null;
+  product_handle?: string | null;
+  product_title?: string | null;
+  total?: number | null;
+  original_total?: number | null;
+  variant?: ({ __typename?: 'ProductVariant' } & ProductVariantFragment) | null;
+};
+
+export type AddressFieldsFragment = {
+  __typename?: 'Address';
+  first_name?: string | null;
+  last_name?: string | null;
+  phone?: string | null;
+  address_1?: string | null;
+  city?: string | null;
+  country_code?: string | null;
+  postal_code?: string | null;
+};
+
+export type ShippingMethodFieldsFragment = {
+  __typename?: 'ShippingMethod';
+  id?: string | null;
+  cart_id?: string | null;
+  name?: string | null;
+  amount?: number | null;
+  is_tax_inclusive?: boolean | null;
+  shipping_option_id?: string | null;
+};
+
+export type PaymentCollectionFieldsFragment = {
+  __typename?: 'PaymentCollection';
+  id?: string | null;
+  currency_code?: string | null;
+  amount?: number | null;
+  status?: PaymentStatus | null;
+  payment_providers?: Array<{
+    __typename?: 'PaymentProviders';
+    id?: string | null;
+  } | null> | null;
+  payment_sessions?: Array<{
+    __typename?: 'PaymentSessions';
+    id?: string | null;
+    amount?: number | null;
+    currency_code?: string | null;
+    provider_id?: string | null;
+    data?: any | null;
+    status?: PaymentSessionStatus | null;
+  } | null> | null;
+};
+
+export type CountryFieldsFragment = {
+  __typename?: 'Country';
+  id?: string | null;
+  iso_2?: string | null;
+  iso_3?: string | null;
+  name?: string | null;
+  display_name?: string | null;
+};
+
+export type RegionFieldsFragment = {
+  __typename?: 'Region';
+  id: string;
+  name: string;
+  currency_code: string;
+  automatic_taxes?: boolean | null;
+  created_at?: any | null;
+  updated_at?: any | null;
+  countries?: Array<
+    ({ __typename?: 'Country' } & CountryFieldsFragment) | null
+  > | null;
+};
+
+export type CartFieldsFragment = {
+  __typename?: 'Cart';
+  id: string;
+  region_id?: string | null;
+  email?: string | null;
+  total?: number | null;
+  subtotal?: number | null;
+  tax_total?: number | null;
+  discount_total?: number | null;
+  gift_card_total?: number | null;
+  shipping_subtotal?: number | null;
+  original_total?: number | null;
+  currency_code: string;
+  items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
+  shipping_address?:
+    | ({ __typename?: 'Address' } & AddressFieldsFragment)
+    | null;
+  billing_address?: ({ __typename?: 'Address' } & AddressFieldsFragment) | null;
+  region?: ({ __typename?: 'Region' } & RegionFieldsFragment) | null;
+  shipping_methods?: Array<
+    { __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment
+  > | null;
+  payment_collection?:
+    | ({ __typename?: 'PaymentCollection' } & PaymentCollectionFieldsFragment)
+    | null;
 };
 
 export type CustomerAddressFragment = {
@@ -455,14 +703,14 @@ export type ProductVariantFragment = {
   id: string;
   sku?: string | null;
   inventoryQuantity?: number | null;
-  allowBackorder: boolean;
-  manageInventory: boolean;
-  options: Array<{
+  allowBackorder?: boolean | null;
+  manageInventory?: boolean | null;
+  options?: Array<{
     __typename?: 'ProductVariantOption';
     id: string;
     optionId: string;
     value: string;
-  }>;
+  } | null> | null;
   price?: ({ __typename?: 'Price' } & PriceFragment) | null;
   originalPrice?: ({ __typename?: 'Price' } & PriceFragment) | null;
 };
@@ -531,13 +779,144 @@ export type CollectionProductsFragment = {
   }> | null;
 };
 
-export type ProductHitFragment = {
-  __typename?: 'ProductHit';
-  id: string;
-  title?: string | null;
-  description?: string | null;
-  handle: string;
-  thumbnail?: string | null;
+export type CreateCartMutationVariables = Exact<{
+  data: CreateCartInput;
+}>;
+
+export type CreateCartMutation = {
+  __typename?: 'Mutation';
+  createCart?: ({ __typename?: 'Cart' } & CartFieldsFragment) | null;
+};
+
+export type UpdateCartMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: UpdateCartInput;
+}>;
+
+export type UpdateCartMutation = {
+  __typename?: 'Mutation';
+  updateCart?:
+    | ({
+        __typename?: 'Cart';
+        region_id?: string | null;
+        currency_code: string;
+        shipping_address?:
+          | ({ __typename?: 'Address' } & AddressFieldsFragment)
+          | null;
+        billing_address?:
+          | ({ __typename?: 'Address' } & AddressFieldsFragment)
+          | null;
+      } & CartFieldsFragment)
+    | null;
+};
+
+export type CreateLineItemMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  data: CreateLineItemInput;
+}>;
+
+export type CreateLineItemMutation = {
+  __typename?: 'Mutation';
+  createLineItem?: {
+    __typename?: 'Cart';
+    id: string;
+    total?: number | null;
+    items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
+  } | null;
+};
+
+export type UpdateLineItemMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  lineItemId: Scalars['ID']['input'];
+  data: UpdateLineItemInput;
+}>;
+
+export type UpdateLineItemMutation = {
+  __typename?: 'Mutation';
+  updateLineItem?: {
+    __typename?: 'Cart';
+    id: string;
+    total?: number | null;
+    items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
+  } | null;
+};
+
+export type DeleteLineItemMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  lineItemId: Scalars['ID']['input'];
+}>;
+
+export type DeleteLineItemMutation = {
+  __typename?: 'Mutation';
+  deleteLineItem: {
+    __typename?: 'StoreLineItemDeleteResponse';
+    id: string;
+    object?: string | null;
+    deleted: boolean;
+  };
+};
+
+export type AddShippingMethodMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  optionId: Scalars['ID']['input'];
+}>;
+
+export type AddShippingMethodMutation = {
+  __typename?: 'Mutation';
+  addShippingMethod?: {
+    __typename?: 'Cart';
+    id: string;
+    total?: number | null;
+    items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
+    shipping_methods?: Array<
+      { __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment
+    > | null;
+  } | null;
+};
+
+export type CompleteCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+}>;
+
+export type CompleteCartMutation = {
+  __typename?: 'Mutation';
+  completeCart?:
+    | {
+        __typename: 'CompleteCartErrorResult';
+        type: string;
+        error?: {
+          __typename?: 'CompleteCartError';
+          message: string;
+          name: string;
+          type: string;
+        } | null;
+        cart?: {
+          __typename?: 'Cart';
+          id: string;
+          total?: number | null;
+          items?: Array<
+            { __typename?: 'LineItem' } & CartItemFieldsFragment
+          > | null;
+        } | null;
+      }
+    | {
+        __typename: 'CompleteCartOrderResult';
+        type: string;
+        order?: {
+          __typename?: 'Order';
+          id: string;
+          email?: string | null;
+          status?: string | null;
+          total?: number | null;
+          items?: Array<
+            { __typename?: 'LineItem' } & CartItemFieldsFragment
+          > | null;
+          shipping_methods?: Array<
+            { __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment
+          > | null;
+        } | null;
+      }
+    | null;
 };
 
 export type LoginMutationVariables = Exact<{
@@ -555,6 +934,15 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
 export type LogoutMutation = {
   __typename?: 'Mutation';
   logout?: { __typename?: 'LogoutResponse'; success?: boolean | null } | null;
+};
+
+export type GetCartQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+export type GetCartQuery = {
+  __typename?: 'Query';
+  getCart?: ({ __typename?: 'Cart' } & CartFieldsFragment) | null;
 };
 
 export type GetCustomerQueryVariables = Exact<{ [key: string]: never }>;
@@ -791,14 +1179,6 @@ export type GetCollectionQuery = {
 export type SearchSuggestionsQueryVariables = Exact<{
   query: Scalars['String']['input'];
 }>;
-
-export type SearchSuggestionsQuery = {
-  __typename?: 'Query';
-  searchProducts: {
-    __typename?: 'SearchProducts';
-    items: Array<{ __typename?: 'ProductHit' } & ProductHitFragment>;
-  };
-};
 
 export const CustomerAddressFragmentDoc = {
   kind: 'Document',
@@ -1464,29 +1844,6 @@ export const CollectionProductsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CollectionProductsFragment, unknown>;
-export const ProductHitFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProductHit' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'ProductHit' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'thumbnail' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<ProductHitFragment, unknown>;
 export const LoginDocument = {
   kind: 'Document',
   definitions: [
@@ -1681,365 +2038,6 @@ export const GetCustomerDocument = {
     },
   ],
 } as unknown as DocumentNode<GetCustomerQuery, GetCustomerQueryVariables>;
-export const GetFooterDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetFooter' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'footer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'storeName' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'social' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'copyright' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'poweredByCta' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'text' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'InlineFragment',
-                              typeCondition: {
-                                kind: 'NamedType',
-                                name: { kind: 'Name', value: 'TextBlock' },
-                              },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_type' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'style' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'children' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: '_key' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'text' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'marks',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'markDefs' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'InlineFragment',
-                                          typeCondition: {
-                                            kind: 'NamedType',
-                                            name: {
-                                              kind: 'Name',
-                                              value: 'LinkMark',
-                                            },
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: '_key',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: '_type',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'href',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'target',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'InlineFragment',
-                                          typeCondition: {
-                                            kind: 'NamedType',
-                                            name: {
-                                              kind: 'Name',
-                                              value: 'IconLinkMark',
-                                            },
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: '_key',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: '_type',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'href',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'iconType',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'iconClass',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'iconFill',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'iconComponent',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'iconImage',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'asset',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'url',
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'alt',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'iconUrl',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'target',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'InlineFragment',
-                              typeCondition: {
-                                kind: 'NamedType',
-                                name: { kind: 'Name', value: 'ImageBlock' },
-                              },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_type' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'asset' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'url' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'alt' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'InlineFragment',
-                              typeCondition: {
-                                kind: 'NamedType',
-                                name: { kind: 'Name', value: 'FileBlock' },
-                              },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_type' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'asset' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'url' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'originalFilename',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'size' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'mimeType',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetFooterQuery, GetFooterQueryVariables>;
 export const GetProductsDocument = {
   kind: 'Document',
   definitions: [
@@ -3566,87 +3564,3 @@ export const GetCollectionDocument = {
     },
   ],
 } as unknown as DocumentNode<GetCollectionQuery, GetCollectionQueryVariables>;
-export const SearchSuggestionsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'SearchSuggestions' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'query' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'searchProducts' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'query' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'query' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ProductHit' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProductHit' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'ProductHit' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'thumbnail' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  SearchSuggestionsQuery,
-  SearchSuggestionsQueryVariables
->;

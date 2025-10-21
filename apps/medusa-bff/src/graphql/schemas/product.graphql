@@ -88,27 +88,12 @@ type ProductOptionValue {
 type ProductVariant {
   id: ID!
   sku: String
-  barcode: String
-  ean: String
-  upc: String
-  inventory_quantity: Int
-  allow_backorder: Boolean!
-  manage_inventory: Boolean!
-  weight: Float
-  length: Float
-  height: Float
-  width: Float
-  hs_code: String
-  mid_code: String
-  material: String
-  country_of_origin: String
-  metadata: JSON
-  variant_rank: Int
-  product_id: ID!
-  options: [ProductVariantOption!]
-  calculated_price: CalculatedPrice
-  created_at: DateTime!
-  updated_at: DateTime!
+  inventoryQuantity: Int
+  allowBackorder: Boolean
+  manageInventory: Boolean
+  options: [ProductVariantOption]
+  price: Price
+  originalPrice: Price
 }
 
 type ProductVariantOption {
