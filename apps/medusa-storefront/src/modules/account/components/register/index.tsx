@@ -9,11 +9,19 @@ import { SubmitButton } from '@modules/checkout/components/submit-button';
 import Input from '@modules/common/components/input';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
-type Props = {
+import { REGISTER_DESCRIPTION, REGISTER_HEADING } from './constants';
+
+type RegisterProps = {
+  heading?: string;
+  description?: string;
   setCurrentView: (view: LOGIN_VIEW) => void;
 };
 
-const Register = ({ setCurrentView }: Props) => {
+const Register = ({
+  heading = REGISTER_HEADING,
+  description = REGISTER_DESCRIPTION,
+  setCurrentView,
+}: RegisterProps) => {
   const [message, formAction] = useActionState(signup, null);
 
   return (
@@ -21,12 +29,9 @@ const Register = ({ setCurrentView }: Props) => {
       className="flex max-w-sm flex-col items-center"
       data-testid="register-page"
     >
-      <h1 className="text-large-semi mb-6 uppercase">
-        Become a Medusa Store Member
-      </h1>
+      <h1 className="text-large-semi mb-6 uppercase">{heading}</h1>
       <p className="text-base-regular mb-4 text-center text-ui-fg-base">
-        Create your Medusa Store Member profile, and get access to an enhanced
-        shopping experience.
+        {description}
       </p>
       <form className="flex w-full flex-col" action={formAction}>
         <div className="flex w-full flex-col gap-y-2">

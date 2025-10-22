@@ -6,11 +6,19 @@ import ErrorMessage from '@modules/checkout/components/error-message';
 import { SubmitButton } from '@modules/checkout/components/submit-button';
 import Input from '@modules/common/components/input';
 
-type Props = {
+import { LOGIN_DESCRIPTION, LOGIN_HEADING } from './constants';
+
+type LoginProps = {
+  heading?: string;
+  description?: string;
   setCurrentView: (view: LOGIN_VIEW) => void;
 };
 
-const Login = ({ setCurrentView }: Props) => {
+const Login = ({
+  heading = LOGIN_HEADING,
+  description = LOGIN_DESCRIPTION,
+  setCurrentView,
+}: LoginProps) => {
   const [message, formAction] = useActionState(login, null);
 
   return (
@@ -18,9 +26,9 @@ const Login = ({ setCurrentView }: Props) => {
       className="flex w-full max-w-sm flex-col items-center"
       data-testid="login-page"
     >
-      <h1 className="text-large-semi mb-6 uppercase">Welcome back</h1>
+      <h1 className="text-large-semi mb-6 uppercase">{heading}</h1>
       <p className="text-base-regular mb-8 text-center text-ui-fg-base">
-        Sign in to access an enhanced shopping experience.
+        {description}
       </p>
       <form className="w-full" action={formAction}>
         <div className="flex w-full flex-col gap-y-2">
