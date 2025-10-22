@@ -74,4 +74,12 @@ export const cartResolvers = {
       return await context.cartService.completeCart(cartId);
     },
   },
+  CompleteCartResponse: {
+    __resolveType(obj) {
+      if (obj.__typename) return obj.__typename;
+      if (obj.order) return 'CompleteCartOrderResult';
+      if (obj.error) return 'CompleteCartErrorResult';
+      return null;
+    },
+  },
 };

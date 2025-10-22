@@ -108,6 +108,9 @@ export const COMPLETE_CART_MUTATION = gql`
           shipping_methods {
             ...ShippingMethodFields
           }
+          shipping_address {
+            ...AddressFields
+          }
         }
       }
       ... on CompleteCartErrorResult {
@@ -128,5 +131,6 @@ export const COMPLETE_CART_MUTATION = gql`
     }
   }
   ${LINE_ITEM_FRAGMENT}
+  ${ADDRESS_FRAGMENT}
   ${SHIPPING_METHODS_FRAGMENT}
 `;

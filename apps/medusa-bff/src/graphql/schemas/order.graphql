@@ -6,6 +6,7 @@ type Order {
   email: String
   items: [LineItem!]
   shipping_methods: [ShippingMethod!]
+  shipping_address: Address
   payment_status: String
   fulfillment_status: String
   total: Int

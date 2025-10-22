@@ -39,6 +39,7 @@ export const PRODUCT_VARIANT_FRAGMENT = gql`
     inventoryQuantity
     allowBackorder
     manageInventory
+    title
     options {
       id
       optionId

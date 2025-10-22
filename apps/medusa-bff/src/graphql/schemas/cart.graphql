@@ -38,6 +38,10 @@ type LineItem {
 }
 
 type Address {
+  id: String
+  metadata: JSON
+  created_at: DateTime
+  updated_at: DateTime
   first_name: String
   last_name: String
   phone: String
