@@ -7,7 +7,7 @@ export class CartService extends MedusaBaseService {
     try {
       const response = await this.medusa.store.cart.retrieve(id, {
         fields:
-          '+items.*,items.variant.*,items.variant.product.*,+shipping_methods.*',
+          '+items.*,items.variant.*,items.variant.product.*,shipping_methods.*',
       });
       return response.cart || null;
     } catch (error: unknown) {

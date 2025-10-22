@@ -8,6 +8,8 @@ import { graphqlFetch, graphqlMutation } from '@lib/gql/apollo-client';
 import {
   AddShippingMethodMutation,
   AddShippingMethodMutationVariables,
+  CompleteCartMutation,
+  CompleteCartMutationVariables,
   CreateCartMutation,
   CreateCartMutationVariables,
   CreateLineItemMutation,
@@ -23,6 +25,7 @@ import {
 } from '@lib/gql/generated-types/graphql';
 import {
   ADD_SHIPPING_METHOD_MUTATION,
+  COMPLETE_CART_MUTATION,
   CREATE_CART_MUTATION,
   CREATE_LINE_ITEM_MUTATION,
   DELETE_LINE_ITEM_MUTATION,
@@ -94,8 +97,6 @@ export const getOrSetCart = async (
     });
 
     cart = data?.createCart;
-
-    console.log('setting cart id with id: ' + cart?.id);
 
     await setCartId(cart?.id || '');
 
@@ -506,38 +507,97 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
  * @param cartId - optional - The ID of the cart to place an order for.
  * @returns The cart object if the order was successful, or null if not.
  */
+// export async function placeOrder(cartId?: string) {
+//   const id = cartId || (await getCartId());
+
+//   if (!id) {
+//     throw new Error('No existing cart found when placing an order');
+//   }
+
+//   const headers = {
+//     ...(await getAuthHeaders()),
+//   };
+
+//   const cartRes = await sdk.store.cart
+//     .complete(id, {}, headers)
+//     .then(async (cartRes) => {
+//       const cartCacheTag = await getCacheTag('carts');
+//       revalidateTag(cartCacheTag);
+//       return cartRes;
+//     })
+//     .catch(medusaError);
+
+//   if (cartRes?.type === 'order') {
+//     const countryCode =
+//       cartRes.order.shipping_address?.country_code?.toLowerCase();
+
+//     const orderCacheTag = await getCacheTag('orders');
+//     revalidateTag(orderCacheTag);
+
+//     removeCartId();
+//     redirect(`/${countryCode}/order/${cartRes?.order.id}/confirmed`);
+//   }
+
+//   return cartRes.cart;
+// }
+
 export async function placeOrder(cartId?: string) {
   const id = cartId || (await getCartId());
+  if (!id) throw new Error('No existing cart found when placing an order');
 
-  if (!id) {
-    throw new Error('No existing cart found when placing an order');
-  }
+  try {
+    const result = await graphqlMutation<
+      CompleteCartMutation,
+      CompleteCartMutationVariables
+    >({
+      mutation: COMPLETE_CART_MUTATION,
+      variables: { cartId: id },
+      context: {
+        headers: {
+          ...(await getAuthHeaders()),
+        },
+      },
+    });
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+    const completed = result?.completeCart;
 
-  const cartRes = await sdk.store.cart
-    .complete(id, {}, headers)
-    .then(async (cartRes) => {
+    if (!completed) {
+      throw new Error('No result returned from completeCart mutation');
+    }
+
+    // ✅ Handle successful order result
+    if (completed.__typename === 'CompleteCartOrderResult') {
+      const order = completed.order;
+      const countryCode =
+        order?.shipping_address?.country_code?.toLowerCase() ?? 'us';
+
+      const orderCacheTag = await getCacheTag('orders');
+      revalidateTag(orderCacheTag);
+
+      removeCartId();
+      redirect(`/${countryCode}/order/${order?.id}/confirmed`);
+
+      return order;
+    }
+
+    // ❌ Handle error result
+    if (completed.__typename === 'CompleteCartErrorResult') {
+      console.error(
+        'Cart completion failed:',
+        completed.error?.message || 'Unknown error'
+      );
+
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
-      return cartRes;
-    })
-    .catch(medusaError);
 
-  if (cartRes?.type === 'order') {
-    const countryCode =
-      cartRes.order.shipping_address?.country_code?.toLowerCase();
+      return completed.cart;
+    }
 
-    const orderCacheTag = await getCacheTag('orders');
-    revalidateTag(orderCacheTag);
-
-    removeCartId();
-    redirect(`/${countryCode}/order/${cartRes?.order.id}/confirmed`);
+    return null;
+  } catch (error: any) {
+    console.error('GraphQL completeCart error:', error.message);
+    throw error;
   }
-
-  return cartRes.cart;
 }
 
 /**
