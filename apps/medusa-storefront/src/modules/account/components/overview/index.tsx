@@ -1,3 +1,4 @@
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
 import { HttpTypes } from '@medusajs/types';
 import { Container } from '@medusajs/ui';
@@ -5,7 +6,7 @@ import LocalizedClientLink from '@modules/common/components/localized-client-lin
 import ChevronDown from '@modules/common/icons/chevron-down';
 
 type OverviewProps = {
-  customer: HttpTypes.StoreCustomer | null;
+  customer: Customer | null;
   orders: HttpTypes.StoreOrder[] | null;
 };
 
@@ -14,8 +15,8 @@ const Overview = ({ customer, orders }: OverviewProps) => {
     <div data-testid="overview-page-wrapper">
       <div className="hidden small:block">
         <div className="text-xl-semi mb-4 flex items-center justify-between">
-          <span data-testid="welcome-message" data-value={customer?.first_name}>
-            Hello {customer?.first_name}
+          <span data-testid="welcome-message" data-value={customer?.firstName}>
+            Hello {customer?.firstName}
           </span>
           <span className="text-small-regular text-ui-fg-base">
             Signed in as:{' '}
@@ -134,7 +135,7 @@ const Overview = ({ customer, orders }: OverviewProps) => {
   );
 };
 
-const getProfileCompletion = (customer: HttpTypes.StoreCustomer | null) => {
+const getProfileCompletion = (customer: Customer | null) => {
   let count = 0;
 
   if (!customer) {
@@ -145,7 +146,7 @@ const getProfileCompletion = (customer: HttpTypes.StoreCustomer | null) => {
     count++;
   }
 
-  if (customer.first_name && customer.last_name) {
+  if (customer.firstName && customer.lastName) {
     count++;
   }
 
@@ -154,7 +155,7 @@ const getProfileCompletion = (customer: HttpTypes.StoreCustomer | null) => {
   }
 
   const billingAddress = customer.addresses?.find(
-    (addr) => addr.is_default_billing
+    (addr) => addr?.isDefaultBilling
   );
 
   if (billingAddress) {

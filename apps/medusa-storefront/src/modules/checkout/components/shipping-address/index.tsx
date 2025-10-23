@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { mapKeys } from 'lodash';
 
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import { Container } from '@medusajs/ui';
 import Checkbox from '@modules/common/components/checkbox';
@@ -16,7 +17,7 @@ const ShippingAddress = ({
   checked,
   onChange,
 }: {
-  customer: HttpTypes.StoreCustomer | null;
+  customer: Customer | null;
   cart: HttpTypes.StoreCart | null;
   checked: boolean;
   onChange: () => void;
@@ -42,8 +43,8 @@ const ShippingAddress = ({
   // check if customer has saved addresses that are in the current region
   const addressesInRegion = useMemo(
     () =>
-      customer?.addresses.filter(
-        (a) => a.country_code && countriesInRegion?.includes(a.country_code)
+      customer?.addresses?.filter(
+        (a) => a?.countryCode && countriesInRegion?.includes(a.countryCode)
       ),
     [customer?.addresses, countriesInRegion]
   );
@@ -100,7 +101,7 @@ const ShippingAddress = ({
       {customer && (addressesInRegion?.length || 0) > 0 && (
         <Container className="mb-6 flex flex-col gap-y-4 p-5">
           <p className="text-small-regular">
-            {`Hi ${customer.first_name}, do you want to use one of your saved addresses?`}
+            {`Hi ${customer.firstName}, do you want to use one of your saved addresses?`}
           </p>
           <AddressSelect
             addresses={customer.addresses}

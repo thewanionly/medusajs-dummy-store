@@ -4,8 +4,19 @@ import { transformCustomer } from './util/transforms';
 
 export const customerResolvers = {
   Query: {
-    me: async (_: unknown, __: unknown, { medusa }: GraphQLContext) => {
+    me: async (
+      _: unknown,
+      __: unknown,
+      { medusa, session }: GraphQLContext
+    ) => {
       try {
+        if (!session.isCustomerLoggedIn) {
+          handleMedusaError({ message: 'Unauthorized' }, 'run Query.me', [
+            'Query',
+            'me',
+          ]);
+        }
+
         const { customer } = await medusa.store.customer.retrieve({
           fields: '*orders',
         });
@@ -21,7 +32,7 @@ export const customerResolvers = {
     login: async (
       _: unknown,
       args: { email: string; password: string },
-      { medusa }: GraphQLContext
+      { medusa, session }: GraphQLContext
     ) => {
       try {
         const token = await medusa.auth.login('customer', 'emailpass', {
@@ -30,11 +41,18 @@ export const customerResolvers = {
         });
 
         if (typeof token !== 'string') {
-          // TODO - Handle error
           throw new Error('Unable to login');
         }
 
-        await medusa.client.setToken(token);
+        session.medusaToken = token;
+        session.isCustomerLoggedIn = true;
+
+        await new Promise<void>((resolve, reject) => {
+          session.save((err) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        });
 
         return { token };
       } catch (e) {

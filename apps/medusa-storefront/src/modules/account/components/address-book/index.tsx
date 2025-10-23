@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 
 import AddAddress from '../address-card/add-address';
 import EditAddress from '../address-card/edit-address-modal';
 
 type AddressBookProps = {
-  customer: HttpTypes.StoreCustomer;
+  customer: Customer;
   region: HttpTypes.StoreRegion;
 };
 
@@ -16,9 +17,9 @@ const AddressBook: React.FC<AddressBookProps> = ({ customer, region }) => {
     <div className="w-full">
       <div className="mt-4 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
         <AddAddress region={region} addresses={addresses} />
-        {addresses.map((address) => {
+        {addresses?.map((address) => {
           return (
-            <EditAddress region={region} address={address} key={address.id} />
+            <EditAddress region={region} address={address} key={address?.id} />
           );
         })}
       </div>

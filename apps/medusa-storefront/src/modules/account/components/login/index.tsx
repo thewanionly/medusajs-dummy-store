@@ -1,6 +1,9 @@
-import { useActionState } from 'react';
+import { FormEvent } from 'react';
 
-import { login } from '@lib/data/customer';
+import { useMutation } from '@apollo/client/react';
+import { postLogin } from '@lib/data/customer';
+import { LoginMutation } from '@lib/gql/generated-types/graphql';
+import { LOGIN_MUTATION } from '@lib/gql/mutations/customer';
 import { LOGIN_VIEW } from '@modules/account/templates/login-template';
 import ErrorMessage from '@modules/checkout/components/error-message';
 import { SubmitButton } from '@modules/checkout/components/submit-button';
@@ -11,7 +14,26 @@ type Props = {
 };
 
 const Login = ({ setCurrentView }: Props) => {
-  const [message, formAction] = useActionState(login, null);
+  const [login, { error }] = useMutation<LoginMutation>(LOGIN_MUTATION);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const { data } = await login({
+      variables: {
+        email,
+        password,
+      },
+    });
+
+    const token = data?.login?.token;
+
+    await postLogin(token);
+  };
 
   return (
     <div
@@ -22,7 +44,7 @@ const Login = ({ setCurrentView }: Props) => {
       <p className="text-base-regular mb-8 text-center text-ui-fg-base">
         Sign in to access an enhanced shopping experience.
       </p>
-      <form className="w-full" action={formAction}>
+      <form className="w-full" onSubmit={handleSubmit}>
         <div className="flex w-full flex-col gap-y-2">
           <Input
             label="Email"
@@ -42,7 +64,10 @@ const Login = ({ setCurrentView }: Props) => {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="login-error-message" />
+        <ErrorMessage
+          error={error?.message}
+          data-testid="login-error-message"
+        />
         <SubmitButton data-testid="sign-in-button" className="mt-6 w-full">
           Sign in
         </SubmitButton>

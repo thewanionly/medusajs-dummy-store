@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setAddresses } from '@lib/data/cart';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import compareAddresses from '@lib/util/compare-addresses';
 import { CheckCircleSolid } from '@medusajs/icons';
 import { HttpTypes } from '@medusajs/types';
@@ -22,7 +23,7 @@ const Addresses = ({
   customer,
 }: {
   cart: HttpTypes.StoreCart | null;
-  customer: HttpTypes.StoreCustomer | null;
+  customer: Customer | null;
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();

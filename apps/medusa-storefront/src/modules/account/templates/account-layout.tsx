@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { HttpTypes } from '@medusajs/types';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import UnderlineLink from '@modules/common/components/interactive-link';
 
 import AccountNav from '../components/account-nav';
 
 interface AccountLayoutProps {
-  customer: HttpTypes.StoreCustomer | null;
+  customer: Customer | null;
   children: React.ReactNode;
 }
 

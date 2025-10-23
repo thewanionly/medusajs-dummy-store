@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from 'react';
 
 import { addCustomerAddress } from '@lib/data/customer';
+import { CustomerAddress, Maybe } from '@lib/gql/generated-types/graphql';
 import useToggleState from '@lib/hooks/use-toggle-state';
 import { Plus } from '@medusajs/icons';
 import { HttpTypes } from '@medusajs/types';
@@ -17,13 +18,13 @@ const AddAddress = ({
   addresses,
 }: {
   region: HttpTypes.StoreRegion;
-  addresses: HttpTypes.StoreCustomerAddress[];
+  addresses?: Maybe<Maybe<CustomerAddress>[]> | null;
 }) => {
   const [successState, setSuccessState] = useState(false);
   const { state, open, close: closeModal } = useToggleState(false);
 
   const [formState, formAction] = useActionState(addCustomerAddress, {
-    isDefaultShipping: addresses.length === 0,
+    isDefaultShipping: addresses?.length === 0,
     success: false,
     error: null,
   });

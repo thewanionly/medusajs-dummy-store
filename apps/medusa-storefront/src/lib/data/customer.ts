@@ -1,19 +1,16 @@
 'use server';
 
 import { revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { sdk } from '@lib/config';
-import { graphqlFetch } from '@lib/gql';
-import { graphqlMutation } from '@lib/gql/apollo-client';
+import { createServerApolloClient, graphqlFetch } from '@lib/gql/apollo-client';
 import {
   Customer,
   GetCustomerQuery,
   GetCustomerQueryVariables,
-  LoginMutation,
-  LoginMutationVariables,
 } from '@lib/gql/generated-types/graphql';
-import { LOGIN_MUTATION } from '@lib/gql/mutations/customer';
 import { GET_CUSTOMER_QUERY } from '@lib/gql/queries/customer';
 import medusaError from '@lib/util/medusa-error';
 import { HttpTypes } from '@medusajs/types';
@@ -28,19 +25,25 @@ import {
 } from './cookies';
 
 export const retrieveCustomer = async (): Promise<Customer | null> => {
-  const customer = await graphqlFetch<
-    GetCustomerQuery,
-    GetCustomerQueryVariables
-  >({
-    query: GET_CUSTOMER_QUERY,
-  })
-    .then((response) => response?.me ?? null)
-    .catch(() => {
-      // TODO: Error handling
-      return null;
-    });
+  const cookieHeader = (await cookies()).toString();
+  const apolloClient = createServerApolloClient(cookieHeader);
 
-  return customer;
+  try {
+    const customer = await graphqlFetch<
+      GetCustomerQuery,
+      GetCustomerQueryVariables
+    >(
+      {
+        query: GET_CUSTOMER_QUERY,
+        fetchPolicy: 'network-only',
+      },
+      apolloClient
+    ).then((response) => response?.me ?? null);
+
+    return customer;
+  } catch {
+    return null;
+  }
 };
 
 export const updateCustomer = async (body: HttpTypes.StoreUpdateCustomer) => {
@@ -104,31 +107,19 @@ export async function signup(_currentState: unknown, formData: FormData) {
   }
 }
 
-export async function login(_currentState: unknown, formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
-  try {
-    const loginResponse = await graphqlMutation<
-      LoginMutation,
-      LoginMutationVariables
-    >({
-      mutation: LOGIN_MUTATION,
-      variables: {
-        email,
-        password,
-      },
-    });
-
-    const token = loginResponse?.login?.token;
-
-    if (token) {
-      await setAuthToken(token as string);
-      const customerCacheTag = await getCacheTag('customers');
-      revalidateTag(customerCacheTag);
-    }
-  } catch (error: any) {
-    return error.toString();
+/**
+ * Sets appropriate cookies for client-side SDK authentication
+ * and merges carts if applicable.
+ *
+ * @param token Auth token received after logging in
+ * @returns
+ */
+export async function postLogin(token: string | null | undefined) {
+  // TODO: MDS-80 Revisit: remove auth-related logic once all requests are refactored to use BFF.
+  if (token) {
+    await setAuthToken(token as string);
+    const customerCacheTag = await getCacheTag('customers');
+    revalidateTag(customerCacheTag);
   }
 
   try {

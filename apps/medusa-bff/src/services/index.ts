@@ -1,4 +1,5 @@
-import { IncomingMessage } from 'http';
+import type express from 'express';
+import { Session, SessionData } from 'express-session';
 
 import Medusa from '@medusajs/js-sdk';
 
@@ -6,56 +7,50 @@ import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
 
-export function createContext({ req }: { req: IncomingMessage }) {
-  let _medusa: Medusa | null = null;
+export function createContext({ req }: { req: express.Request }) {
   let _productService: ProductService | null = null;
   let _categoryService: CategoryService | null = null;
   let _collectionService: CollectionService | null = null;
 
-  const createMedusa = () => {
-    const authHeader = (req.headers && (req.headers as any).authorization) as
-      | string
-      | undefined;
+  const createMedusa = (session: Session & Partial<SessionData>) => {
+    const medusaToken = session.medusaToken;
 
-    if (!_medusa) {
-      _medusa = new Medusa({
-        baseUrl: process.env.MEDUSA_API_URL || 'http://localhost:9000',
-        auth: {
-          type: 'jwt',
-        },
-        globalHeaders: {
-          'X-Publishable-API-Key':
-            process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_test',
-          ...(authHeader ? { Authorization: authHeader } : undefined),
-        },
-      });
-    }
+    const medusa = new Medusa({
+      baseUrl: process.env.MEDUSA_API_URL || 'http://localhost:9000',
+      auth: {
+        type: 'session',
+      },
+      globalHeaders: {
+        'X-Publishable-API-Key':
+          process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_test',
+        ...(medusaToken
+          ? { Authorization: `Bearer ${medusaToken}` }
+          : undefined),
+      },
+    });
 
-    if (authHeader?.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
-      if (token) _medusa.client.setToken(token);
-    }
+    if (medusaToken) medusa.client.setToken(medusaToken);
 
-    return _medusa;
+    return medusa;
   };
 
+  const session = req.session;
+  const medusa = createMedusa(session);
+
   return {
-    get medusa() {
-      return createMedusa();
-    },
+    session,
+    medusa,
     get productService() {
-      if (!_productService)
-        _productService = new ProductService(createMedusa());
+      if (!_productService) _productService = new ProductService(medusa);
       return _productService;
     },
     get categoryService() {
-      if (!_categoryService)
-        _categoryService = new CategoryService(createMedusa());
+      if (!_categoryService) _categoryService = new CategoryService(medusa);
       return _categoryService;
     },
     get collectionService() {
       if (!_collectionService)
-        _collectionService = new CollectionService(createMedusa());
+        _collectionService = new CollectionService(medusa);
       return _collectionService;
     },
   };

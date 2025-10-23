@@ -3,14 +3,12 @@
 import { useState } from 'react';
 
 import { transferCart } from '@lib/data/customer';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { ExclamationCircleSolid } from '@medusajs/icons';
-import { StoreCart, StoreCustomer } from '@medusajs/types';
+import { StoreCart } from '@medusajs/types';
 import { Button } from '@medusajs/ui';
 
-function CartMismatchBanner(props: {
-  customer: StoreCustomer;
-  cart: StoreCart;
-}) {
+function CartMismatchBanner(props: { customer: Customer; cart: StoreCart }) {
   const { customer, cart } = props;
   const [isPending, setIsPending] = useState(false);
   const [actionText, setActionText] = useState('Run transfer again');
