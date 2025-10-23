@@ -14,12 +14,26 @@ const medusa = new Medusa({
   apiKey: process.env.MEDUSA_PUBLISHABLE_KEY,
 });
 
+const mockSession = {
+  medusaToken: mockLoginToken,
+  isCustomerLoggedIn: true,
+  save: jest.fn((cb) => cb()),
+  destroy: jest.fn((cb) => cb()),
+};
+
+const mockRes = {
+  clearCookie: jest.fn(),
+};
+
 describe('Customer Resolvers', () => {
   let testContext: GraphQLContext;
 
   beforeEach(() => {
     jest.clearAllMocks();
+
     testContext = {
+      res: mockRes,
+      session: mockSession,
       medusa,
     } as unknown as GraphQLContext;
   });
@@ -68,6 +82,18 @@ describe('Customer Resolvers', () => {
       await expect(
         customerResolvers.Mutation.login({}, loginArgs, testContext)
       ).rejects.toThrow();
+    });
+  });
+
+  describe('Mutation.logout', () => {
+    it('should logout customer successfully', async () => {
+      const result = await customerResolvers.Mutation.logout(
+        {},
+        {},
+        testContext
+      );
+
+      expect(result).toEqual({ success: true });
     });
   });
 });

@@ -34,7 +34,7 @@ describe('Product Resolvers', () => {
       productService: mockProductService,
       categoryService: mockCategoryService,
       collectionService: mockCollectionService,
-    };
+    } as unknown as GraphQLContext;
   });
 
   afterEach(() => {

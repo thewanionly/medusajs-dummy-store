@@ -11,7 +11,7 @@ export type GraphQLContext = {
   res: express.Response;
   session: Session & Partial<SessionData>;
   medusa: Medusa;
-  productService: ProductService | null;
-  categoryService: CategoryService | null;
-  collectionService: CollectionService | null;
+  productService: ProductService;
+  categoryService: CategoryService;
+  collectionService: CollectionService;
 };
