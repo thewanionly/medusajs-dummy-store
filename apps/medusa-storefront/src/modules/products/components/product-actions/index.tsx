@@ -11,6 +11,7 @@ import { Product } from '@lib/gql/generated-types/graphql';
 import { useIntersection } from '@lib/hooks/use-in-view';
 import { HttpTypes } from '@medusajs/types';
 import { Button } from '@medusajs/ui';
+import ErrorMessage from '@modules/checkout/components/error-message';
 import Divider from '@modules/common/components/divider';
 import OptionSelect from '@modules/products/components/product-actions/option-select';
 
@@ -21,6 +22,13 @@ export type ProductActionsProps = {
   product: Product;
   disabled?: boolean;
 };
+
+enum AddToCartStatus {
+  IDLE = 'idle',
+  ADDING = 'adding',
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
 
 const optionsAsKeymap = (
   variantOptions: HttpTypes.StoreProductVariant['options']
@@ -38,7 +46,8 @@ export default function ProductActions({
   const [options, setOptions] = useState<Record<string, string | undefined>>(
     {}
   );
-  const [isAdding, setIsAdding] = useState(false);
+  const [status, setStatus] = useState<AddToCartStatus>(AddToCartStatus.IDLE);
+
   const countryCode = useParams().countryCode as string;
 
   // If there is only 1 variant, preselect the options
@@ -110,15 +119,19 @@ export default function ProductActions({
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return null;
 
-    setIsAdding(true);
+    setStatus(AddToCartStatus.ADDING);
 
-    await addToCart({
-      variantId: selectedVariant.id,
-      quantity: 1,
-      countryCode,
-    });
+    try {
+      await addToCart({
+        variantId: selectedVariant.id,
+        quantity: 1,
+        countryCode,
+      });
 
-    setIsAdding(false);
+      setStatus(AddToCartStatus.SUCCESS);
+    } catch {
+      setStatus(AddToCartStatus.ERROR);
+    }
   };
 
   return (
@@ -136,7 +149,7 @@ export default function ProductActions({
                       updateOption={setOptionValue}
                       title={option.title ?? ''}
                       data-testid="product-options"
-                      disabled={!!disabled || isAdding}
+                      disabled={!!disabled || status === AddToCartStatus.ADDING}
                     />
                   </div>
                 );
@@ -148,18 +161,26 @@ export default function ProductActions({
 
         <ProductPrice product={product} variant={selectedVariant} />
 
+        {status === AddToCartStatus.ERROR && (
+          <ErrorMessage error="Failed adding product to cart. Please try again." />
+        )}
+        {status === AddToCartStatus.SUCCESS && (
+          <div className="text-small-regular pt-2 text-green-700">
+            Successfully added product to cart
+          </div>
+        )}
         <Button
           onClick={handleAddToCart}
           disabled={
             !inStock ||
             !selectedVariant ||
             !!disabled ||
-            isAdding ||
+            status === AddToCartStatus.ADDING ||
             !isValidVariant
           }
           variant="primary"
           className="h-10 w-full"
-          isLoading={isAdding}
+          isLoading={status === AddToCartStatus.ADDING}
           data-testid="add-product-button"
         >
           {!selectedVariant
@@ -175,9 +196,9 @@ export default function ProductActions({
           updateOptions={setOptionValue}
           inStock={inStock}
           handleAddToCart={handleAddToCart}
-          isAdding={isAdding}
+          isAdding={status === AddToCartStatus.ADDING}
           show={!inView}
-          optionsDisabled={!!disabled || isAdding}
+          optionsDisabled={!!disabled || status === AddToCartStatus.ADDING}
         />
       </div>
     </>

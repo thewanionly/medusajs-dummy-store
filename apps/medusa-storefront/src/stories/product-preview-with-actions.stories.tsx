@@ -1,5 +1,3 @@
-import { mockedProducts } from 'mocks/data/storybook/products';
-
 import { Product } from '@lib/gql/generated-types/graphql';
 import ProductActions, {
   ProductActionsProps,
@@ -7,7 +5,15 @@ import ProductActions, {
 import { Meta, StoryObj } from '@storybook/nextjs';
 import { PlayFunction } from '@storybook/types';
 
-import { handlers as cartsHandlers } from '../mocks/msw/handlers/storybook/carts';
+import {
+  mockedProducts,
+  outOfStockProduct,
+} from '../mocks/data/storybook/products';
+import {
+  addToCartServerError,
+  handlers as cartsHandlers,
+  createCartSuccess,
+} from '../mocks/msw/handlers/storybook/carts';
 import { handlers as regionsHandlers } from '../mocks/msw/handlers/storybook/regions';
 import ProductPreview, {
   ProductPreviewProps,
@@ -16,11 +22,9 @@ import ProductPreview, {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const addToCartPlay: PlayFunction = async ({ canvas, userEvent }) => {
-  await delay(500);
-
   const options = canvas.getAllByTestId('option-button');
   await userEvent.click(options[0]!);
-  await delay(1000);
+  await delay(300);
 
   await userEvent.click(canvas.getByTestId('add-product-button'));
 };
@@ -69,4 +73,22 @@ export const Default: Story = {
     },
   },
   play: addToCartPlay,
+};
+
+export const ErrorAddToCart: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [...regionsHandlers, createCartSuccess, addToCartServerError],
+    },
+  },
+  play: addToCartPlay,
+};
+
+export const OutOfStock: Story = {
+  args: { ...mockedProps, product: outOfStockProduct as Product },
+  play: async ({ canvas, userEvent }) => {
+    const options = canvas.getAllByTestId('option-button');
+    await userEvent.click(options[0]!);
+  },
 };
