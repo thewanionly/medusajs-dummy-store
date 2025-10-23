@@ -29,11 +29,13 @@ const addToCartPlay: PlayFunction = async ({ canvas, userEvent }) => {
   await userEvent.click(canvas.getByTestId('add-product-button'));
 };
 
+type ProductPreviewWithActionsProps = ProductPreviewProps & ProductActionsProps;
+
 const ProductPreviewWithActions = ({
   product,
   isFeatured,
   disabled,
-}: ProductPreviewProps & ProductActionsProps) => (
+}: ProductPreviewWithActionsProps) => (
   <div className="flex flex-col gap-8 sm:flex-row">
     <div className="w-1/3 min-w-[250px]">
       <ProductPreview product={product} isFeatured={isFeatured} />
@@ -64,9 +66,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const mockedProps: ProductPreviewProps = {
+const mockedProps: ProductPreviewWithActionsProps = {
   product: mockedProducts[0] as Product,
   isFeatured: true,
+  disabled: false,
 };
 
 export const Default: Story = {
