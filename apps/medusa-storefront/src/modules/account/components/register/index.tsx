@@ -22,7 +22,7 @@ const Register = ({
   description = REGISTER_DESCRIPTION,
   setCurrentView,
 }: RegisterProps) => {
-  const [state, formAction] = useActionState(signup, null);
+  const [state, formAction, isPending] = useActionState(signup, null);
 
   return (
     <div
@@ -98,7 +98,11 @@ const Register = ({
           </LocalizedClientLink>
           .
         </span>
-        <SubmitButton className="mt-6 w-full" data-testid="register-button">
+        <SubmitButton
+          className="mt-6 w-full"
+          data-testid="register-button"
+          isLoading={isPending}
+        >
           Join
         </SubmitButton>
       </form>

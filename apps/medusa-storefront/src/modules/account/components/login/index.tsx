@@ -19,7 +19,7 @@ const Login = ({
   description = LOGIN_DESCRIPTION,
   setCurrentView,
 }: LoginProps) => {
-  const [state, formAction] = useActionState(login, null);
+  const [state, formAction, isPending] = useActionState(login, null);
 
   return (
     <div
@@ -61,7 +61,11 @@ const Login = ({
             {state?.message}
           </div>
         )}
-        <SubmitButton data-testid="sign-in-button" className="mt-6 w-full">
+        <SubmitButton
+          data-testid="sign-in-button"
+          className="mt-6 w-full"
+          isLoading={isPending}
+        >
           Sign in
         </SubmitButton>
       </form>
