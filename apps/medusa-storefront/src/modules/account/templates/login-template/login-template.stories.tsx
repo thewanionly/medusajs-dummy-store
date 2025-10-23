@@ -5,6 +5,13 @@ import {
 import { Meta, StoryObj } from '@storybook/nextjs';
 
 import {
+  accountLocked,
+  handlers as customerHandlers,
+  invalidCredentials,
+  rateLimited,
+  serverError,
+} from '../../../../mocks/msw/handlers/storybook/customer';
+import {
   LOGIN_DESCRIPTION,
   LOGIN_HEADING,
 } from '../../components/login/constants';
@@ -37,5 +44,46 @@ const mockedProps: LoginTemplateProps = {
 };
 
 export const Default: Story = {
-  args: { ...mockedProps },
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: customerHandlers,
+    },
+  },
+};
+
+export const InvalidCredentials: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [invalidCredentials],
+    },
+  },
+};
+
+export const AccountLocked: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [accountLocked],
+    },
+  },
+};
+
+export const RateLimited: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [rateLimited],
+    },
+  },
+};
+
+export const ServerError: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [serverError],
+    },
+  },
 };
