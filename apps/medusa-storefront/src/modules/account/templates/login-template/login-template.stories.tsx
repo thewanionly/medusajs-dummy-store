@@ -1,8 +1,11 @@
+import 'storybook/test';
+
 import {
   LoginTemplate,
   LoginTemplateProps,
 } from '@modules/account/templates/login-template';
 import { Meta, StoryObj } from '@storybook/nextjs';
+import type { PlayFunction } from '@storybook/types';
 
 import {
   accountLocked,
@@ -21,7 +24,7 @@ import {
 } from '../../components/register/constants';
 
 const meta = {
-  title: 'LoginTemplate',
+  title: 'LoginRegisterForm',
   component: LoginTemplate,
   parameters: {
     nextjs: {
@@ -43,47 +46,64 @@ const mockedProps: LoginTemplateProps = {
   registerDescription: REGISTER_DESCRIPTION,
 };
 
-export const Default: Story = {
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const loginPlay: PlayFunction = async ({ canvas, userEvent }) => {
+  await userEvent.type(canvas.getByTestId('email-input'), 'john.doe@gmail.com');
+  await delay(300);
+
+  await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+  await delay(300);
+
+  await userEvent.click(canvas.getByTestId('sign-in-button'));
+};
+
+export const LoginSuccess: Story = {
   args: mockedProps,
   parameters: {
     msw: {
       handlers: customerHandlers,
     },
   },
+  play: loginPlay,
 };
 
-export const InvalidCredentials: Story = {
+export const LoginInvalidCredentials: Story = {
   args: mockedProps,
   parameters: {
     msw: {
       handlers: [invalidCredentials],
     },
   },
+  play: loginPlay,
 };
 
-export const AccountLocked: Story = {
+export const LoginAccountLocked: Story = {
   args: mockedProps,
   parameters: {
     msw: {
       handlers: [accountLocked],
     },
   },
+  play: loginPlay,
 };
 
-export const RateLimited: Story = {
+export const LoginRateLimited: Story = {
   args: mockedProps,
   parameters: {
     msw: {
       handlers: [rateLimited],
     },
   },
+  play: loginPlay,
 };
 
-export const ServerError: Story = {
+export const LoginServerError: Story = {
   args: mockedProps,
   parameters: {
     msw: {
       handlers: [serverError],
     },
   },
+  play: loginPlay,
 };
