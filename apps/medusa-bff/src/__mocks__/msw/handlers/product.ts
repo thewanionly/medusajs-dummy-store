@@ -3,7 +3,7 @@ import { HttpResponse, http } from 'msw';
 import {
   createMockMedusaProduct,
   createMockMedusaProducts,
-} from '@mocks/products';
+} from '@mocks/data/products';
 
 /* Success (i.e. happy path) handlers */
 export const handlers = [

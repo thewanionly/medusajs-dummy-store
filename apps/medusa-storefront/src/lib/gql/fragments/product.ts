@@ -134,3 +134,13 @@ export const COLLECTION_PRODUCTS_FRAGMENT = gql`
   ${PRODUCT_IMAGE_FRAGMENT}
   ${PRICE_FRAGMENT}
 `;
+
+export const PRODUCT_HIT_FRAGMENT = gql`
+  fragment ProductHit on ProductHit {
+    id
+    title
+    description
+    handle
+    thumbnail
+  }
+`;

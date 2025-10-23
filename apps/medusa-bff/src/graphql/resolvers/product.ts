@@ -1,3 +1,4 @@
+import { QuerySearchProductsArgs } from '@graphql/generated/graphql';
 import { HttpTypes } from '@medusajs/types';
 
 import { GraphQLContext } from '../types/context';
@@ -45,6 +46,13 @@ export const productResolvers = {
       context: GraphQLContext
     ) => {
       return await context.collectionService.getCollection(params.id);
+    },
+    searchProducts: async (
+      _parent: unknown,
+      args: QuerySearchProductsArgs,
+      context: GraphQLContext
+    ) => {
+      return await context.algoliaSearchService.search(args);
     },
   },
   Collection: {

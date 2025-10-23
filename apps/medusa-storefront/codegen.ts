@@ -20,6 +20,9 @@ const config: CodegenConfig = {
     },
   },
   ignoreNoDocuments: false,
+  hooks: {
+    afterAllFileWrite: ['prettier --write'],
+  },
 };
 
 export default config;
