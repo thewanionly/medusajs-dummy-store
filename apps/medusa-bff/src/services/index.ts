@@ -1,13 +1,20 @@
 import type express from 'express';
 import { Session, SessionData } from 'express-session';
 
+import { GraphQLContext } from '@graphql/types/context';
 import Medusa from '@medusajs/js-sdk';
 
 import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
 
-export function createContext({ req }: { req: express.Request }) {
+export function createContext({
+  req,
+  res,
+}: {
+  req: express.Request;
+  res: express.Response;
+}): GraphQLContext {
   let _productService: ProductService | null = null;
   let _categoryService: CategoryService | null = null;
   let _collectionService: CollectionService | null = null;
@@ -17,9 +24,6 @@ export function createContext({ req }: { req: express.Request }) {
 
     const medusa = new Medusa({
       baseUrl: process.env.MEDUSA_API_URL || 'http://localhost:9000',
-      auth: {
-        type: 'session',
-      },
       globalHeaders: {
         'X-Publishable-API-Key':
           process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_test',
@@ -38,6 +42,8 @@ export function createContext({ req }: { req: express.Request }) {
   const medusa = createMedusa(session);
 
   return {
+    req,
+    res,
     session,
     medusa,
     get productService() {

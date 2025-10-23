@@ -80,8 +80,13 @@ export type CustomerAddress = {
   province?: Maybe<Scalars['String']['output']>;
 };
 
+export type LogoutResponse = {
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Mutation = {
   login?: Maybe<Token>;
+  logout?: Maybe<LogoutResponse>;
 };
 
 export type MutationLoginArgs = {
@@ -359,6 +364,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  LogoutResponse: ResolverTypeWrapper<LogoutResponse>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Price: ResolverTypeWrapper<Price>;
   Product: ResolverTypeWrapper<Product>;
@@ -387,6 +393,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
+  LogoutResponse: LogoutResponse;
   Mutation: Record<PropertyKey, never>;
   Price: Price;
   Product: Product;
@@ -515,6 +522,14 @@ export interface JsonScalarConfig
   name: 'JSON';
 }
 
+export type LogoutResponseResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['LogoutResponse'] = ResolversParentTypes['LogoutResponse'],
+> = {
+  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+};
+
 export type MutationResolvers<
   ContextType = GraphQLContext,
   ParentType extends
@@ -525,6 +540,11 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationLoginArgs, 'email' | 'password'>
+  >;
+  logout?: Resolver<
+    Maybe<ResolversTypes['LogoutResponse']>,
+    ParentType,
+    ContextType
   >;
 };
 
@@ -803,6 +823,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   CustomerAddress?: CustomerAddressResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
+  LogoutResponse?: LogoutResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Price?: PriceResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;

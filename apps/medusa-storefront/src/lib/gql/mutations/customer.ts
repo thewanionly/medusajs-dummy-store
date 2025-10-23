@@ -7,3 +7,11 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+export const LOGOUT_MUTATION = gql`
+  mutation Logout {
+    logout {
+      success
+    }
+  }
+`;

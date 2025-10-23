@@ -4,10 +4,15 @@ type Query {
 
 type Mutation {
   login(email: String!, password: String!): Token
+  logout: LogoutResponse
 }
 
 type Token {
   token: String
+}
+
+type LogoutResponse {
+  success: Boolean
 }
 
 type Customer {

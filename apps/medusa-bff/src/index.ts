@@ -53,7 +53,7 @@ async function startServer() {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: async ({ req }) => createContext({ req }),
+      context: async ({ req, res }) => createContext({ req, res }),
     })
   );
 
