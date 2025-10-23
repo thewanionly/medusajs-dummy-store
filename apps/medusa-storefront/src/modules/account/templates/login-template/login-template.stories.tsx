@@ -8,11 +8,11 @@ import { Meta, StoryObj } from '@storybook/nextjs';
 import type { PlayFunction } from '@storybook/types';
 
 import {
-  accountLocked,
+  accountAlreadyExists,
   handlers as customerHandlers,
   invalidCredentials,
-  rateLimited,
-  serverError,
+  serverErrorLogin,
+  serverErrorRegister,
 } from '../../../../mocks/msw/handlers/storybook/customer';
 import {
   LOGIN_DESCRIPTION,
@@ -58,6 +58,25 @@ const loginPlay: PlayFunction = async ({ canvas, userEvent }) => {
   await userEvent.click(canvas.getByTestId('sign-in-button'));
 };
 
+const registerPlay: PlayFunction = async ({ canvas, userEvent }) => {
+  await userEvent.click(canvas.getByTestId('register-button'));
+  await delay(150);
+
+  await userEvent.type(canvas.getByTestId('first-name-input'), 'John');
+  await delay(300);
+
+  await userEvent.type(canvas.getByTestId('last-name-input'), 'Doe');
+  await delay(300);
+
+  await userEvent.type(canvas.getByTestId('email-input'), 'john.doe@gmail.com');
+  await delay(300);
+
+  await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+  await delay(300);
+
+  await userEvent.click(canvas.getByTestId('register-button'));
+};
+
 export const LoginSuccess: Story = {
   args: mockedProps,
   parameters: {
@@ -78,32 +97,42 @@ export const LoginInvalidCredentials: Story = {
   play: loginPlay,
 };
 
-export const LoginAccountLocked: Story = {
-  args: mockedProps,
-  parameters: {
-    msw: {
-      handlers: [accountLocked],
-    },
-  },
-  play: loginPlay,
-};
-
-export const LoginRateLimited: Story = {
-  args: mockedProps,
-  parameters: {
-    msw: {
-      handlers: [rateLimited],
-    },
-  },
-  play: loginPlay,
-};
-
 export const LoginServerError: Story = {
   args: mockedProps,
   parameters: {
     msw: {
-      handlers: [serverError],
+      handlers: [serverErrorLogin],
     },
   },
   play: loginPlay,
+};
+
+export const RegisterSuccess: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: customerHandlers,
+    },
+  },
+  play: registerPlay,
+};
+
+export const RegisterAccountAlreadyExists: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [accountAlreadyExists],
+    },
+  },
+  play: registerPlay,
+};
+
+export const RegisterServerError: Story = {
+  args: mockedProps,
+  parameters: {
+    msw: {
+      handlers: [serverErrorRegister],
+    },
+  },
+  play: registerPlay,
 };
