@@ -129,7 +129,8 @@ export async function postLogin(token: string | null | undefined) {
   }
 }
 
-export async function signout(countryCode: string) {
+// TODO: MDS-80 Revisit and remove logic related to JWT-based auth.
+export async function postSignout(countryCode: string) {
   await sdk.auth.logout();
 
   await removeAuthToken();

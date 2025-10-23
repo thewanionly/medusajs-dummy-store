@@ -2,8 +2,14 @@
 
 import { useParams, usePathname } from 'next/navigation';
 
-import { signout } from '@lib/data/customer';
-import { Customer } from '@lib/gql/generated-types/graphql';
+import { useMutation } from '@apollo/client/react';
+import { postSignout } from '@lib/data/customer';
+import {
+  Customer,
+  LogoutMutation,
+  LogoutMutationVariables,
+} from '@lib/gql/generated-types/graphql';
+import { LOGOUT_MUTATION } from '@lib/gql/mutations/customer';
 import { ArrowRightOnRectangle } from '@medusajs/icons';
 import { clx } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
@@ -16,8 +22,16 @@ const AccountNav = ({ customer }: { customer: Customer | null }) => {
   const route = usePathname();
   const { countryCode } = useParams() as { countryCode: string };
 
+  const [logout, _] = useMutation<LogoutMutation, LogoutMutationVariables>(
+    LOGOUT_MUTATION
+  );
+
   const handleLogout = async () => {
-    await signout(countryCode);
+    const { data } = await logout();
+
+    if (data?.logout?.success) {
+      await postSignout(countryCode);
+    }
   };
 
   return (
