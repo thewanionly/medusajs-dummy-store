@@ -1,5 +1,6 @@
 import { listCartShippingMethods } from '@lib/data/fulfillment';
 import { listCartPaymentMethods } from '@lib/data/payment';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import Addresses from '@modules/checkout/components/addresses';
 import Payment from '@modules/checkout/components/payment';
@@ -11,7 +12,7 @@ export default async function CheckoutForm({
   customer,
 }: {
   cart: HttpTypes.StoreCart | null;
-  customer: HttpTypes.StoreCustomer | null;
+  customer: Customer | null;
 }) {
   if (!cart) {
     return null;

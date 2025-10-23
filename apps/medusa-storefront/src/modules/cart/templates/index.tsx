@@ -1,3 +1,4 @@
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { HttpTypes } from '@medusajs/types';
 import Divider from '@modules/common/components/divider';
 
@@ -11,7 +12,7 @@ const CartTemplate = ({
   customer,
 }: {
   cart: HttpTypes.StoreCart | null;
-  customer: HttpTypes.StoreCustomer | null;
+  customer: Customer | null;
 }) => {
   return (
     <div className="py-12">

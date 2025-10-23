@@ -3,8 +3,8 @@
 import { useParams, usePathname } from 'next/navigation';
 
 import { signout } from '@lib/data/customer';
+import { Customer } from '@lib/gql/generated-types/graphql';
 import { ArrowRightOnRectangle } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import { clx } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import ChevronDown from '@modules/common/icons/chevron-down';
@@ -12,11 +12,7 @@ import MapPin from '@modules/common/icons/map-pin';
 import Package from '@modules/common/icons/package';
 import User from '@modules/common/icons/user';
 
-const AccountNav = ({
-  customer,
-}: {
-  customer: HttpTypes.StoreCustomer | null;
-}) => {
+const AccountNav = ({ customer }: { customer: Customer | null }) => {
   const route = usePathname();
   const { countryCode } = useParams() as { countryCode: string };
 
@@ -41,7 +37,7 @@ const AccountNav = ({
         ) : (
           <>
             <div className="text-xl-semi mb-4 px-8">
-              Hello {customer?.first_name}
+              Hello {customer?.firstName}
             </div>
             <div className="text-base-regular">
               <ul>

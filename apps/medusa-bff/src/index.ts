@@ -14,6 +14,8 @@ import { resolvers } from '@graphql/resolvers';
 import { typeDefs } from '@graphql/schemas';
 import { createContext } from '@services/index';
 
+import { sessionConfig } from './config/session';
+
 async function startServer() {
   const app = express();
   const httpServer = http.createServer(app);
@@ -38,12 +40,18 @@ async function startServer() {
   const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',');
 
   app.use(
-    '/graphql',
     cors<cors.CorsRequest>({
       origin: allowedOrigins,
       credentials: true,
-    }),
-    express.json(),
+    })
+  );
+
+  app.use(sessionConfig);
+
+  app.use(express.json());
+
+  app.use(
+    '/graphql',
     expressMiddleware(server, {
       context: async ({ req }) => createContext({ req }),
     })
