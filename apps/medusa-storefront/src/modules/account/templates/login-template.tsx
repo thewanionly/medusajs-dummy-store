@@ -17,7 +17,7 @@ export type LoginTemplateProps = {
   registerDescription?: string;
 };
 
-export const LoginTemplate = ({
+const LoginTemplate = ({
   loginHeading,
   loginDescription,
   registerHeading,
@@ -43,3 +43,5 @@ export const LoginTemplate = ({
     </div>
   );
 };
+
+export default LoginTemplate;

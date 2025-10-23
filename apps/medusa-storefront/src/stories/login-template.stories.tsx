@@ -1,7 +1,6 @@
 import 'storybook/test';
 
-import {
-  LoginTemplate,
+import LoginTemplate, {
   LoginTemplateProps,
 } from '@modules/account/templates/login-template';
 import { Meta, StoryObj } from '@storybook/nextjs';
@@ -13,15 +12,15 @@ import {
   invalidCredentials,
   serverErrorLogin,
   serverErrorRegister,
-} from '../../../../mocks/msw/handlers/storybook/customer';
+} from '../mocks/msw/handlers/storybook/customer';
 import {
   LOGIN_DESCRIPTION,
   LOGIN_HEADING,
-} from '../../components/login/constants';
+} from '../modules/account/components/login/constants';
 import {
   REGISTER_DESCRIPTION,
   REGISTER_HEADING,
-} from '../../components/register/constants';
+} from '../modules/account/components/register/constants';
 
 const meta = {
   title: 'LoginRegisterForm',
