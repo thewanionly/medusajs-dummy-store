@@ -1,6 +1,6 @@
 import { HttpResponse, delay, http } from 'msw';
 
-import { mockedToken } from '../../../data/storybook/customer';
+import { mockedCustomer, mockedToken } from '../../../data/storybook/customer';
 
 export const handlers = [
   http.post('http://localhost:9000/auth/customer/emailpass', async () => {
@@ -8,6 +8,23 @@ export const handlers = [
 
     return HttpResponse.json({
       token: mockedToken,
+    });
+  }),
+  http.post(
+    'http://localhost:9000/auth/customer/emailpass/register',
+    async () => {
+      await delay(1000);
+
+      return HttpResponse.json({
+        token: mockedToken,
+      });
+    }
+  ),
+  http.post('http://localhost:9000/store/customers', async () => {
+    await delay(1000);
+
+    return HttpResponse.json({
+      customer: mockedCustomer,
     });
   }),
 ];
