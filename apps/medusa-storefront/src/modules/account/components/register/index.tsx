@@ -22,7 +22,7 @@ const Register = ({
   description = REGISTER_DESCRIPTION,
   setCurrentView,
 }: RegisterProps) => {
-  const [message, formAction] = useActionState(signup, null);
+  const [state, formAction] = useActionState(signup, null);
 
   return (
     <div
@@ -73,7 +73,14 @@ const Register = ({
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="register-error" />
+        {state?.status === 'error' && (
+          <ErrorMessage error={state?.message} data-testid="register-error" />
+        )}
+        {state?.status === 'success' && (
+          <div className="text-small-regular pt-2 text-green-700">
+            {state?.message}
+          </div>
+        )}
         <span className="text-small-regular mt-6 text-center text-ui-fg-base">
           By creating an account, you agree to Medusa Store&apos;s{' '}
           <LocalizedClientLink

@@ -19,7 +19,7 @@ const Login = ({
   description = LOGIN_DESCRIPTION,
   setCurrentView,
 }: LoginProps) => {
-  const [message, formAction] = useActionState(login, null);
+  const [state, formAction] = useActionState(login, null);
 
   return (
     <div
@@ -50,7 +50,17 @@ const Login = ({
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="login-error-message" />
+        {state?.status === 'error' && (
+          <ErrorMessage
+            error={state?.message}
+            data-testid="login-error-message"
+          />
+        )}
+        {state?.status === 'success' && (
+          <div className="text-small-regular pt-2 text-green-700">
+            {state?.message}
+          </div>
+        )}
         <SubmitButton data-testid="sign-in-button" className="mt-6 w-full">
           Sign in
         </SubmitButton>
