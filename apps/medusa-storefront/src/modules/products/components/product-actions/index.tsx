@@ -21,6 +21,7 @@ import MobileActions from './mobile-actions';
 export type ProductActionsProps = {
   product: Product;
   disabled?: boolean;
+  enableMobileActions?: boolean;
 };
 
 enum AddToCartStatus {
@@ -42,6 +43,7 @@ const optionsAsKeymap = (
 export default function ProductActions({
   product,
   disabled,
+  enableMobileActions = true,
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>(
     {}
@@ -189,17 +191,19 @@ export default function ProductActions({
               ? 'Out of stock'
               : 'Add to cart'}
         </Button>
-        <MobileActions
-          product={product}
-          variant={selectedVariant}
-          options={options}
-          updateOptions={setOptionValue}
-          inStock={inStock}
-          handleAddToCart={handleAddToCart}
-          isAdding={status === AddToCartStatus.ADDING}
-          show={!inView}
-          optionsDisabled={!!disabled || status === AddToCartStatus.ADDING}
-        />
+        {enableMobileActions && (
+          <MobileActions
+            product={product}
+            variant={selectedVariant}
+            options={options}
+            updateOptions={setOptionValue}
+            inStock={inStock}
+            handleAddToCart={handleAddToCart}
+            isAdding={status === AddToCartStatus.ADDING}
+            show={!inView}
+            optionsDisabled={!!disabled || status === AddToCartStatus.ADDING}
+          />
+        )}
       </div>
     </>
   );

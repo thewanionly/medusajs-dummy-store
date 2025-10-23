@@ -39,7 +39,11 @@ const ProductPreviewWithActions = ({
       <ProductPreview product={product} isFeatured={isFeatured} />
     </div>
     <div className="mt-4">
-      <ProductActions product={product} disabled={disabled} />
+      <ProductActions
+        product={product}
+        disabled={disabled}
+        enableMobileActions={false}
+      />
     </div>
   </div>
 );
