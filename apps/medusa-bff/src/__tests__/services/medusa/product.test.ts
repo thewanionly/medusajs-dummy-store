@@ -1,3 +1,4 @@
+import { createMockProduct, createMockProducts } from '@mocks/data/products';
 import {
   emptyProductsHandler,
   internalServerErrorHandler,
@@ -11,7 +12,6 @@ import {
   unauthorizedAccessHandler,
 } from '@mocks/msw/handlers/product';
 import { server } from '@mocks/msw/node';
-import { createMockProduct, createMockProducts } from '@mocks/products';
 import { ProductService } from '@services/medusa/product';
 
 describe('ProductService', () => {

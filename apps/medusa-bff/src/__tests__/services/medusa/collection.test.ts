@@ -1,6 +1,6 @@
 import { CollectionService } from '@services/medusa/collection';
 
-import { mockMedusaApi } from '../../../__mocks__/products';
+import { mockMedusaApi } from '../../../__mocks__/data/products';
 import { COLLECTION_FIELDS } from '../../../constants/medusa';
 
 jest.mock('@medusajs/js-sdk', () => ({
