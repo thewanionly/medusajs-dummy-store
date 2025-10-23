@@ -14,7 +14,7 @@ import { handlers as regionsHandlers } from '../../mocks/msw/handlers/storybook/
 import ProductCard from './ProductCard';
 
 const meta = {
-  title: 'ProductCard',
+  title: 'ProductCardOld',
   component: ProductCard,
   argTypes: {
     variantId: { table: { disable: true } },
