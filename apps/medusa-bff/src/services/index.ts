@@ -5,6 +5,7 @@ import { GraphQLContext } from '@graphql/types/context';
 import Medusa from '@medusajs/js-sdk';
 import { createClient } from '@sanity/client';
 
+import { AlgoliaSearchService } from './algolia/search';
 import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
@@ -19,6 +20,7 @@ export function createContext({
   let _productService: ProductService | null = null;
   let _categoryService: CategoryService | null = null;
   let _collectionService: CollectionService | null = null;
+  let _algoliaSearchService: AlgoliaSearchService | null = null;
 
   const createMedusa = (session: Session & Partial<SessionData>) => {
     const medusaToken = session.medusaToken;
@@ -68,6 +70,11 @@ export function createContext({
       if (!_collectionService)
         _collectionService = new CollectionService(medusa);
       return _collectionService;
+    },
+    get algoliaSearchService() {
+      if (!_algoliaSearchService)
+        _algoliaSearchService = new AlgoliaSearchService();
+      return _algoliaSearchService;
     },
   };
 }

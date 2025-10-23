@@ -3,6 +3,7 @@ export const activeGqlMocks = {
   GetCollections: false,
   GetCollectionsSummary: false,
   GetProductCategories: false,
+  SearchSuggestions: false,
 };
 
 export const activeHttpMocks = {};

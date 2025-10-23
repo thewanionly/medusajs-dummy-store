@@ -28,6 +28,14 @@ type Query {
   productCategory(id: ID!): ProductCategory
   collections(limit: Int, offset: Int, handle: [String]): [Collection!]!
   collection(id: ID!): Collection
+  searchProducts(
+    query: String
+    indexName: String
+    hitsPerPage: Int
+    page: Int
+    filters: String
+    facets: [String!]
+  ): SearchProducts!
 }
 
 type ProductListResponse {
@@ -120,4 +128,22 @@ type Collection {
 type ProductList {
   count: Int!
   items: [Product!]
+}
+
+type ProductHit {
+  id: ID!
+  title: String
+  description: String
+  handle: String!
+  thumbnail: String
+}
+
+type SearchProducts {
+  total: Int!
+  page: Int!
+  totalPages: Int!
+  hitsPerPage: Int!
+  query: String!
+  params: String!
+  items: [ProductHit!]!
 }
