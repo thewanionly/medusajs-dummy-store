@@ -17,9 +17,8 @@ import OptionSelect from '@modules/products/components/product-actions/option-se
 import ProductPrice from '../product-price';
 import MobileActions from './mobile-actions';
 
-type ProductActionsProps = {
+export type ProductActionsProps = {
   product: Product;
-  region: HttpTypes.StoreRegion;
   disabled?: boolean;
 };
 
