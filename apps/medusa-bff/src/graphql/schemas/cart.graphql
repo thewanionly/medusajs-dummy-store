@@ -178,12 +178,6 @@ input UpdateCartInput {
   promo_codes: [String]
 }
 
-type CompleteCartError {
-  message: String!
-  name: String!
-  type: String!
-}
-
 input CreateLineItemInput {
   variant_id: String!
   quantity: Int!
@@ -197,6 +191,12 @@ type StoreLineItemDeleteResponse {
   id: ID!
   object: String
   deleted: Boolean!
+}
+
+type CompleteCartError {
+  message: String!
+  name: String!
+  type: String!
 }
 
 type CompleteCartErrorResult {
