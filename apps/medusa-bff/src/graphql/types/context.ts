@@ -15,6 +15,5 @@ export type GraphQLContext = {
   productService: ProductService;
   categoryService: CategoryService;
   collectionService: CollectionService;
-};
   sanityFooterService: SanityFooterService;
-}
+};

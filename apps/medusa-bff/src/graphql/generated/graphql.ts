@@ -26,6 +26,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -80,9 +81,64 @@ export type CustomerAddress = {
   province?: Maybe<Scalars['String']['output']>;
 };
 
+export type FileBlock = {
+  _key: Scalars['String']['output'];
+  _type: Scalars['String']['output'];
+  asset?: Maybe<SanityFileAsset>;
+};
+
+export type Footer = {
+  copyright?: Maybe<Scalars['String']['output']>;
+  poweredByCta?: Maybe<RichText>;
+  social?: Maybe<Array<SocialLink>>;
+  storeName?: Maybe<Scalars['String']['output']>;
+};
+
+export type IconLinkMark = {
+  _key: Scalars['String']['output'];
+  _type: Scalars['String']['output'];
+  href: Scalars['String']['output'];
+  iconClass?: Maybe<Scalars['String']['output']>;
+  iconComponent?: Maybe<Scalars['String']['output']>;
+  iconFill?: Maybe<Scalars['String']['output']>;
+  iconImage?: Maybe<SanityImage>;
+  iconType: Scalars['String']['output'];
+  iconUrl?: Maybe<Scalars['String']['output']>;
+  target?: Maybe<Scalars['String']['output']>;
+};
+
+export type ImageBlock = {
+  _key: Scalars['String']['output'];
+  _type: Scalars['String']['output'];
+  alt?: Maybe<Scalars['String']['output']>;
+  asset?: Maybe<SanityImageAsset>;
+  caption?: Maybe<Scalars['String']['output']>;
+};
+
+export type ImageDimensions = {
+  aspectRatio: Scalars['Float']['output'];
+  height: Scalars['Int']['output'];
+  width: Scalars['Int']['output'];
+};
+
+export type ImageMetadata = {
+  dimensions?: Maybe<ImageDimensions>;
+  hasAlpha?: Maybe<Scalars['Boolean']['output']>;
+  isOpaque?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type LinkMark = {
+  _key: Scalars['String']['output'];
+  _type: Scalars['String']['output'];
+  href: Scalars['String']['output'];
+  target?: Maybe<Scalars['String']['output']>;
+};
+
 export type LogoutResponse = {
   success?: Maybe<Scalars['Boolean']['output']>;
 };
+
+export type MarkDef = IconLinkMark | LinkMark;
 
 export type Mutation = {
   login?: Maybe<Token>;
@@ -182,6 +238,7 @@ export type ProductVariantOption = {
 export type Query = {
   collection?: Maybe<Collection>;
   collections: Array<Collection>;
+  footer?: Maybe<Footer>;
   me?: Maybe<Customer>;
   product?: Maybe<Product>;
   productCategories: Array<ProductCategory>;
@@ -230,6 +287,54 @@ export type QueryProductsArgs = {
   q?: InputMaybe<Scalars['String']['input']>;
   region_id?: InputMaybe<Scalars['String']['input']>;
   tag_id?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type RichText = {
+  text: Array<RichTextBlock>;
+};
+
+export type RichTextBlock = FileBlock | ImageBlock | TextBlock;
+
+export type SanityFileAsset = {
+  _id: Scalars['ID']['output'];
+  mimeType?: Maybe<Scalars['String']['output']>;
+  originalFilename?: Maybe<Scalars['String']['output']>;
+  size?: Maybe<Scalars['Int']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type SanityImage = {
+  alt?: Maybe<Scalars['String']['output']>;
+  asset?: Maybe<SanityImageAsset>;
+  caption?: Maybe<Scalars['String']['output']>;
+};
+
+export type SanityImageAsset = {
+  _id: Scalars['ID']['output'];
+  metadata?: Maybe<ImageMetadata>;
+  url: Scalars['String']['output'];
+};
+
+export type SocialLink = {
+  text: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type Span = {
+  _key: Scalars['String']['output'];
+  _type: Scalars['String']['output'];
+  marks?: Maybe<Array<Scalars['String']['output']>>;
+  text: Scalars['String']['output'];
+};
+
+export type TextBlock = {
+  _key: Scalars['String']['output'];
+  _type: Scalars['String']['output'];
+  children: Array<Span>;
+  level?: Maybe<Scalars['Int']['output']>;
+  listItem?: Maybe<Scalars['String']['output']>;
+  markDefs?: Maybe<Array<MarkDef>>;
+  style?: Maybe<Scalars['String']['output']>;
 };
 
 export type Token = {
@@ -353,6 +458,17 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
+  MarkDef: IconLinkMark | LinkMark;
+  RichTextBlock:
+    | FileBlock
+    | ImageBlock
+    | (Omit<TextBlock, 'markDefs'> & {
+        markDefs?: Maybe<Array<_RefType['MarkDef']>>;
+      });
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -360,11 +476,23 @@ export type ResolversTypes = {
   Customer: ResolverTypeWrapper<Customer>;
   CustomerAddress: ResolverTypeWrapper<CustomerAddress>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  FileBlock: ResolverTypeWrapper<FileBlock>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  Footer: ResolverTypeWrapper<
+    Omit<Footer, 'poweredByCta'> & {
+      poweredByCta?: Maybe<ResolversTypes['RichText']>;
+    }
+  >;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  IconLinkMark: ResolverTypeWrapper<IconLinkMark>;
+  ImageBlock: ResolverTypeWrapper<ImageBlock>;
+  ImageDimensions: ResolverTypeWrapper<ImageDimensions>;
+  ImageMetadata: ResolverTypeWrapper<ImageMetadata>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  LinkMark: ResolverTypeWrapper<LinkMark>;
   LogoutResponse: ResolverTypeWrapper<LogoutResponse>;
+  MarkDef: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['MarkDef']>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Price: ResolverTypeWrapper<Price>;
   Product: ResolverTypeWrapper<Product>;
@@ -378,7 +506,23 @@ export type ResolversTypes = {
   ProductVariant: ResolverTypeWrapper<ProductVariant>;
   ProductVariantOption: ResolverTypeWrapper<ProductVariantOption>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  RichText: ResolverTypeWrapper<
+    Omit<RichText, 'text'> & { text: Array<ResolversTypes['RichTextBlock']> }
+  >;
+  RichTextBlock: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>['RichTextBlock']
+  >;
+  SanityFileAsset: ResolverTypeWrapper<SanityFileAsset>;
+  SanityImage: ResolverTypeWrapper<SanityImage>;
+  SanityImageAsset: ResolverTypeWrapper<SanityImageAsset>;
+  SocialLink: ResolverTypeWrapper<SocialLink>;
+  Span: ResolverTypeWrapper<Span>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  TextBlock: ResolverTypeWrapper<
+    Omit<TextBlock, 'markDefs'> & {
+      markDefs?: Maybe<Array<ResolversTypes['MarkDef']>>;
+    }
+  >;
   Token: ResolverTypeWrapper<Token>;
 };
 
@@ -389,11 +533,21 @@ export type ResolversParentTypes = {
   Customer: Customer;
   CustomerAddress: CustomerAddress;
   DateTime: Scalars['DateTime']['output'];
+  FileBlock: FileBlock;
   Float: Scalars['Float']['output'];
+  Footer: Omit<Footer, 'poweredByCta'> & {
+    poweredByCta?: Maybe<ResolversParentTypes['RichText']>;
+  };
   ID: Scalars['ID']['output'];
+  IconLinkMark: IconLinkMark;
+  ImageBlock: ImageBlock;
+  ImageDimensions: ImageDimensions;
+  ImageMetadata: ImageMetadata;
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
+  LinkMark: LinkMark;
   LogoutResponse: LogoutResponse;
+  MarkDef: ResolversUnionTypes<ResolversParentTypes>['MarkDef'];
   Mutation: Record<PropertyKey, never>;
   Price: Price;
   Product: Product;
@@ -407,7 +561,19 @@ export type ResolversParentTypes = {
   ProductVariant: ProductVariant;
   ProductVariantOption: ProductVariantOption;
   Query: Record<PropertyKey, never>;
+  RichText: Omit<RichText, 'text'> & {
+    text: Array<ResolversParentTypes['RichTextBlock']>;
+  };
+  RichTextBlock: ResolversUnionTypes<ResolversParentTypes>['RichTextBlock'];
+  SanityFileAsset: SanityFileAsset;
+  SanityImage: SanityImage;
+  SanityImageAsset: SanityImageAsset;
+  SocialLink: SocialLink;
+  Span: Span;
   String: Scalars['String']['output'];
+  TextBlock: Omit<TextBlock, 'markDefs'> & {
+    markDefs?: Maybe<Array<ResolversParentTypes['MarkDef']>>;
+  };
   Token: Token;
 };
 
@@ -517,10 +683,143 @@ export interface DateTimeScalarConfig
   name: 'DateTime';
 }
 
+export type FileBlockResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['FileBlock'] = ResolversParentTypes['FileBlock'],
+> = {
+  _key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  asset?: Resolver<
+    Maybe<ResolversTypes['SanityFileAsset']>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FooterResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Footer'] = ResolversParentTypes['Footer'],
+> = {
+  copyright?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  poweredByCta?: Resolver<
+    Maybe<ResolversTypes['RichText']>,
+    ParentType,
+    ContextType
+  >;
+  social?: Resolver<
+    Maybe<Array<ResolversTypes['SocialLink']>>,
+    ParentType,
+    ContextType
+  >;
+  storeName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+};
+
+export type IconLinkMarkResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['IconLinkMark'] = ResolversParentTypes['IconLinkMark'],
+> = {
+  _key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  href?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  iconClass?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  iconComponent?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  iconFill?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  iconImage?: Resolver<
+    Maybe<ResolversTypes['SanityImage']>,
+    ParentType,
+    ContextType
+  >;
+  iconType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  iconUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  target?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageBlockResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['ImageBlock'] = ResolversParentTypes['ImageBlock'],
+> = {
+  _key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  alt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  asset?: Resolver<
+    Maybe<ResolversTypes['SanityImageAsset']>,
+    ParentType,
+    ContextType
+  >;
+  caption?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageDimensionsResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['ImageDimensions'] = ResolversParentTypes['ImageDimensions'],
+> = {
+  aspectRatio?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+};
+
+export type ImageMetadataResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['ImageMetadata'] = ResolversParentTypes['ImageMetadata'],
+> = {
+  dimensions?: Resolver<
+    Maybe<ResolversTypes['ImageDimensions']>,
+    ParentType,
+    ContextType
+  >;
+  hasAlpha?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType
+  >;
+  isOpaque?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType
+  >;
+};
+
 export interface JsonScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
+
+export type LinkMarkResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['LinkMark'] = ResolversParentTypes['LinkMark'],
+> = {
+  _key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  href?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  target?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type LogoutResponseResolvers<
   ContextType = GraphQLContext,
@@ -528,6 +827,18 @@ export type LogoutResponseResolvers<
     ResolversParentTypes['LogoutResponse'] = ResolversParentTypes['LogoutResponse'],
 > = {
   success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+};
+
+export type MarkDefResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['MarkDef'] = ResolversParentTypes['MarkDef'],
+> = {
+  __resolveType: TypeResolveFn<
+    'IconLinkMark' | 'LinkMark',
+    ParentType,
+    ContextType
+  >;
 };
 
 export type MutationResolvers<
@@ -782,6 +1093,7 @@ export type QueryResolvers<
     ContextType,
     Partial<QueryCollectionsArgs>
   >;
+  footer?: Resolver<Maybe<ResolversTypes['Footer']>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
   product?: Resolver<
     Maybe<ResolversTypes['Product']>,
@@ -809,6 +1121,117 @@ export type QueryResolvers<
   >;
 };
 
+export type RichTextResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['RichText'] = ResolversParentTypes['RichText'],
+> = {
+  text?: Resolver<
+    Array<ResolversTypes['RichTextBlock']>,
+    ParentType,
+    ContextType
+  >;
+};
+
+export type RichTextBlockResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['RichTextBlock'] = ResolversParentTypes['RichTextBlock'],
+> = {
+  __resolveType: TypeResolveFn<
+    'FileBlock' | 'ImageBlock' | 'TextBlock',
+    ParentType,
+    ContextType
+  >;
+};
+
+export type SanityFileAssetResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SanityFileAsset'] = ResolversParentTypes['SanityFileAsset'],
+> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  mimeType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  originalFilename?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  size?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type SanityImageResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SanityImage'] = ResolversParentTypes['SanityImage'],
+> = {
+  alt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  asset?: Resolver<
+    Maybe<ResolversTypes['SanityImageAsset']>,
+    ParentType,
+    ContextType
+  >;
+  caption?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
+export type SanityImageAssetResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SanityImageAsset'] = ResolversParentTypes['SanityImageAsset'],
+> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metadata?: Resolver<
+    Maybe<ResolversTypes['ImageMetadata']>,
+    ParentType,
+    ContextType
+  >;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type SocialLinkResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink'],
+> = {
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type SpanResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Span'] = ResolversParentTypes['Span'],
+> = {
+  _key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  marks?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type TextBlockResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['TextBlock'] = ResolversParentTypes['TextBlock'],
+> = {
+  _key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  children?: Resolver<Array<ResolversTypes['Span']>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  listItem?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  markDefs?: Resolver<
+    Maybe<Array<ResolversTypes['MarkDef']>>,
+    ParentType,
+    ContextType
+  >;
+  style?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type TokenResolvers<
   ContextType = GraphQLContext,
   ParentType extends
@@ -822,8 +1245,16 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Customer?: CustomerResolvers<ContextType>;
   CustomerAddress?: CustomerAddressResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  FileBlock?: FileBlockResolvers<ContextType>;
+  Footer?: FooterResolvers<ContextType>;
+  IconLinkMark?: IconLinkMarkResolvers<ContextType>;
+  ImageBlock?: ImageBlockResolvers<ContextType>;
+  ImageDimensions?: ImageDimensionsResolvers<ContextType>;
+  ImageMetadata?: ImageMetadataResolvers<ContextType>;
   JSON?: GraphQLScalarType;
+  LinkMark?: LinkMarkResolvers<ContextType>;
   LogoutResponse?: LogoutResponseResolvers<ContextType>;
+  MarkDef?: MarkDefResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Price?: PriceResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
@@ -837,5 +1268,13 @@ export type Resolvers<ContextType = GraphQLContext> = {
   ProductVariant?: ProductVariantResolvers<ContextType>;
   ProductVariantOption?: ProductVariantOptionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  RichText?: RichTextResolvers<ContextType>;
+  RichTextBlock?: RichTextBlockResolvers<ContextType>;
+  SanityFileAsset?: SanityFileAssetResolvers<ContextType>;
+  SanityImage?: SanityImageResolvers<ContextType>;
+  SanityImageAsset?: SanityImageAssetResolvers<ContextType>;
+  SocialLink?: SocialLinkResolvers<ContextType>;
+  Span?: SpanResolvers<ContextType>;
+  TextBlock?: TextBlockResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
 };

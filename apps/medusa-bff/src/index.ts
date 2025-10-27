@@ -22,8 +22,6 @@ async function startServer() {
   const httpServer = http.createServer(app);
 
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
     schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
     plugins: [
       process.env.NODE_ENV === 'production'
@@ -51,10 +49,6 @@ async function startServer() {
   app.use(sessionConfig);
 
   app.use(express.json());
-
-  app.use(
-    '/graphql',
-  const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',');
 
   app.use(
     '/graphql',

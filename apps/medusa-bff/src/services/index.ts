@@ -60,9 +60,6 @@ export function createContext({
         _collectionService = new CollectionService(medusa);
       return _collectionService;
     },
-    productService: new ProductService(baseUrl, publishableKey),
-    categoryService: new CategoryService(baseUrl, publishableKey),
-    collectionService: new CollectionService(baseUrl, publishableKey),
     sanityFooterService: new SanityFooterService(),
   };
 }
