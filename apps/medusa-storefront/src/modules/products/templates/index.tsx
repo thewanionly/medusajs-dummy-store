@@ -49,13 +49,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         <div className="flex w-full flex-col gap-y-12 py-8 small:sticky small:top-48 small:max-w-[300px] small:py-0">
           <ProductOnboardingCta />
           <Suspense
-            fallback={
-              <ProductActions
-                disabled={true}
-                product={product}
-                region={region}
-              />
-            }
+            fallback={<ProductActions disabled={true} product={product} />}
           >
             <ProductActionsWrapper id={product.id} region={region} />
           </Suspense>

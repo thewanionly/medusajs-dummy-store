@@ -9,24 +9,29 @@ import { SubmitButton } from '@modules/checkout/components/submit-button';
 import Input from '@modules/common/components/input';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
-type Props = {
+import { REGISTER_DESCRIPTION, REGISTER_HEADING } from './constants';
+
+type RegisterProps = {
+  heading?: string;
+  description?: string;
   setCurrentView: (view: LOGIN_VIEW) => void;
 };
 
-const Register = ({ setCurrentView }: Props) => {
-  const [message, formAction] = useActionState(signup, null);
+const Register = ({
+  heading = REGISTER_HEADING,
+  description = REGISTER_DESCRIPTION,
+  setCurrentView,
+}: RegisterProps) => {
+  const [state, formAction, isPending] = useActionState(signup, null);
 
   return (
     <div
       className="flex max-w-sm flex-col items-center"
       data-testid="register-page"
     >
-      <h1 className="text-large-semi mb-6 uppercase">
-        Become a Medusa Store Member
-      </h1>
+      <h1 className="text-large-semi mb-6 uppercase">{heading}</h1>
       <p className="text-base-regular mb-4 text-center text-ui-fg-base">
-        Create your Medusa Store Member profile, and get access to an enhanced
-        shopping experience.
+        {description}
       </p>
       <form className="flex w-full flex-col" action={formAction}>
         <div className="flex w-full flex-col gap-y-2">
@@ -68,7 +73,14 @@ const Register = ({ setCurrentView }: Props) => {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="register-error" />
+        {state?.status === 'error' && (
+          <ErrorMessage error={state?.message} data-testid="register-error" />
+        )}
+        {state?.status === 'success' && (
+          <div className="text-small-regular pt-2 text-green-700">
+            {state?.message}
+          </div>
+        )}
         <span className="text-small-regular mt-6 text-center text-ui-fg-base">
           By creating an account, you agree to Medusa Store&apos;s{' '}
           <LocalizedClientLink
@@ -86,7 +98,11 @@ const Register = ({ setCurrentView }: Props) => {
           </LocalizedClientLink>
           .
         </span>
-        <SubmitButton className="mt-6 w-full" data-testid="register-button">
+        <SubmitButton
+          className="mt-6 w-full"
+          data-testid="register-button"
+          isLoading={isPending}
+        >
           Join
         </SubmitButton>
       </form>

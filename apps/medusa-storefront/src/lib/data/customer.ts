@@ -82,11 +82,7 @@ export async function signup(_currentState: unknown, formData: FormData) {
       ...(await getAuthHeaders()),
     };
 
-    const { customer: createdCustomer } = await sdk.store.customer.create(
-      customerForm,
-      {},
-      headers
-    );
+    await sdk.store.customer.create(customerForm, {}, headers);
 
     const loginToken = await sdk.auth.login('customer', 'emailpass', {
       email: customerForm.email,
@@ -100,9 +96,16 @@ export async function signup(_currentState: unknown, formData: FormData) {
 
     await transferCart();
 
-    return createdCustomer;
+    return {
+      message: 'Registration successful',
+      status: 'success',
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return error.toString();
+    return {
+      message: error.toString(),
+      status: 'error',
+    };
   }
 }
 
@@ -118,14 +121,27 @@ export async function login(_currentState: unknown, formData: FormData) {
         const customerCacheTag = await getCacheTag('customers');
         revalidateTag(customerCacheTag);
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return error.toString();
+    return {
+      message: error.toString(),
+      status: 'error',
+    };
   }
 
   try {
     await transferCart();
+
+    return {
+      message: 'Login successful',
+      status: 'success',
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return error.toString();
+    return {
+      message: error.toString(),
+      status: 'error',
+    };
   }
 }
 

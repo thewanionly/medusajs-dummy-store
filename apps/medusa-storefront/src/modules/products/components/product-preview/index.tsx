@@ -6,13 +6,15 @@ import LocalizedClientLink from '@modules/common/components/localized-client-lin
 import Thumbnail from '../thumbnail';
 import PreviewPrice from './price';
 
+export type ProductPreviewProps = {
+  product: Product;
+  isFeatured?: boolean;
+};
+
 export default async function ProductPreview({
   product,
   isFeatured,
-}: {
-  product: Product;
-  isFeatured?: boolean;
-}) {
+}: ProductPreviewProps) {
   const { cheapestPrice } = getProductPrice({
     product,
   });
