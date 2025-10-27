@@ -5,7 +5,7 @@ import { GraphQLContext } from '../types/context';
 export const cartResolvers = {
   Query: {
     getCart: async (
-      _parent: any,
+      _parent: unknown,
       { id }: { id: string },
       context: GraphQLContext
     ) => {
@@ -14,21 +14,21 @@ export const cartResolvers = {
   },
   Mutation: {
     createCart: async (
-      _parent: any,
+      _parent: unknown,
       { data }: { data: HttpTypes.StoreCreateCart },
       context: GraphQLContext
     ) => {
       return await context.cartService.createCart(data);
     },
     updateCart: async (
-      _parent: any,
+      _parent: unknown,
       { id, data }: { id: string; data: HttpTypes.StoreUpdateCart },
       context: GraphQLContext
     ) => {
       return await context.cartService.updateCart(id, data);
     },
     createLineItem: async (
-      _parent: any,
+      _parent: unknown,
       {
         cartId,
         data,
@@ -38,7 +38,7 @@ export const cartResolvers = {
       return await context.cartService.createLineItem(cartId, data);
     },
     updateLineItem: async (
-      _parent: any,
+      _parent: unknown,
       {
         cartId,
         lineItemId,
@@ -53,21 +53,21 @@ export const cartResolvers = {
       return await context.cartService.updateLineItem(cartId, lineItemId, data);
     },
     deleteLineItem: async (
-      _parent: any,
+      _parent: unknown,
       { cartId, lineItemId }: { cartId: string; lineItemId: string },
       context: GraphQLContext
     ) => {
       return await context.cartService.deleteLineItem(cartId, lineItemId);
     },
     addShippingMethod: async (
-      _parent: any,
+      _parent: unknown,
       { cartId, optionId }: { cartId: string; optionId: string },
       context: GraphQLContext
     ) => {
       return await context.cartService.addShippingMethod(cartId, optionId);
     },
     completeCart: async (
-      _parent: any,
+      _parent: unknown,
       { cartId }: { cartId: string },
       context: GraphQLContext
     ) => {
@@ -75,10 +75,13 @@ export const cartResolvers = {
     },
   },
   CompleteCartResponse: {
-    __resolveType(obj) {
-      if (obj.__typename) return obj.__typename;
-      if (obj.order) return 'CompleteCartOrderResult';
-      if (obj.error) return 'CompleteCartErrorResult';
+    __resolveType(obj: HttpTypes.StoreCompleteCartResponse) {
+      if (obj.type === 'order') {
+        return 'CompleteCartOrderResult';
+      }
+      if (obj.type === 'cart') {
+        return 'CompleteCartErrorResult';
+      }
       return null;
     },
   },

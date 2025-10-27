@@ -94,12 +94,12 @@ export class CartService extends MedusaBaseService {
   async addShippingMethod(
     cartId: string,
     optionId: string
-  ): Promise<HttpTypes.StoreCartResponse | null> {
+  ): Promise<HttpTypes.StoreCart | null> {
     try {
       const response = await this.medusa.store.cart.addShippingMethod(cartId, {
         option_id: optionId,
       });
-      return response.cart;
+      return response.cart || null;
     } catch (error: unknown) {
       console.error('Error adding shipping method:', (error as Error).message);
       return null;
