@@ -5,6 +5,7 @@ import {
   PRODUCT_CATEGORY_FRAGMENT,
   PRODUCT_COLLECTION_FRAGMENT,
   PRODUCT_FRAGMENT,
+  PRODUCT_HIT_FRAGMENT,
 } from '../fragments/product';
 
 export const GET_PRODUCTS_QUERY = gql`
@@ -137,4 +138,15 @@ export const GET_COLLECTION_QUERY = gql`
   }
   ${COLLECTION_PRODUCTS_FRAGMENT}
   ${PRODUCT_FRAGMENT}
+`;
+
+export const SEARCH_SUGGESTIONS_QUERY = gql`
+  query SearchSuggestions($query: String!) {
+    searchProducts(query: $query) {
+      items {
+        ...ProductHit
+      }
+    }
+  }
+  ${PRODUCT_HIT_FRAGMENT}
 `;

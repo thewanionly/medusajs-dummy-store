@@ -80,6 +80,15 @@ export type ProductCategory = {
   products?: Maybe<ProductList>;
 };
 
+export type ProductHit = {
+  __typename?: 'ProductHit';
+  description?: Maybe<Scalars['String']['output']>;
+  handle: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  thumbnail?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
 export type ProductImage = {
   __typename?: 'ProductImage';
   id: Scalars['ID']['output'];
@@ -143,6 +152,7 @@ export type Query = {
   productCategories: Array<ProductCategory>;
   productCategory?: Maybe<ProductCategory>;
   products: ProductListResponse;
+  searchProducts: SearchProducts;
 };
 
 export type Query_CollectionArgs = {
@@ -186,6 +196,26 @@ export type Query_ProductsArgs = {
   q?: InputMaybe<Scalars['String']['input']>;
   region_id?: InputMaybe<Scalars['String']['input']>;
   tag_id?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Query_SearchProductsArgs = {
+  facets?: InputMaybe<Array<Scalars['String']['input']>>;
+  filters?: InputMaybe<Scalars['String']['input']>;
+  hitsPerPage?: InputMaybe<Scalars['Int']['input']>;
+  indexName?: InputMaybe<Scalars['String']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SearchProducts = {
+  __typename?: 'SearchProducts';
+  hitsPerPage: Scalars['Int']['output'];
+  items: Array<ProductHit>;
+  page: Scalars['Int']['output'];
+  params: Scalars['String']['output'];
+  query: Scalars['String']['output'];
+  total: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export type ProductImageFragment = {
@@ -293,6 +323,15 @@ export type CollectionProductsFragment = {
       originalPrice?: ({ __typename?: 'Price' } & PriceFragment) | null;
     }> | null;
   }> | null;
+};
+
+export type ProductHitFragment = {
+  __typename?: 'ProductHit';
+  id: string;
+  title?: string | null;
+  description?: string | null;
+  handle: string;
+  thumbnail?: string | null;
 };
 
 export type GetProductsQueryVariables = Exact<{
@@ -436,6 +475,18 @@ export type GetCollectionQuery = {
           | null;
       } & ProductCollectionFragment)
     | null;
+};
+
+export type SearchSuggestionsQueryVariables = Exact<{
+  query: Scalars['String']['input'];
+}>;
+
+export type SearchSuggestionsQuery = {
+  __typename?: 'Query';
+  searchProducts: {
+    __typename?: 'SearchProducts';
+    items: Array<{ __typename?: 'ProductHit' } & ProductHitFragment>;
+  };
 };
 
 export const ProductCategoryFragmentDoc = {
@@ -996,6 +1047,29 @@ export const CollectionProductsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CollectionProductsFragment, unknown>;
+export const ProductHitFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductHit' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProductHit' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thumbnail' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductHitFragment, unknown>;
 export const GetProductsDocument = {
   kind: 'Document',
   definitions: [
@@ -2522,3 +2596,87 @@ export const GetCollectionDocument = {
     },
   ],
 } as unknown as DocumentNode<GetCollectionQuery, GetCollectionQueryVariables>;
+export const SearchSuggestionsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'SearchSuggestions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'query' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'searchProducts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'query' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'query' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProductHit' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductHit' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProductHit' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'thumbnail' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SearchSuggestionsQuery,
+  SearchSuggestionsQueryVariables
+>;

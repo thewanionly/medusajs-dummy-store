@@ -88,6 +88,14 @@ export type ProductCategory = {
   products?: Maybe<ProductList>;
 };
 
+export type ProductHit = {
+  description?: Maybe<Scalars['String']['output']>;
+  handle: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  thumbnail?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
 export type ProductImage = {
   id: Scalars['ID']['output'];
   url: Scalars['String']['output'];
@@ -142,6 +150,7 @@ export type Query = {
   productCategories: Array<ProductCategory>;
   productCategory?: Maybe<ProductCategory>;
   products: ProductListResponse;
+  searchProducts: SearchProducts;
 };
 
 export type QueryCollectionArgs = {
@@ -185,6 +194,25 @@ export type QueryProductsArgs = {
   q?: InputMaybe<Scalars['String']['input']>;
   region_id?: InputMaybe<Scalars['String']['input']>;
   tag_id?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type QuerySearchProductsArgs = {
+  facets?: InputMaybe<Array<Scalars['String']['input']>>;
+  filters?: InputMaybe<Scalars['String']['input']>;
+  hitsPerPage?: InputMaybe<Scalars['Int']['input']>;
+  indexName?: InputMaybe<Scalars['String']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SearchProducts = {
+  hitsPerPage: Scalars['Int']['output'];
+  items: Array<ProductHit>;
+  page: Scalars['Int']['output'];
+  params: Scalars['String']['output'];
+  query: Scalars['String']['output'];
+  total: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -316,6 +344,7 @@ export type ResolversTypes = {
   Price: ResolverTypeWrapper<Price>;
   Product: ResolverTypeWrapper<Product>;
   ProductCategory: ResolverTypeWrapper<ProductCategory>;
+  ProductHit: ResolverTypeWrapper<ProductHit>;
   ProductImage: ResolverTypeWrapper<ProductImage>;
   ProductList: ResolverTypeWrapper<ProductList>;
   ProductListResponse: ResolverTypeWrapper<ProductListResponse>;
@@ -325,6 +354,7 @@ export type ResolversTypes = {
   ProductVariant: ResolverTypeWrapper<ProductVariant>;
   ProductVariantOption: ResolverTypeWrapper<ProductVariantOption>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  SearchProducts: ResolverTypeWrapper<SearchProducts>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
 
@@ -340,6 +370,7 @@ export type ResolversParentTypes = {
   Price: Price;
   Product: Product;
   ProductCategory: ProductCategory;
+  ProductHit: ProductHit;
   ProductImage: ProductImage;
   ProductList: ProductList;
   ProductListResponse: ProductListResponse;
@@ -349,6 +380,7 @@ export type ResolversParentTypes = {
   ProductVariant: ProductVariant;
   ProductVariantOption: ProductVariantOption;
   Query: Record<PropertyKey, never>;
+  SearchProducts: SearchProducts;
   String: Scalars['String']['output'];
 };
 
@@ -485,6 +517,26 @@ export type ProductCategoryResolvers<
     ParentType,
     ContextType
   >;
+};
+
+export type ProductHitResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['ProductHit'] = ResolversParentTypes['ProductHit'],
+> = {
+  description?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  handle?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  thumbnail?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
 export type ProductImageResolvers<
@@ -635,6 +687,30 @@ export type QueryResolvers<
     ContextType,
     Partial<QueryProductsArgs>
   >;
+  searchProducts?: Resolver<
+    ResolversTypes['SearchProducts'],
+    ParentType,
+    ContextType,
+    Partial<QuerySearchProductsArgs>
+  >;
+};
+
+export type SearchProductsResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SearchProducts'] = ResolversParentTypes['SearchProducts'],
+> = {
+  hitsPerPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  items?: Resolver<
+    Array<ResolversTypes['ProductHit']>,
+    ParentType,
+    ContextType
+  >;
+  page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  params?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  query?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = GraphQLContext> = {
@@ -644,6 +720,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Price?: PriceResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductCategory?: ProductCategoryResolvers<ContextType>;
+  ProductHit?: ProductHitResolvers<ContextType>;
   ProductImage?: ProductImageResolvers<ContextType>;
   ProductList?: ProductListResolvers<ContextType>;
   ProductListResponse?: ProductListResponseResolvers<ContextType>;
@@ -653,4 +730,5 @@ export type Resolvers<ContextType = GraphQLContext> = {
   ProductVariant?: ProductVariantResolvers<ContextType>;
   ProductVariantOption?: ProductVariantOptionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SearchProducts?: SearchProductsResolvers<ContextType>;
 };

@@ -1,54 +1,35 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import DOMPurify from 'isomorphic-dompurify';
-import {
-  Hits,
-  InstantSearch,
-  SearchBox,
-  SearchBoxProps,
-} from 'react-instantsearch';
 
+import { ProductHit } from '@lib/gql/generated-types/graphql';
 import { Button } from '@medusajs/ui';
+import PlaceholderImage from '@modules/common/icons/placeholder-image';
 
-import { searchClient } from '../../../../lib/config';
+import { useSearch } from '../../../../lib/hooks/use-search';
 import Modal from '../../../common/components/modal';
-
-type Hit = {
-  objectID: string;
-  id: string;
-  title: string;
-  description: string;
-  handle: string;
-  thumbnail: string;
-};
-
-const DEBOUNCE_TIME = 250;
-
-type QueryHook = NonNullable<SearchBoxProps['queryHook']>;
 
 export default function SearchModal() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const timerId = useRef<NodeJS.Timeout | null>(null);
-
-  const queryHook = useCallback<QueryHook>((query, search) => {
-    if (timerId.current) {
-      clearTimeout(timerId.current);
-    }
-
-    timerId.current = setTimeout(() => search(query), DEBOUNCE_TIME);
-  }, []);
+  const { query, setQuery, results, loading, error, isTyping } = useSearch();
 
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setQuery('');
+    }
+  }, [isOpen, setQuery]);
 
   return (
     <>
@@ -62,31 +43,130 @@ export default function SearchModal() {
         </Button>
       </div>
       <Modal isOpen={isOpen} close={() => setIsOpen(false)}>
-        <InstantSearch
-          searchClient={searchClient}
-          indexName={process.env.NEXT_PUBLIC_ALGOLIA_PRODUCT_INDEX_NAME}
-        >
-          <SearchBox
-            className="w-full [&_button]:w-[3%] [&_input]:w-[94%] [&_input]:outline-none"
-            queryHook={queryHook}
+        <div className="w-full">
+          <SearchBox query={query} setQuery={setQuery} loading={loading} />
+          <SearchResults
+            results={results}
+            loading={loading}
+            error={error}
+            query={query}
+            isTyping={isTyping}
           />
-          <Hits hitComponent={Hit} classNames={{ root: 'overflow-auto' }} />
-        </InstantSearch>
+        </div>
       </Modal>
     </>
   );
 }
+const SearchBox = ({
+  query,
+  setQuery,
+  loading,
+}: {
+  query: string;
+  setQuery: (query: string) => void;
+  loading: boolean;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-const Hit = ({ hit }: { hit: Hit }) => {
+  useEffect(() => {
+    if (inputRef.current && document.activeElement !== inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [loading]);
+
+  return (
+    <div className="relative w-full">
+      <input
+        ref={inputRef}
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search products..."
+        className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus-visible:outline-2 focus-visible:outline-blue-500"
+        disabled={loading}
+        autoFocus
+      />
+    </div>
+  );
+};
+
+const SearchResults = ({
+  results,
+  loading,
+  error,
+  query,
+  isTyping,
+}: {
+  results: { items: ProductHit[] } | null;
+  loading: boolean;
+  error: string | null;
+  query: string;
+  isTyping: boolean;
+}) => {
+  if (loading) {
+    return (
+      <div className="mt-4 text-center">
+        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
+        <p className="mt-2 text-sm text-gray-500">Searching...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mt-4 text-center text-red-500">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (
+    query.trim() &&
+    !isTyping &&
+    !loading &&
+    (!results || !results.items || results.items.length === 0)
+  ) {
+    return (
+      <div className="mt-4 text-center text-gray-500">
+        <p>No products found</p>
+      </div>
+    );
+  }
+
+  if (!query.trim()) {
+    return null;
+  }
+
+  return (
+    <div className="mt-4 max-h-96 overflow-auto">
+      {results?.items?.map((hit: ProductHit) => (
+        <Hit key={hit.id} hit={hit} />
+      ))}
+    </div>
+  );
+};
+
+const Hit = ({ hit }: { hit: ProductHit }) => {
   return (
     <div className="relative mt-4 flex flex-row gap-x-2">
-      <Image src={hit.thumbnail} alt={hit.title} width={100} height={100} />
+      {hit.thumbnail ? (
+        <Image
+          src={hit.thumbnail}
+          alt={hit.title ?? 'Product Image'}
+          width={100}
+          height={100}
+        />
+      ) : (
+        <div className="border-grey-400 flex h-[125px] w-[100px] items-center justify-center self-start border">
+          <PlaceholderImage size={40} />
+        </div>
+      )}
       <div className="flex flex-col gap-y-1">
         <h3>{hit.title}</h3>
         <p
           className="text-sm text-gray-500"
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(hit.description),
+            __html: DOMPurify.sanitize(hit.description ?? ''),
           }}
         />
       </div>
