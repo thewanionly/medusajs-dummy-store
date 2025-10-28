@@ -1,23 +1,3 @@
-scalar DateTime
-scalar JSON
-
-enum PaymentStatus {
-  canceled
-  not_paid
-  awaiting
-  authorized
-  partially_authorized
-}
-
-enum PaymentSessionStatus {
-  authorized
-  captured
-  canceled
-  pending
-  requires_more
-  error
-}
-
 type LineItem {
   id: ID!
   title: String
@@ -83,28 +63,6 @@ type ShippingMethod {
   created_at: DateTime
   updated_at: DateTime
   shipping_option_id: String
-}
-
-type PaymentCollection {
-  id: String
-  currency_code: String
-  amount: Int
-  status: PaymentStatus
-  payment_providers: [PaymentProviders]
-  payment_sessions: [PaymentSessions]
-}
-
-type PaymentProviders {
-  id: String
-}
-
-type PaymentSessions {
-  id: String
-  amount: Int
-  currency_code: String
-  provider_id: String
-  data: JSON
-  status: PaymentSessionStatus
 }
 
 type Cart {
@@ -224,4 +182,6 @@ extend type Mutation {
   deleteLineItem(cartId: ID!, lineItemId: ID!): StoreLineItemDeleteResponse!
   addShippingMethod(cartId: ID!, optionId: ID!): Cart
   completeCart(cartId: ID!): CompleteCartResponse
+  transferCart(cartId: ID!): Cart
+  applyPromotions(cartId: ID!, codes: [String!]!): Cart
 }

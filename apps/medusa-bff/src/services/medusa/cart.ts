@@ -117,4 +117,29 @@ export class CartService extends MedusaBaseService {
       return null;
     }
   }
+
+  async transferCart(cartId: string): Promise<HttpTypes.StoreCart | null> {
+    try {
+      const response = await this.medusa.store.cart.transferCart(cartId, {});
+      return response.cart || null;
+    } catch (error: unknown) {
+      console.error('Error transferring cart:', (error as Error).message);
+      return null;
+    }
+  }
+
+  async applyPromotions(
+    cartId: string,
+    codes: string[]
+  ): Promise<HttpTypes.StoreCart | null> {
+    try {
+      const response = await this.medusa.store.cart.update(cartId, {
+        promo_codes: codes,
+      });
+      return response.cart || null;
+    } catch (error: unknown) {
+      console.error('Error applying promotions:', (error as Error).message);
+      return null;
+    }
+  }
 }

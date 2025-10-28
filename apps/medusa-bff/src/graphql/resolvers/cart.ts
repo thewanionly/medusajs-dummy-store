@@ -73,6 +73,21 @@ export const cartResolvers = {
     ) => {
       return await context.cartService.completeCart(cartId);
     },
+    transferCart: async (
+      _parent: unknown,
+      { cartId }: { cartId: string },
+      context: GraphQLContext
+    ) => {
+      return await context.cartService.transferCart(cartId);
+    },
+
+    applyPromotions: async (
+      _parent: unknown,
+      { cartId, codes }: { cartId: string; codes: string[] },
+      context: GraphQLContext
+    ) => {
+      return await context.cartService.applyPromotions(cartId, codes);
+    },
   },
   CompleteCartResponse: {
     __resolveType(obj: HttpTypes.StoreCompleteCartResponse) {

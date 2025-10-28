@@ -1,0 +1,38 @@
+enum PaymentStatus {
+  canceled
+  not_paid
+  awaiting
+  authorized
+  partially_authorized
+}
+
+enum PaymentSessionStatus {
+  authorized
+  captured
+  canceled
+  pending
+  requires_more
+  error
+}
+
+type PaymentCollection {
+  id: String
+  currency_code: String
+  amount: Int
+  status: PaymentStatus
+  payment_providers: [PaymentProviders]
+  payment_sessions: [PaymentSessions]
+}
+
+type PaymentProviders {
+  id: String
+}
+
+type PaymentSessions {
+  id: String
+  amount: Int
+  currency_code: String
+  provider_id: String
+  data: JSON
+  status: PaymentSessionStatus
+}
