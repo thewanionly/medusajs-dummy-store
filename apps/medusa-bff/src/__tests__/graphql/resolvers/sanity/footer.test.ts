@@ -6,23 +6,26 @@ import {
   nullFooterHandler,
 } from '@mocks/msw/handlers/sanity';
 import { server } from '@mocks/msw/node';
-import { SanityFooterService } from '@services/sanity/footer';
+import { createClient } from '@sanity/client';
 
 describe('Footer Resolvers', () => {
-  let sanityFooterService: SanityFooterService;
   let mockContext: any;
 
   beforeEach(() => {
-    sanityFooterService = new SanityFooterService();
+    const mockSanityClient = createClient({
+      projectId: 'projectid',
+      dataset: 'dev',
+      apiVersion: '2023-05-03',
+      useCdn: false,
+    });
 
     mockContext = {
-      sanityFooterService,
+      sanityClient: mockSanityClient,
     };
   });
 
   describe('Query.footer', () => {
     it('should handle successful footer content retrieval', async () => {
-
       const result = await footerResolvers.Query.footer({}, {}, mockContext);
 
       expect(result).toEqual(mockFooterData);
@@ -65,10 +68,8 @@ describe('Footer Resolvers', () => {
     });
 
     it('should handle data integrity with JSON serialization', async () => {
-
       const result = await footerResolvers.Query.footer({}, {}, mockContext);
 
-      // Ensure data integrity through JSON serialization
       const serialized = JSON.parse(JSON.stringify(result));
       expect(serialized).toEqual(mockFooterData);
     });

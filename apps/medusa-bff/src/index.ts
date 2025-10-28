@@ -39,13 +39,6 @@ async function startServer() {
 
   const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',');
 
-  app.use(
-    cors<cors.CorsRequest>({
-      origin: allowedOrigins,
-      credentials: true,
-    })
-  );
-
   app.use(sessionConfig);
 
   app.use(express.json());

@@ -10,10 +10,11 @@ export const footerResolvers = {
       context: GraphQLContext
     ) => {
       try {
-        return await context.sanityFooterService.getFooterContent(FOOTER_QUERY);
+        const result = await context.sanityClient.fetch(FOOTER_QUERY);
+        return result;
       } catch (error) {
-        console.error('Error in footer resolver:', error);
-        throw error;
+        console.error('Error fetching footer content from Sanity:', error);
+        return [];
       }
     },
   },

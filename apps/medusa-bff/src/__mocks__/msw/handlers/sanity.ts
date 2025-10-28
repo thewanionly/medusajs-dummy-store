@@ -2,27 +2,34 @@ import { HttpResponse, http } from 'msw';
 
 import { mockFooterData } from '@mocks/data/footer';
 
+const projectId = process.env.SANITY_PROJECT_ID;
+const dataset = process.env.SANITY_DATASET;
+const apiVersion = process.env.SANITY_API_VERSION;
+
 /* Success (i.e. happy path) handlers */
 export const handlers = [
-  http.get('https://*.api.sanity.io/v*/data/query/*', ({ request }) => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('query');
+  http.get(
+    `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
+    ({ request }) => {
+      const url = new URL(request.url);
+      const query = url.searchParams.get('query');
 
-    if (query && query.includes('footer')) {
+      if (query && query.includes('footer')) {
+        return HttpResponse.json({
+          result: mockFooterData,
+        });
+      }
+
       return HttpResponse.json({
-        result: mockFooterData,
+        result: [],
       });
     }
-
-    return HttpResponse.json({
-      result: [],
-    });
-  }),
+  ),
 ];
 
 /* Other handlers */
 export const emptyFooterHandler = http.get(
-  'https://*.api.sanity.io/v*/data/query/*',
+  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
   ({ request }) => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query');
@@ -40,7 +47,7 @@ export const emptyFooterHandler = http.get(
 );
 
 export const nullFooterHandler = http.get(
-  'https://*.api.sanity.io/v*/data/query/*',
+  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
   ({ request }) => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query');
@@ -58,7 +65,7 @@ export const nullFooterHandler = http.get(
 );
 
 export const undefinedFooterHandler = http.get(
-  'https://*.api.sanity.io/v*/data/query/*',
+  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
   ({ request }) => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query');
@@ -76,14 +83,14 @@ export const undefinedFooterHandler = http.get(
 );
 
 export const generalErrorHandler = http.get(
-  'https://*.api.sanity.io/v*/data/query/*',
+  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
   () => {
     return HttpResponse.json({ error: 'Sanity API error' }, { status: 500 });
   }
 );
 
 export const authErrorHandler = http.get(
-  'https://*.api.sanity.io/v*/data/query/*',
+  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
   () => {
     return HttpResponse.json(
       { error: 'Unauthorized - Invalid API token' },
@@ -93,7 +100,7 @@ export const authErrorHandler = http.get(
 );
 
 export const queryErrorHandler = http.get(
-  'https://*.api.sanity.io/v*/data/query/*',
+  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
   () => {
     return HttpResponse.json(
       { error: 'Invalid GROQ query syntax' },
