@@ -21,6 +21,7 @@ import {
   REGISTER_DESCRIPTION,
   REGISTER_HEADING,
 } from '../modules/account/components/register/constants';
+import { delay } from './utils/delay';
 
 const meta = {
   title: 'LoginRegisterForm',
@@ -44,8 +45,6 @@ const mockedProps: LoginTemplateProps = {
   registerHeading: REGISTER_HEADING,
   registerDescription: REGISTER_DESCRIPTION,
 };
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const loginPlay: PlayFunction = async ({ canvas, userEvent }) => {
   await userEvent.type(canvas.getByTestId('email-input'), 'john.doe@gmail.com');

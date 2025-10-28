@@ -18,8 +18,7 @@ import { handlers as regionsHandlers } from '../mocks/msw/handlers/storybook/reg
 import ProductPreview, {
   ProductPreviewProps,
 } from '../modules/products/components/product-preview';
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { delay } from './utils/delay';
 
 const addToCartPlay: PlayFunction = async ({ canvas, userEvent }) => {
   const options = canvas.getAllByTestId('option-button');
@@ -72,7 +71,7 @@ const mockedProps: ProductPreviewWithActionsProps = {
   disabled: false,
 };
 
-export const Default: Story = {
+export const SuccessAddToCart: Story = {
   args: mockedProps,
   parameters: {
     msw: {
