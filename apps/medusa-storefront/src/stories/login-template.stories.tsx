@@ -1,10 +1,9 @@
-import 'storybook/test';
+import { expect } from 'storybook/test';
 
 import LoginTemplate, {
   LoginTemplateProps,
 } from '@modules/account/templates/login-template';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import type { PlayFunction } from '@storybook/types';
 
 import {
   accountAlreadyExists,
@@ -46,35 +45,6 @@ const mockedProps: LoginTemplateProps = {
   registerDescription: REGISTER_DESCRIPTION,
 };
 
-const loginPlay: PlayFunction = async ({ canvas, userEvent }) => {
-  await userEvent.type(canvas.getByTestId('email-input'), 'john.doe@gmail.com');
-  await delay(300);
-
-  await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
-  await delay(300);
-
-  await userEvent.click(canvas.getByTestId('sign-in-button'));
-};
-
-const registerPlay: PlayFunction = async ({ canvas, userEvent }) => {
-  await userEvent.click(canvas.getByTestId('register-button'));
-  await delay(150);
-
-  await userEvent.type(canvas.getByTestId('first-name-input'), 'John');
-  await delay(300);
-
-  await userEvent.type(canvas.getByTestId('last-name-input'), 'Doe');
-  await delay(300);
-
-  await userEvent.type(canvas.getByTestId('email-input'), 'john.doe@gmail.com');
-  await delay(300);
-
-  await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
-  await delay(300);
-
-  await userEvent.click(canvas.getByTestId('register-button'));
-};
-
 export const LoginSuccess: Story = {
   args: mockedProps,
   parameters: {
@@ -82,7 +52,21 @@ export const LoginSuccess: Story = {
       handlers: customerHandlers,
     },
   },
-  play: loginPlay,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.type(
+      canvas.getByTestId('email-input'),
+      'john.doe@gmail.com'
+    );
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('sign-in-button'));
+    await delay(1000);
+
+    expect(await canvas.findByText(/Login successful/i)).toBeInTheDocument();
+  },
 };
 
 export const LoginInvalidCredentials: Story = {
@@ -92,7 +76,23 @@ export const LoginInvalidCredentials: Story = {
       handlers: [invalidCredentials],
     },
   },
-  play: loginPlay,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.type(
+      canvas.getByTestId('email-input'),
+      'john.doe@gmail.com'
+    );
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('sign-in-button'));
+    await delay(1000);
+
+    expect(
+      await canvas.findByText(/Invalid email or password/i)
+    ).toBeInTheDocument();
+  },
 };
 
 export const LoginServerError: Story = {
@@ -102,7 +102,23 @@ export const LoginServerError: Story = {
       handlers: [serverErrorLogin],
     },
   },
-  play: loginPlay,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.type(
+      canvas.getByTestId('email-input'),
+      'john.doe@gmail.com'
+    );
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('sign-in-button'));
+    await delay(1000);
+
+    expect(
+      await canvas.findByText(/Something went wrong. Please try again./i)
+    ).toBeInTheDocument();
+  },
 };
 
 export const RegisterSuccess: Story = {
@@ -112,7 +128,32 @@ export const RegisterSuccess: Story = {
       handlers: customerHandlers,
     },
   },
-  play: registerPlay,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByTestId('register-button'));
+    await delay(150);
+
+    await userEvent.type(canvas.getByTestId('first-name-input'), 'John');
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('last-name-input'), 'Doe');
+    await delay(300);
+
+    await userEvent.type(
+      canvas.getByTestId('email-input'),
+      'john.doe@gmail.com'
+    );
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('register-button'));
+    await delay(1500);
+
+    expect(
+      await canvas.findByText(/Registration successful/i)
+    ).toBeInTheDocument();
+  },
 };
 
 export const RegisterAccountAlreadyExists: Story = {
@@ -122,7 +163,32 @@ export const RegisterAccountAlreadyExists: Story = {
       handlers: [accountAlreadyExists],
     },
   },
-  play: registerPlay,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByTestId('register-button'));
+    await delay(150);
+
+    await userEvent.type(canvas.getByTestId('first-name-input'), 'John');
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('last-name-input'), 'Doe');
+    await delay(300);
+
+    await userEvent.type(
+      canvas.getByTestId('email-input'),
+      'john.doe@gmail.com'
+    );
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('register-button'));
+    await delay(1000);
+
+    expect(
+      await canvas.findByText(/Identity with email already exists/i)
+    ).toBeInTheDocument();
+  },
 };
 
 export const RegisterServerError: Story = {
@@ -132,5 +198,30 @@ export const RegisterServerError: Story = {
       handlers: [serverErrorRegister],
     },
   },
-  play: registerPlay,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByTestId('register-button'));
+    await delay(150);
+
+    await userEvent.type(canvas.getByTestId('first-name-input'), 'John');
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('last-name-input'), 'Doe');
+    await delay(300);
+
+    await userEvent.type(
+      canvas.getByTestId('email-input'),
+      'john.doe@gmail.com'
+    );
+    await delay(300);
+
+    await userEvent.type(canvas.getByTestId('password-input'), 'e0wtr7sRXk5d');
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('register-button'));
+    await delay(1000);
+
+    expect(
+      await canvas.findByText(/Something went wrong. Please try again./i)
+    ).toBeInTheDocument();
+  },
 };

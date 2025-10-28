@@ -1,23 +1,11 @@
-import { screen } from 'storybook/test';
+import { expect, screen } from 'storybook/test';
 
 import SearchModal from '@modules/search/components/modal';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { PlayFunction } from '@storybook/types';
 
 import { handlers as searchHandlers } from '../mocks/msw/handlers/storybook';
 import { serverError } from '../mocks/msw/handlers/storybook/search';
 import { delay } from './utils/delay';
-
-const searchPlay: (query: string) => PlayFunction =
-  (query) =>
-  async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByTestId('search-button'));
-    await delay(500);
-
-    const searchInput = screen.getByTestId('search-input');
-
-    await userEvent.type(searchInput as HTMLInputElement, query);
-  };
 
 const SearchModalWrapper = () => <SearchModal buttonClassName="block" />;
 
@@ -44,7 +32,16 @@ export const Success: Story = {
       handlers: searchHandlers,
     },
   },
-  play: searchPlay('shirt'),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByTestId('search-button'));
+    await delay(500);
+
+    await userEvent.type(screen.getByTestId('search-input'), 'shirt');
+    await delay(500);
+
+    const suggestions = await screen.findAllByTestId('search-hit');
+    expect(suggestions.length).toBeGreaterThan(0);
+  },
 };
 
 export const NoResultsFound: Story = {
@@ -54,7 +51,15 @@ export const NoResultsFound: Story = {
       handlers: searchHandlers,
     },
   },
-  play: searchPlay('smartphone'),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByTestId('search-button'));
+    await delay(500);
+
+    await userEvent.type(screen.getByTestId('search-input'), 'jacket');
+    await delay(500);
+
+    expect(await screen.findByText(/No products found/i)).toBeInTheDocument();
+  },
 };
 
 export const Error: Story = {
@@ -64,5 +69,15 @@ export const Error: Story = {
       handlers: [serverError],
     },
   },
-  play: searchPlay('shirt'),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByTestId('search-button'));
+    await delay(500);
+
+    await userEvent.type(screen.getByTestId('search-input'), 'shirt');
+    await delay(1000);
+
+    expect(
+      await screen.findByText(/Something went wrong. Please try again./i)
+    ).toBeInTheDocument();
+  },
 };

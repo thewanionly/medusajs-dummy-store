@@ -13,7 +13,7 @@ export const handlers = [
   http.post(
     'http://localhost:9000/auth/customer/emailpass/register',
     async () => {
-      await delay(1000);
+      await delay(250);
 
       return HttpResponse.json({
         token: mockedToken,
@@ -21,7 +21,7 @@ export const handlers = [
     }
   ),
   http.post('http://localhost:9000/store/customers', async () => {
-    await delay(1000);
+    await delay(250);
 
     return HttpResponse.json({
       customer: mockedCustomer,

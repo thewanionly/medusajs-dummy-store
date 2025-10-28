@@ -1,9 +1,10 @@
+import { expect } from 'storybook/test';
+
 import { Product } from '@lib/gql/generated-types/graphql';
 import ProductActions, {
   ProductActionsProps,
 } from '@modules/products/components/product-actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { PlayFunction } from '@storybook/types';
 
 import {
   mockedProducts,
@@ -19,14 +20,6 @@ import ProductPreview, {
   ProductPreviewProps,
 } from '../modules/products/components/product-preview';
 import { delay } from './utils/delay';
-
-const addToCartPlay: PlayFunction = async ({ canvas, userEvent }) => {
-  const options = canvas.getAllByTestId('option-button');
-  await userEvent.click(options[0]!);
-  await delay(300);
-
-  await userEvent.click(canvas.getByTestId('add-product-button'));
-};
 
 type ProductPreviewWithActionsProps = ProductPreviewProps & ProductActionsProps;
 
@@ -78,7 +71,18 @@ export const SuccessAddToCart: Story = {
       handlers: [...cartsHandlers, ...regionsHandlers],
     },
   },
-  play: addToCartPlay,
+  play: async ({ canvas, userEvent }) => {
+    const options = canvas.getAllByTestId('option-button');
+    await userEvent.click(options[0]!);
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('add-product-button'));
+    await delay(1000);
+
+    expect(
+      await canvas.findByText(/Successfully added product to cart/i)
+    ).toBeInTheDocument();
+  },
 };
 
 export const ErrorAddToCart: Story = {
@@ -88,7 +92,20 @@ export const ErrorAddToCart: Story = {
       handlers: [...regionsHandlers, createCartSuccess, addToCartServerError],
     },
   },
-  play: addToCartPlay,
+  play: async ({ canvas, userEvent }) => {
+    const options = canvas.getAllByTestId('option-button');
+    await userEvent.click(options[0]!);
+    await delay(300);
+
+    await userEvent.click(canvas.getByTestId('add-product-button'));
+    await delay(1000);
+
+    expect(
+      await canvas.findByText(
+        /Failed adding product to cart. Please try again./i
+      )
+    ).toBeInTheDocument();
+  },
 };
 
 export const OutOfStock: Story = {
@@ -96,5 +113,9 @@ export const OutOfStock: Story = {
   play: async ({ canvas, userEvent }) => {
     const options = canvas.getAllByTestId('option-button');
     await userEvent.click(options[0]!);
+
+    expect(canvas.getByTestId('add-product-button')).toHaveTextContent(
+      'Out of stock'
+    );
   },
 };

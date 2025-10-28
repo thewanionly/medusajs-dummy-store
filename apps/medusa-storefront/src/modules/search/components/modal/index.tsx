@@ -166,7 +166,10 @@ const SearchResults = ({
 
 const Hit = ({ hit }: { hit: ProductHit }) => {
   return (
-    <div className="relative mt-4 flex flex-row gap-x-2">
+    <div
+      className="relative mt-4 flex flex-row gap-x-2"
+      data-testid="search-hit"
+    >
       {hit.thumbnail ? (
         <Image
           src={hit.thumbnail}

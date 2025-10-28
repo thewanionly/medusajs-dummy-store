@@ -8,7 +8,7 @@ import {
 export const createCartSuccess = http.post(
   'http://localhost:9000/store/carts',
   async () => {
-    await delay(1000);
+    await delay(500);
 
     return HttpResponse.json({
       cart: mockedCart,
@@ -19,7 +19,7 @@ export const createCartSuccess = http.post(
 export const addToCartSuccess = http.post(
   'http://localhost:9000/store/carts/:id/line-items',
   async () => {
-    await delay(1000);
+    await delay(500);
 
     return HttpResponse.json({
       cart: mockedAddToCartResponse,
