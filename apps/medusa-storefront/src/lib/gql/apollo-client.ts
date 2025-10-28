@@ -109,5 +109,4 @@ export async function graphqlMutation<
     throw new Error(error.message || 'GraphQL error');
   }
 }
-
 export default apolloClient;

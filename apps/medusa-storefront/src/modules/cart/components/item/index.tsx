@@ -70,7 +70,11 @@ const Item = ({ item, type = 'full', currencyCode }: ItemProps) => {
         >
           {item.product_title}
         </Text>
-        <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        <LineItemOptions
+          variant={item.variant}
+          data-testid="product-variant"
+          data-value={item.variant}
+        />
       </Table.Cell>
 
       {type === 'full' && (
