@@ -19,6 +19,7 @@ export function createContext({
   let _productService: ProductService | null = null;
   let _categoryService: CategoryService | null = null;
   let _collectionService: CollectionService | null = null;
+  let _cartService: CartService | null = null;
 
   const createMedusa = (session: Session & Partial<SessionData>) => {
     const medusaToken = session.medusaToken;
