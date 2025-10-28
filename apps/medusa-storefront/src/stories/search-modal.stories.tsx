@@ -1,7 +1,7 @@
 import { screen } from 'storybook/test';
 
 import SearchModal from '@modules/search/components/modal';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { PlayFunction } from '@storybook/types';
 
 import { handlers as searchHandlers } from '../mocks/msw/handlers/storybook';

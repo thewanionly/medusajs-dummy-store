@@ -2,7 +2,7 @@ import { Product } from '@lib/gql/generated-types/graphql';
 import ProductActions, {
   ProductActionsProps,
 } from '@modules/products/components/product-actions';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { PlayFunction } from '@storybook/types';
 
 import {

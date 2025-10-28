@@ -3,7 +3,7 @@ import 'storybook/test';
 import LoginTemplate, {
   LoginTemplateProps,
 } from '@modules/account/templates/login-template';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import type { PlayFunction } from '@storybook/types';
 
 import {
