@@ -1,3 +1,5 @@
+import { screen } from 'storybook/test';
+
 import SearchModal from '@modules/search/components/modal';
 import { Meta, StoryObj } from '@storybook/nextjs';
 import { PlayFunction } from '@storybook/types';
@@ -12,8 +14,7 @@ const searchPlay: (query: string) => PlayFunction =
     await userEvent.click(canvas.getByTestId('search-button'));
     await delay(500);
 
-    // Headless UI’s Dialog renders in a portal at <body>, outside the Storybook canvas. Using document.querySelector instead of canvas.queryByTestId locates the element correctly.
-    const searchInput = document.querySelector('[data-testid="search-input"]');
+    const searchInput = screen.getByTestId('search-input');
 
     await userEvent.type(searchInput as HTMLInputElement, query);
   };
