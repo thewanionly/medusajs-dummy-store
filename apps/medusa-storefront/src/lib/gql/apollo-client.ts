@@ -109,22 +109,4 @@ export async function graphqlMutation<
     throw new Error(error.message || 'GraphQL error');
   }
 }
-
-export async function graphqlMutation<
-  TResult,
-  TVariables extends OperationVariables,
->(
-  options: ApolloClient.MutateOptions<TResult, TVariables>
-): Promise<TResult | undefined> {
-  try {
-    const { data } = await apolloClient.mutate<TResult, TVariables>({
-      ...options,
-    });
-    return data;
-  } catch (error: any) {
-    // TODO - Better error handling
-    throw new Error(error.message || 'GraphQL error');
-  }
-}
-
 export default apolloClient;
