@@ -170,18 +170,21 @@ const Hit = ({ hit }: { hit: ProductHit }) => {
       className="relative mt-4 flex flex-row gap-x-2"
       data-testid="search-hit"
     >
-      {hit.thumbnail ? (
-        <Image
-          src={hit.thumbnail}
-          alt={hit.title ?? 'Product Image'}
-          width={100}
-          height={100}
-        />
-      ) : (
-        <div className="border-grey-400 flex h-[125px] w-[100px] items-center justify-center self-start border">
-          <PlaceholderImage size={40} />
-        </div>
-      )}
+      <div className="relative h-[100px] w-[100px] shrink-0 overflow-hidden border border-gray-200">
+        {hit.thumbnail ? (
+          <Image
+            src={hit.thumbnail}
+            alt={hit.title ?? 'Product Image'}
+            width={100}
+            height={100}
+            className="aspect-square object-cover"
+          />
+        ) : (
+          <div className="border-grey-400 flex h-[125px] w-[100px] items-center justify-center self-start border">
+            <PlaceholderImage size={40} />
+          </div>
+        )}
+      </div>
       <div className="flex flex-col gap-y-1">
         <h3>{hit.title}</h3>
         <p
