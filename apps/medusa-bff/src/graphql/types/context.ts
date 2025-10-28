@@ -2,6 +2,7 @@ import type express from 'express';
 import { Session, SessionData } from 'express-session';
 
 import Medusa from '@medusajs/js-sdk';
+import { SanityClient } from '@sanity/client';
 import { CategoryService } from '@services/medusa/category';
 import { CollectionService } from '@services/medusa/collection';
 import { ProductService } from '@services/medusa/product';
@@ -14,4 +15,5 @@ export type GraphQLContext = {
   productService: ProductService;
   categoryService: CategoryService;
   collectionService: CollectionService;
+  sanityClient: SanityClient;
 };

@@ -1,12 +1,15 @@
 import { listCategories } from '@lib/data/categories';
 import { listCollections } from '@lib/data/collections';
+import { getFooterContent } from '@lib/data/footer';
+import { RichTextBlock } from '@lib/gql/generated-types/graphql';
 import { Text, clx } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
-import MedusaCTA from '@modules/layout/components/medusa-cta';
+import PortableText from '@modules/common/components/portable-text';
 
 export default async function Footer() {
   const { collections } = await listCollections();
   const productCategories = await listCategories();
+  const footerContent = await getFooterContent();
 
   return (
     <footer className="w-full border-t border-ui-border-base">
@@ -17,7 +20,7 @@ export default async function Footer() {
               href="/"
               className="txt-compact-xlarge-plus uppercase text-ui-fg-subtle hover:text-ui-fg-base"
             >
-              Medusa Store
+              {footerContent?.storeName || 'Medusa Store'}
             </LocalizedClientLink>
           </div>
           <div className="text-small-regular grid grid-cols-2 gap-10 sm:grid-cols-3 md:gap-x-16">
@@ -108,45 +111,36 @@ export default async function Footer() {
             <div className="flex flex-col gap-y-2">
               <span className="txt-ui-fg-base txt-small-plus">Medusa</span>
               <ul className="txt-small grid grid-cols-1 gap-y-2 text-ui-fg-subtle">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
-                  </a>
-                </li>
+                {footerContent?.social &&
+                  footerContent?.social.map(
+                    (social: { text: string; url: string }, index: number) => (
+                      <li key={index}>
+                        <a
+                          href={social.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="capitalize hover:text-ui-fg-base"
+                        >
+                          {social.text}
+                        </a>
+                      </li>
+                    )
+                  )}
               </ul>
             </div>
           </div>
         </div>
-        <div className="mb-16 flex w-full justify-between text-ui-fg-muted">
+        <div className="mb-16 flex w-full flex-col gap-4 text-ui-fg-muted sm:flex-row sm:items-center sm:justify-between">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
+            ©{`${new Date().getFullYear()} ${footerContent?.copyright}`}
           </Text>
-          <MedusaCTA />
+          <div className="flex items-center gap-4">
+            {footerContent?.poweredByCta && (
+              <PortableText
+                value={footerContent.poweredByCta.text as RichTextBlock[]}
+              />
+            )}
+          </div>
         </div>
       </div>
     </footer>
