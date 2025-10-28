@@ -41,6 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div className="txt-compact-medium relative z-0 flex w-full">
           <input
             type={inputType}
+            id={name}
             name={name}
             placeholder=" "
             required={required}
@@ -63,6 +64,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className="absolute right-0 top-3 px-4 text-ui-fg-subtle outline-none transition-all duration-150 focus:text-ui-fg-base focus:outline-none"
             >
               {showPassword ? <Eye /> : <EyeOff />}
+              <span className="sr-only">Toggle password visibility</span>
             </button>
           )}
         </div>

@@ -53,7 +53,11 @@ export default function SearchModal({ buttonClassName }: SearchModalProps) {
           Search
         </Button>
       </div>
-      <Modal isOpen={isOpen} close={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        close={() => setIsOpen(false)}
+        aria-label="search-modal"
+      >
         <div className="flex h-full max-h-[75vh] min-h-0 flex-col">
           <div className="shrink-0">
             <SearchBox query={query} setQuery={setQuery} loading={loading} />
