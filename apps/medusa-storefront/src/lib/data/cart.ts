@@ -8,6 +8,8 @@ import { graphqlFetch, graphqlMutation } from '@lib/gql/apollo-client';
 import {
   AddShippingMethodMutation,
   AddShippingMethodMutationVariables,
+  ApplyPromotionsMutation,
+  ApplyPromotionsMutationVariables,
   CompleteCartMutation,
   CompleteCartMutationVariables,
   CreateCartMutation,
@@ -25,6 +27,7 @@ import {
 } from '@lib/gql/generated-types/graphql';
 import {
   ADD_SHIPPING_METHOD_MUTATION,
+  APPLY_PROMOTIONS_MUTATION,
   COMPLETE_CART_MUTATION,
   CREATE_CART_MUTATION,
   CREATE_LINE_ITEM_MUTATION,
@@ -371,28 +374,42 @@ export async function initiatePaymentSession(
     .catch(medusaError);
 }
 
-export async function applyPromotions(codes: string[]) {
+export const applyPromotions = async (
+  codes: string[]
+): Promise<ApplyPromotionsMutation['applyPromotions'] | null> => {
   const cartId = await getCartId();
 
   if (!cartId) {
     throw new Error('No existing cart found');
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  };
+  try {
+    const result = await graphqlMutation<
+      ApplyPromotionsMutation,
+      ApplyPromotionsMutationVariables
+    >({
+      mutation: APPLY_PROMOTIONS_MUTATION,
+      variables: {
+        cartId,
+        codes,
+      },
+    });
 
-  return sdk.store.cart
-    .update(cartId, { promo_codes: codes }, {}, headers)
-    .then(async () => {
+    const cart = result?.applyPromotions ?? null;
+
+    if (cart) {
       const cartCacheTag = await getCacheTag('carts');
       revalidateTag(cartCacheTag);
 
       const fulfillmentCacheTag = await getCacheTag('fulfillment');
       revalidateTag(fulfillmentCacheTag);
-    })
-    .catch(medusaError);
-}
+    }
+
+    return cart;
+  } catch (err) {
+    medusaError(err);
+  }
+};
 
 export async function applyGiftCard(code: string) {
   //   const cartId = getCartId()
@@ -502,45 +519,6 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
   );
 }
 
-/**
- * Places an order for a cart. If no cart ID is provided, it will use the cart ID from the cookies.
- * @param cartId - optional - The ID of the cart to place an order for.
- * @returns The cart object if the order was successful, or null if not.
- */
-// export async function placeOrder(cartId?: string) {
-//   const id = cartId || (await getCartId());
-
-//   if (!id) {
-//     throw new Error('No existing cart found when placing an order');
-//   }
-
-//   const headers = {
-//     ...(await getAuthHeaders()),
-//   };
-
-//   const cartRes = await sdk.store.cart
-//     .complete(id, {}, headers)
-//     .then(async (cartRes) => {
-//       const cartCacheTag = await getCacheTag('carts');
-//       revalidateTag(cartCacheTag);
-//       return cartRes;
-//     })
-//     .catch(medusaError);
-
-//   if (cartRes?.type === 'order') {
-//     const countryCode =
-//       cartRes.order.shipping_address?.country_code?.toLowerCase();
-
-//     const orderCacheTag = await getCacheTag('orders');
-//     revalidateTag(orderCacheTag);
-
-//     removeCartId();
-//     redirect(`/${countryCode}/order/${cartRes?.order.id}/confirmed`);
-//   }
-
-//   return cartRes.cart;
-// }
-
 export async function placeOrder(cartId?: string) {
   const id = cartId || (await getCartId());
   if (!id) throw new Error('No existing cart found when placing an order');
@@ -565,7 +543,6 @@ export async function placeOrder(cartId?: string) {
       throw new Error('No result returned from completeCart mutation');
     }
 
-    // ✅ Handle successful order result
     if (completed.__typename === 'CompleteCartOrderResult') {
       const order = completed.order;
       const countryCode =
@@ -580,7 +557,6 @@ export async function placeOrder(cartId?: string) {
       return order;
     }
 
-    // ❌ Handle error result
     if (completed.__typename === 'CompleteCartErrorResult') {
       console.error(
         'Cart completion failed:',

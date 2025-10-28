@@ -134,3 +134,21 @@ export const COMPLETE_CART_MUTATION = gql`
   ${ADDRESS_FRAGMENT}
   ${SHIPPING_METHODS_FRAGMENT}
 `;
+
+export const TRANSFER_CART_MUTATION = gql`
+  mutation TransferCart($cartId: ID!) {
+    transferCart(cartId: $cartId) {
+      ...CartFields
+    }
+  }
+  ${CART_FRAGMENT}
+`;
+
+export const APPLY_PROMOTIONS_MUTATION = gql`
+  mutation ApplyPromotions($cartId: ID!, $codes: [String!]!) {
+    applyPromotions(cartId: $cartId, codes: $codes) {
+      ...CartFields
+    }
+  }
+  ${CART_FRAGMENT}
+`;
