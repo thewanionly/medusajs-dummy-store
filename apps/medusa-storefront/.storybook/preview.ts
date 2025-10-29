@@ -1,4 +1,8 @@
+import { initialize, mswLoader } from 'msw-storybook-addon';
+
 import type { Preview } from '@storybook/nextjs-vite';
+
+initialize();
 
 const preview: Preview = {
   parameters: {
@@ -16,6 +20,7 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+  loaders: [mswLoader],
 };
 
 export default preview;
