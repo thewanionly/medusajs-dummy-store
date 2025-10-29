@@ -136,7 +136,7 @@ const SearchResults = ({
 
   if (error) {
     return (
-      <div className="flex min-h-full items-center justify-center text-red-500">
+      <div className="flex min-h-full items-center justify-center text-rose-600">
         <p>Error: {error}</p>
       </div>
     );

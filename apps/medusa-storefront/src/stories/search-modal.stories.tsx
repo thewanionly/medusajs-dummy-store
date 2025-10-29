@@ -3,7 +3,7 @@ import { expect, screen } from 'storybook/test';
 import SearchModal from '@modules/search/components/modal';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { handlers as searchHandlers } from '../mocks/msw/handlers/storybook';
+import { handlers as searchHandlers } from '../mocks/msw/handlers/storybook/search';
 import { serverError } from '../mocks/msw/handlers/storybook/search';
 import { delay } from './utils/delay';
 
