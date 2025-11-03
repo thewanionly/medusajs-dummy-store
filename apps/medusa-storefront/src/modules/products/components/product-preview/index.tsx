@@ -11,7 +11,7 @@ export type ProductPreviewProps = {
   isFeatured?: boolean;
 };
 
-export default async function ProductPreview({
+export default function ProductPreview({
   product,
   isFeatured,
 }: ProductPreviewProps) {
