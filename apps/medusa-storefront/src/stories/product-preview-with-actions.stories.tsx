@@ -6,10 +6,7 @@ import ProductActions, {
 } from '@modules/products/components/product-actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import {
-  mockedProducts,
-  outOfStockProduct,
-} from '../mocks/data/storybook/products';
+import { mockedProducts, outOfStockProduct } from '../mocks/data/products';
 import {
   addToCartServerError,
   handlers as cartsHandlers,

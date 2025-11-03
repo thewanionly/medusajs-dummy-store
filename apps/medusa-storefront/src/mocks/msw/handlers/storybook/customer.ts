@@ -1,6 +1,6 @@
 import { HttpResponse, delay, http } from 'msw';
 
-import { mockedCustomer, mockedToken } from '../../../data/storybook/customer';
+import { mockedCustomer, mockedToken } from '../../../data/customer';
 import { storefrontMedusaBffWrapper } from '../../../msw/apis';
 
 export const handlers = [

@@ -4420,3 +4420,558 @@ export const mockedProducts = [
     },
   },
 ];
+
+export const outOfStockProduct = {
+  __typename: 'Product',
+  id: 'prod_01K5BYHR8TPVN5662NZVEXMFP9',
+  title: "Men's Tree Glider - Thunder Green (Stony Cream Sole)",
+  handle: 'mens-tree-gliders-thunder-green',
+  description:
+    '<p>Whether it’s workouts or hangouts, the Tree Glider has every phase of your day covered. Inspired by effortless ease, this elevated active style brings flow everywhere you go.</p>',
+  thumbnail:
+    'https://cdn.shopify.com/s/files/1/1104/4168/files/A11893_25Q3_Tree-Glider-Thunder-Green-Stony-Cream-Sole_PDP_LEFT__1.png?v=1754509157',
+  width: null,
+  weight: null,
+  length: null,
+  height: null,
+  originCountry: null,
+  material: null,
+  type: 'ptyp_01K5BYHNMTP0612DDN7S098MFQ',
+  collectionId: 'pcol_01K5BYHPD5JCK0FDPSFWAXSZY2',
+  createdAt: '2025-09-17T13:41:44.238Z',
+  images: [
+    {
+      __typename: 'ProductImage',
+      id: 'img_01K5BYHRDF44K7ZE6XHFXT94KY',
+      url: 'https://cdn.shopify.com/s/files/1/1104/4168/files/A11893_25Q3_Tree-Glider-Thunder-Green-Stony-Cream-Sole_PDP_LEFT__1.png?v=1754509157',
+    },
+    {
+      __typename: 'ProductImage',
+      id: 'img_01K5BYHRDFDHGG1RH59D54K0TN',
+      url: 'https://cdn.shopify.com/s/files/1/1104/4168/files/A11893_25Q3_Tree-Glider-Thunder-Green-Stony-Cream-Sole_PDP_BACK.png?v=1754509156',
+    },
+    {
+      __typename: 'ProductImage',
+      id: 'img_01K5BYHRDFXN8VC9DPQZQS5X9J',
+      url: 'https://cdn.shopify.com/s/files/1/1104/4168/files/A11893_25Q3_Tree-Glider-Thunder-Green-Stony-Cream-Sole_PDP_TD.png?v=1754509157',
+    },
+    {
+      __typename: 'ProductImage',
+      id: 'img_01K5BYHRDFMR91M2WR4EQQSW66',
+      url: 'https://cdn.shopify.com/s/files/1/1104/4168/files/A11893_25Q3_Tree-Glider-Thunder-Green-Stony-Cream-Sole_PDP_SOLE.png?v=1754509156',
+    },
+    {
+      __typename: 'ProductImage',
+      id: 'img_01K5BYHRDFQ3CAPK1B7Q565280',
+      url: 'https://cdn.shopify.com/s/files/1/1104/4168/files/A11893_25Q3_Tree-Glider-Thunder-Green-Stony-Cream-Sole_PDP_PAIR_3Q.png?v=1754509157',
+    },
+  ],
+  tags: [
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6M0EASQQ8ZA20RJ7MQ',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6MXT845W0TX614RAFK',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6N2V9E38HTNT1AMYXS',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6N6FSDE9DGBCE815D7',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6NJHZ56HWE1S9FPQYB',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6NNYEZH2013H3TBMKV',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6NR39VSGJJBT1ZG1KB',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6PC8J6NP75PVMCCXFV',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6PQVFV8AF01RXQBBXA',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6VJD2STPM4EXD8VQ56',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP6VTCEK6NB0E2EH399T',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP7514VMGY0WGSTZBSN5',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP7528J8PWPH5G43V8TJ',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP75JV0S7F2MDQGTAZN0',
+    },
+    {
+      __typename: 'ProductTag',
+      id: 'ptag_01K5BYHP75PQZ7RPHHRMMN7JE6',
+    },
+  ],
+  options: [
+    {
+      __typename: 'ProductOption',
+      id: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+      title: 'Size',
+      values: [
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDEYF528AHE08T4E70S',
+          value: '8',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDEKQP98YYNP4X4AG8D',
+          value: '8.5',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDEQNH3J917MTQER08G',
+          value: '9',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDEWDC0YJ4XCA4N2XM9',
+          value: '9.5',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDE2AS5DPCQ0K63GEHM',
+          value: '10',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDFFX5Q199WXDTDWD4S',
+          value: '10.5',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDFJT53Y2BFY7F8ZYYP',
+          value: '11',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDFN02PRBTSQ6753X88',
+          value: '11.5',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDF9JS8BTJT55D31Y5G',
+          value: '12',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDFQ54DQBAGWZP7S7QM',
+          value: '12.5',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDFPNDHTVR1GSA3H54P',
+          value: '13',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDF34WXF9W3AFWJBK9S',
+          value: '13.5',
+        },
+        {
+          __typename: 'ProductOptionValue',
+          id: 'optval_01K5BYHRDFWRHRD4WD38GP3AQY',
+          value: '14',
+        },
+      ],
+    },
+  ],
+  variants: [
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WARTNVZV51Q736TK02',
+      sku: 'A11893M080',
+      inventoryQuantity: 0,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDEYF528AHE08T4E70S',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '8',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WAKHAHA52CKE8B4FHS',
+      sku: 'A11893M085',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDEKQP98YYNP4X4AG8D',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '8.5',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBBF5GYJ7J8F91XMX9',
+      sku: 'A11893M090',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDEQNH3J917MTQER08G',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '9',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBWZHYGJFW10NDGRP5',
+      sku: 'A11893M095',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDEWDC0YJ4XCA4N2XM9',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '9.5',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBBJ16FRR2PZKB44YB',
+      sku: 'A11893M100',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDE2AS5DPCQ0K63GEHM',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '10',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBPH9SFFCEYAAAEHFK',
+      sku: 'A11893M105',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDFFX5Q199WXDTDWD4S',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '10.5',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBDZBA1A1MN1768DEX',
+      sku: 'A11893M110',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDFJT53Y2BFY7F8ZYYP',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '11',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBK5X3D86YF5N53D2C',
+      sku: 'A11893M115',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDFN02PRBTSQ6753X88',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '11.5',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBZPFT9JMZ1QB5Z3HK',
+      sku: 'A11893M120',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDF9JS8BTJT55D31Y5G',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '12',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBPV726ZTS94TT4HA0',
+      sku: 'A11893M125',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDFQ54DQBAGWZP7S7QM',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '12.5',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBB41CEX1FGZTWGRRG',
+      sku: 'A11893M130',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDFPNDHTVR1GSA3H54P',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '13',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WBGZCK8N5SCKZE093E',
+      sku: 'A11893M135',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDF34WXF9W3AFWJBK9S',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '13.5',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+    {
+      __typename: 'ProductVariant',
+      id: 'variant_01K5BYJ2WB0K3VGHWXY5HWT1EQ',
+      sku: 'A11893M140',
+      inventoryQuantity: 1000000,
+      allowBackorder: false,
+      manageInventory: true,
+      options: [
+        {
+          __typename: 'ProductVariantOption',
+          id: 'optval_01K5BYHRDFWRHRD4WD38GP3AQY',
+          optionId: 'opt_01K5BYHRDF99JQD8KE98ER26X7',
+          value: '14',
+        },
+      ],
+      price: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+      originalPrice: {
+        __typename: 'Price',
+        amount: 135,
+        currencyCode: 'eur',
+        priceType: 'default',
+      },
+    },
+  ],
+  collection: {
+    __typename: 'Collection',
+    id: 'pcol_01K5BYHPD5JCK0FDPSFWAXSZY2',
+    title: '30% Off Tree Runner Go & Tree Gliders',
+    handle: '30-off-tree-runner-go-tree-gliders',
+  },
+};

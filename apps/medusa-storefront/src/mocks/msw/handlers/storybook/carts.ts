@@ -1,9 +1,6 @@
 import { HttpResponse, delay, http } from 'msw';
 
-import {
-  mockedAddToCartResponse,
-  mockedCart,
-} from '../../../data/storybook/carts';
+import { mockedAddToCartResponse, mockedCart } from '../../../data/carts';
 
 export const createCartSuccess = http.post(
   'http://localhost:9000/store/carts',
