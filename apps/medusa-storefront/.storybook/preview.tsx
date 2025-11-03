@@ -1,7 +1,11 @@
+import React from 'react';
+
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import 'styles/globals.css';
 
 import type { Preview } from '@storybook/nextjs-vite';
+
+import { ApolloClientProvider } from '../src/lib/context/apollo-context';
 
 initialize();
 
@@ -22,6 +26,13 @@ const preview: Preview = {
     },
   },
   loaders: [mswLoader],
+  decorators: [
+    (Story) => (
+      <ApolloClientProvider>
+        <Story />
+      </ApolloClientProvider>
+    ),
+  ],
 };
 
 export default preview;

@@ -8,7 +8,7 @@ import type { StorybookConfig } from '@storybook/nextjs-vite';
  * It is needed in projects that use Yarn PnP or are set up within a monorepo.
  */
 function getAbsolutePath(value: string): any {
-  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+  return dirname(fileURLToPath(import.meta.resolve!(`${value}/package.json`)));
 }
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -23,5 +23,8 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../public'],
+  features: {
+    experimentalRSC: true,
+  },
 };
 export default config;
