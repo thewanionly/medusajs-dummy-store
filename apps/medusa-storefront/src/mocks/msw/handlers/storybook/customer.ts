@@ -1,8 +1,20 @@
 import { HttpResponse, delay, http } from 'msw';
 
 import { mockedCustomer, mockedToken } from '../../../data/storybook/customer';
+import { storefrontMedusaBffWrapper } from '../../../msw/apis';
 
 export const handlers = [
+  storefrontMedusaBffWrapper.mutation('Login', async () => {
+    await delay(1000);
+
+    return HttpResponse.json({
+      data: {
+        login: {
+          token: mockedToken,
+        },
+      },
+    });
+  }),
   http.post('http://localhost:9000/auth/customer/emailpass', async () => {
     await delay(1000);
 
@@ -29,30 +41,33 @@ export const handlers = [
   }),
 ];
 
-export const invalidCredentials = http.post(
-  'http://localhost:9000/auth/customer/emailpass',
+export const invalidCredentials = storefrontMedusaBffWrapper.mutation(
+  'Login',
   async () => {
     await delay(1000);
 
-    return HttpResponse.json(
-      {
-        type: 'unauthorized',
-        message: 'Invalid email or password',
-      },
-      { status: 401 }
-    );
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Invalid email or password',
+        },
+      ],
+    });
   }
 );
 
-export const serverErrorLogin = http.post(
-  'http://localhost:9000/auth/customer/emailpass',
+export const serverErrorLogin = storefrontMedusaBffWrapper.mutation(
+  'Login',
   async () => {
     await delay(1000);
 
-    return HttpResponse.json(
-      { message: 'Something went wrong. Please try again.' },
-      { status: 500 }
-    );
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Something went wrong. Please try again.',
+        },
+      ],
+    });
   }
 );
 

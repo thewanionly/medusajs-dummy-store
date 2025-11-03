@@ -14,7 +14,8 @@ type Props = {
 };
 
 const Login = ({ setCurrentView }: Props) => {
-  const [login, { error }] = useMutation<LoginMutation>(LOGIN_MUTATION);
+  const [login, { error, loading, data }] =
+    useMutation<LoginMutation>(LOGIN_MUTATION);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,16 +24,20 @@ const Login = ({ setCurrentView }: Props) => {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    const { data } = await login({
-      variables: {
-        email,
-        password,
-      },
-    });
+    try {
+      const { data } = await login({
+        variables: {
+          email,
+          password,
+        },
+      });
 
-    const token = data?.login?.token;
+      const token = data?.login?.token;
 
-    await postLogin(token);
+      await postLogin(token);
+    } catch (err) {
+      console.error('An error occurred during logging in', err);
+    }
   };
 
   return (
@@ -64,11 +69,22 @@ const Login = ({ setCurrentView }: Props) => {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage
-          error={error?.message}
-          data-testid="login-error-message"
-        />
-        <SubmitButton data-testid="sign-in-button" className="mt-6 w-full">
+        {error && (
+          <ErrorMessage
+            error={error.message}
+            data-testid="login-error-message"
+          />
+        )}
+        {data && (
+          <div className="text-small-regular pt-2 text-green-700">
+            Login successful
+          </div>
+        )}
+        <SubmitButton
+          data-testid="sign-in-button"
+          className="mt-6 w-full"
+          isLoading={loading}
+        >
           Sign in
         </SubmitButton>
       </form>
