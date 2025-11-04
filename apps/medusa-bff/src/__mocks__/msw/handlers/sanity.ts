@@ -5,106 +5,86 @@ import { mockFooterData } from '@mocks/data/footer';
 const projectId = process.env.SANITY_PROJECT_ID;
 const dataset = process.env.SANITY_DATASET;
 const apiVersion = process.env.SANITY_API_VERSION;
+const sanityHttp = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`;
 
 /* Success (i.e. happy path) handlers */
 export const handlers = [
-  http.get(
-    `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-    ({ request }) => {
-      const url = new URL(request.url);
-      const query = url.searchParams.get('query');
+  http.get(sanityHttp, ({ request }) => {
+    const url = new URL(request.url);
+    const query = url.searchParams.get('query');
 
-      if (query && query.includes('footer')) {
-        return HttpResponse.json({
-          result: mockFooterData,
-        });
-      }
-
+    if (query && query.includes('footer')) {
       return HttpResponse.json({
-        result: [],
+        result: mockFooterData,
       });
     }
-  ),
+
+    return HttpResponse.json({
+      result: [],
+    });
+  }),
 ];
 
 /* Other handlers */
-export const emptyFooterHandler = http.get(
-  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-  ({ request }) => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('query');
+export const emptyFooterHandler = http.get(sanityHttp, ({ request }) => {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
 
-    if (query && query.includes('footer')) {
-      return HttpResponse.json({
-        result: [],
-      });
-    }
-
+  if (query && query.includes('footer')) {
     return HttpResponse.json({
       result: [],
     });
   }
-);
 
-export const nullFooterHandler = http.get(
-  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-  ({ request }) => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('query');
+  return HttpResponse.json({
+    result: [],
+  });
+});
 
-    if (query && query.includes('footer')) {
-      return HttpResponse.json({
-        result: null,
-      });
-    }
+export const nullFooterHandler = http.get(sanityHttp, ({ request }) => {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
 
+  if (query && query.includes('footer')) {
     return HttpResponse.json({
-      result: [],
+      result: null,
     });
   }
-);
 
-export const undefinedFooterHandler = http.get(
-  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-  ({ request }) => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('query');
+  return HttpResponse.json({
+    result: [],
+  });
+});
 
-    if (query && query.includes('footer')) {
-      return HttpResponse.json({
-        result: undefined,
-      });
-    }
+export const undefinedFooterHandler = http.get(sanityHttp, ({ request }) => {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
 
+  if (query && query.includes('footer')) {
     return HttpResponse.json({
-      result: [],
+      result: undefined,
     });
   }
-);
 
-export const generalErrorHandler = http.get(
-  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-  () => {
-    return HttpResponse.json({ error: 'Sanity API error' }, { status: 500 });
-  }
-);
+  return HttpResponse.json({
+    result: [],
+  });
+});
 
-export const authErrorHandler = http.get(
-  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-  () => {
-    return HttpResponse.json(
-      { error: 'Unauthorized - Invalid API token' },
-      { status: 401 }
-    );
-  }
-);
+export const generalErrorHandler = http.get(sanityHttp, () => {
+  return HttpResponse.json({ error: 'Sanity API error' }, { status: 500 });
+});
 
-export const queryErrorHandler = http.get(
-  `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
-  () => {
-    return HttpResponse.json(
-      { error: 'Invalid GROQ query syntax' },
-      { status: 400 }
-    );
-  }
-);
+export const authErrorHandler = http.get(sanityHttp, () => {
+  return HttpResponse.json(
+    { error: 'Unauthorized - Invalid API token' },
+    { status: 401 }
+  );
+});
+
+export const queryErrorHandler = http.get(sanityHttp, () => {
+  return HttpResponse.json(
+    { error: 'Invalid GROQ query syntax' },
+    { status: 400 }
+  );
+});
