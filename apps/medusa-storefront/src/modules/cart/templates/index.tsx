@@ -1,5 +1,5 @@
 import { Customer } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { Cart, Maybe } from '@lib/gql/generated-types/graphql';
 import Divider from '@modules/common/components/divider';
 
 import EmptyCartMessage from '../components/empty-cart-message';
@@ -11,7 +11,7 @@ const CartTemplate = ({
   cart,
   customer,
 }: {
-  cart: HttpTypes.StoreCart | null;
+  cart: Cart | undefined | null;
   customer: Customer | null;
 }) => {
   return (

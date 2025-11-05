@@ -1,7 +1,11 @@
 import { Fragment, useMemo } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
-import { CustomerAddress, Maybe } from '@lib/gql/generated-types/graphql';
+import {
+  Address,
+  CustomerAddress,
+  Maybe,
+} from '@lib/gql/generated-types/graphql';
 import compareAddresses from '@lib/util/compare-addresses';
 import { ChevronUpDown } from '@medusajs/icons';
 import { HttpTypes } from '@medusajs/types';
@@ -10,7 +14,7 @@ import Radio from '@modules/common/components/radio';
 
 type AddressSelectProps = {
   addresses?: Maybe<Maybe<CustomerAddress>[]>;
-  addressInput: HttpTypes.StoreCartAddress | null;
+  addressInput: Address | null;
   onSelect: (
     address: HttpTypes.StoreCartAddress | undefined,
     email?: string

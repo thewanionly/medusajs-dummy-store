@@ -1,11 +1,11 @@
+import { Cart } from '@lib/gql/generated-types/graphql';
 import repeat from '@lib/util/repeat';
-import { HttpTypes } from '@medusajs/types';
 import { Heading, Table } from '@medusajs/ui';
 import Item from '@modules/cart/components/item';
 import SkeletonLineItem from '@modules/skeletons/components/skeleton-line-item';
 
 type ItemsTemplateProps = {
-  cart?: HttpTypes.StoreCart;
+  cart?: Cart;
 };
 
 const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {

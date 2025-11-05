@@ -4,7 +4,6 @@ import { Session, SessionData } from 'express-session';
 import { GraphQLContext } from '@graphql/types/context';
 import Medusa from '@medusajs/js-sdk';
 
-import { CartService } from './medusa/cart';
 import { CategoryService } from './medusa/category';
 import { CollectionService } from './medusa/collection';
 import { ProductService } from './medusa/product';
@@ -19,7 +18,6 @@ export function createContext({
   let _productService: ProductService | null = null;
   let _categoryService: CategoryService | null = null;
   let _collectionService: CollectionService | null = null;
-  let _cartService: CartService | null = null;
 
   const createMedusa = (session: Session & Partial<SessionData>) => {
     const medusaToken = session.medusaToken;
@@ -60,10 +58,6 @@ export function createContext({
       if (!_collectionService)
         _collectionService = new CollectionService(medusa);
       return _collectionService;
-    },
-    get cartService() {
-      if (!_cartService) _cartService = new CartService(medusa);
-      return _cartService;
     },
   };
 }

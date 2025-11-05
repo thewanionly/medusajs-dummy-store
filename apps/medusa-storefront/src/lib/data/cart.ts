@@ -10,6 +10,7 @@ import {
   AddShippingMethodMutationVariables,
   ApplyPromotionsMutation,
   ApplyPromotionsMutationVariables,
+  Cart,
   CompleteCartMutation,
   CompleteCartMutationVariables,
   CreateCartMutation,
@@ -54,9 +55,7 @@ import { getRegion } from './regions';
  * @param cartId - optional - The ID of the cart to retrieve.
  * @returns The cart object if found, or null if not found.
  */
-export const retrieveCart = async (
-  cartId?: string
-): Promise<GetCartQuery['getCart'] | null> => {
+export const retrieveCart = async (cartId?: string): Promise<Cart | null> => {
   const id = cartId || (await getCartId());
   if (!id) {
     return null;
@@ -68,7 +67,7 @@ export const retrieveCart = async (
       variables: { id },
     });
 
-    return data?.getCart ?? null;
+    return data?.cart ?? null;
   } catch (error) {
     console.error('Failed to fetch cart:', error);
     return null;
@@ -77,9 +76,7 @@ export const retrieveCart = async (
 
 export const getOrSetCart = async (
   countryCode: string
-): Promise<
-  CreateCartMutation['createCart'] | UpdateCartMutation['updateCart'] | null
-> => {
+): Promise<Cart | null> => {
   const region = await getRegion(countryCode);
 
   if (!region) {
@@ -99,7 +96,7 @@ export const getOrSetCart = async (
       },
     });
 
-    cart = data?.createCart;
+    cart = data?.createCart ?? null;
 
     await setCartId(cart?.id || '');
 
@@ -521,6 +518,7 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
 
 export async function placeOrder(cartId?: string) {
   const id = cartId || (await getCartId());
+
   if (!id) throw new Error('No existing cart found when placing an order');
 
   try {

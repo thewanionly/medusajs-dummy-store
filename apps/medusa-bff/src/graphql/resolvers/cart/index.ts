@@ -1,42 +1,58 @@
+import { GraphQLContext } from '@graphql/types/context';
 import type { HttpTypes } from '@medusajs/types';
 
-import { GraphQLContext } from '../types/context';
+import {
+  normalizeCart,
+  normalizeCompleteCartResponse,
+} from './util/transforms';
 
 export const cartResolvers = {
   Query: {
-    getCart: async (
+    cart: async (
       _parent: unknown,
       { id }: { id: string },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.getCart(id);
+      const { cart } = await medusa.store.cart.retrieve(id, {
+        fields:
+          '+items.*,items.variant.*,items.variant.product.*,shipping_methods.*',
+      });
+
+      return normalizeCart(cart);
     },
   },
+
   Mutation: {
     createCart: async (
       _parent: unknown,
       { data }: { data: HttpTypes.StoreCreateCart },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.createCart(data);
+      const { cart } = await medusa.store.cart.create(data);
+      return normalizeCart(cart);
     },
+
     updateCart: async (
       _parent: unknown,
       { id, data }: { id: string; data: HttpTypes.StoreUpdateCart },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.updateCart(id, data);
+      const { cart } = await medusa.store.cart.update(id, data);
+      return normalizeCart(cart);
     },
+
     createLineItem: async (
       _parent: unknown,
       {
         cartId,
         data,
       }: { cartId: string; data: HttpTypes.StoreAddCartLineItem },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.createLineItem(cartId, data);
+      const { cart } = await medusa.store.cart.createLineItem(cartId, data);
+      return normalizeCart(cart);
     },
+
     updateLineItem: async (
       _parent: unknown,
       {
@@ -48,47 +64,65 @@ export const cartResolvers = {
         lineItemId: string;
         data: HttpTypes.StoreUpdateCartLineItem;
       },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.updateLineItem(cartId, lineItemId, data);
+      const { cart } = await medusa.store.cart.updateLineItem(
+        cartId,
+        lineItemId,
+        data
+      );
+      return normalizeCart(cart);
     },
+
     deleteLineItem: async (
       _parent: unknown,
       { cartId, lineItemId }: { cartId: string; lineItemId: string },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.deleteLineItem(cartId, lineItemId);
+      return await medusa.store.cart.deleteLineItem(cartId, lineItemId);
     },
+
     addShippingMethod: async (
       _parent: unknown,
       { cartId, optionId }: { cartId: string; optionId: string },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.addShippingMethod(cartId, optionId);
+      const { cart } = await medusa.store.cart.addShippingMethod(cartId, {
+        option_id: optionId,
+      });
+      return normalizeCart(cart);
     },
+
     completeCart: async (
       _parent: unknown,
       { cartId }: { cartId: string },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.completeCart(cartId);
+      const response = await medusa.store.cart.complete(cartId);
+      return normalizeCompleteCartResponse(response);
     },
+
     transferCart: async (
       _parent: unknown,
       { cartId }: { cartId: string },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.transferCart(cartId);
+      const { cart } = await medusa.store.cart.transferCart(cartId, {});
+      return normalizeCart(cart);
     },
 
     applyPromotions: async (
       _parent: unknown,
       { cartId, codes }: { cartId: string; codes: string[] },
-      context: GraphQLContext
+      { medusa }: GraphQLContext
     ) => {
-      return await context.cartService.applyPromotions(cartId, codes);
+      const { cart } = await medusa.store.cart.update(cartId, {
+        promo_codes: codes,
+      });
+      return normalizeCart(cart);
     },
   },
+
   CompleteCartResponse: {
     __resolveType(obj: HttpTypes.StoreCompleteCartResponse) {
       if (obj.type === 'order') {

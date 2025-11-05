@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { updateLineItem } from '@lib/data/cart';
-import { HttpTypes } from '@medusajs/types';
+import { LineItem } from '@lib/gql/generated-types/graphql';
 import { Table, Text, clx } from '@medusajs/ui';
 import CartItemSelect from '@modules/cart/components/cart-item-select';
 import ErrorMessage from '@modules/checkout/components/error-message';
@@ -16,7 +16,7 @@ import Spinner from '@modules/common/icons/spinner';
 import Thumbnail from '@modules/products/components/thumbnail';
 
 type ItemProps = {
-  item: HttpTypes.StoreCartLineItem;
+  item: LineItem;
   type?: 'full' | 'preview';
   currencyCode: string;
 };
@@ -43,7 +43,7 @@ const Item = ({ item, type = 'full', currencyCode }: ItemProps) => {
 
   // TODO: Update this to grab the actual max inventory
   const maxQtyFromInventory = 10;
-  const maxQuantity = item.variant?.manage_inventory ? 10 : maxQtyFromInventory;
+  const maxQuantity = item.variant?.manageInventory ? 10 : maxQtyFromInventory;
 
   return (
     <Table.Row className="w-full" data-testid="product-row">

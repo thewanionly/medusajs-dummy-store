@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { mapKeys } from 'lodash';
 
-import { Customer } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { Address, Cart, Customer } from '@lib/gql/generated-types/graphql';
 import { Container } from '@medusajs/ui';
 import Checkbox from '@modules/common/components/checkbox';
 import Input from '@modules/common/components/input';
@@ -18,11 +17,11 @@ const ShippingAddress = ({
   onChange,
 }: {
   customer: Customer | null;
-  cart: HttpTypes.StoreCart | null;
+  cart: Cart;
   checked: boolean;
   onChange: () => void;
 }) => {
-  const [formData, setFormData] = useState<Record<string, any>>({
+  const [formData, setFormData] = useState<Record<string, string>>({
     'shipping_address.first_name': cart?.shipping_address?.first_name || '',
     'shipping_address.last_name': cart?.shipping_address?.last_name || '',
     'shipping_address.address_1': cart?.shipping_address?.address_1 || '',
@@ -36,7 +35,7 @@ const ShippingAddress = ({
   });
 
   const countriesInRegion = useMemo(
-    () => cart?.region?.countries?.map((c) => c.iso_2),
+    () => cart?.region?.countries?.map((c) => c?.iso_2),
     [cart?.region]
   );
 
@@ -49,29 +48,28 @@ const ShippingAddress = ({
     [customer?.addresses, countriesInRegion]
   );
 
-  const setFormAddress = (
-    address?: HttpTypes.StoreCartAddress,
-    email?: string
-  ) => {
-    address &&
-      setFormData((prevState: Record<string, any>) => ({
+  const setFormAddress = (address?: Address, email?: string | null) => {
+    if (address) {
+      setFormData((prevState: Record<string, unknown>) => ({
         ...prevState,
-        'shipping_address.first_name': address?.first_name || '',
-        'shipping_address.last_name': address?.last_name || '',
-        'shipping_address.address_1': address?.address_1 || '',
-        'shipping_address.company': address?.company || '',
-        'shipping_address.postal_code': address?.postal_code || '',
-        'shipping_address.city': address?.city || '',
-        'shipping_address.country_code': address?.country_code || '',
-        'shipping_address.province': address?.province || '',
-        'shipping_address.phone': address?.phone || '',
+        'shipping_address.first_name': address.first_name || '',
+        'shipping_address.last_name': address.last_name || '',
+        'shipping_address.address_1': address.address_1 || '',
+        'shipping_address.company': address.company || '',
+        'shipping_address.postal_code': address.postal_code || '',
+        'shipping_address.city': address.city || '',
+        'shipping_address.country_code': address.country_code || '',
+        'shipping_address.province': address.province || '',
+        'shipping_address.phone': address.phone || '',
       }));
+    }
 
-    email &&
-      setFormData((prevState: Record<string, any>) => ({
+    if (email) {
+      setFormData((prevState: Record<string, unknown>) => ({
         ...prevState,
-        email: email,
+        email,
       }));
+    }
   };
 
   useEffect(() => {
@@ -83,6 +81,7 @@ const ShippingAddress = ({
     if (cart && !cart.email && customer?.email) {
       setFormAddress(undefined, customer.email);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart]); // Add cart as a dependency
 
   const handleChange = (
@@ -108,7 +107,7 @@ const ShippingAddress = ({
             addressInput={
               mapKeys(formData, (_, key) =>
                 key.replace('shipping_address.', '')
-              ) as HttpTypes.StoreCartAddress
+              ) as Address
             }
             onSelect={setFormAddress}
           />
