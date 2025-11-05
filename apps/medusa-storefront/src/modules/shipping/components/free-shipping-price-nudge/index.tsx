@@ -4,21 +4,18 @@ import { useState } from 'react';
 
 import { StoreFreeShippingPrice } from 'types/global';
 
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
 import { CheckCircleSolid, XMark } from '@medusajs/icons';
 import {
   HttpTypes,
-  StoreCart,
   StoreCartShippingOption,
   StorePrice,
 } from '@medusajs/types';
 import { Button, clx } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
-const computeTarget = (
-  cart: HttpTypes.StoreCart,
-  price: HttpTypes.StorePrice
-) => {
+const computeTarget = (cart: Cart, price: HttpTypes.StorePrice) => {
   const priceRule = (price.price_rules || []).find(
     (pr) => pr.attribute === 'item_total'
   )!;
@@ -80,7 +77,7 @@ export default function ShippingPriceNudge({
   shippingOptions,
 }: {
   variant?: 'popup' | 'inline';
-  cart: StoreCart;
+  cart: Cart;
   shippingOptions: StoreCartShippingOption[];
 }) {
   if (!cart || !shippingOptions?.length) {
@@ -136,7 +133,7 @@ function FreeShippingInline({
   cart,
   price,
 }: {
-  cart: StoreCart;
+  cart: Cart;
   price: StorePrice & {
     target_reached: boolean;
     target_remaining: number;
@@ -194,7 +191,7 @@ function FreeShippingPopup({
   cart,
   price,
 }: {
-  cart: StoreCart;
+  cart: Cart;
   price: StoreFreeShippingPrice;
 }) {
   const [isClosed, setIsClosed] = useState(false);

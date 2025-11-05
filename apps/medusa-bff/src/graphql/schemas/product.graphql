@@ -92,6 +92,7 @@ type ProductVariant {
   price: Price
   originalPrice: Price
   title: String
+  product: Product
 }
 
 type ProductVariantOption {

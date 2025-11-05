@@ -34,7 +34,9 @@ export type Scalars = {
 export type Address = {
   __typename?: 'Address';
   address_1?: Maybe<Scalars['String']['output']>;
+  address_2?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
+  company?: Maybe<Scalars['String']['output']>;
   country_code?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['DateTime']['output']>;
   first_name?: Maybe<Scalars['String']['output']>;
@@ -43,6 +45,7 @@ export type Address = {
   metadata?: Maybe<Scalars['JSON']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   postal_code?: Maybe<Scalars['String']['output']>;
+  province?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -60,43 +63,56 @@ export type AddressInput = {
   province?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ApplicationMethod = {
+  __typename?: 'ApplicationMethod';
+  currency_code: Scalars['String']['output'];
+  type: ApplicationType;
+  value: Scalars['Int']['output'];
+};
+
+export enum ApplicationType {
+  Fixed = 'fixed',
+  Percentage = 'percentage',
+}
+
 export type Cart = {
   __typename?: 'Cart';
   billing_address?: Maybe<Address>;
   created_at?: Maybe<Scalars['DateTime']['output']>;
   currency_code: Scalars['String']['output'];
-  discount_tax_total?: Maybe<Scalars['Int']['output']>;
-  discount_total?: Maybe<Scalars['Int']['output']>;
+  customer_id?: Maybe<Scalars['String']['output']>;
+  discount_tax_total: Scalars['Int']['output'];
+  discount_total: Scalars['Int']['output'];
   email?: Maybe<Scalars['String']['output']>;
-  gift_card_tax_total?: Maybe<Scalars['Int']['output']>;
-  gift_card_total?: Maybe<Scalars['Int']['output']>;
+  gift_card_tax_total: Scalars['Int']['output'];
+  gift_card_total: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
-  item_subtotal?: Maybe<Scalars['Int']['output']>;
-  item_tax_total?: Maybe<Scalars['Int']['output']>;
-  item_total?: Maybe<Scalars['Int']['output']>;
+  item_subtotal: Scalars['Int']['output'];
+  item_tax_total: Scalars['Int']['output'];
+  item_total: Scalars['Int']['output'];
   items?: Maybe<Array<LineItem>>;
-  original_item_subtotal?: Maybe<Scalars['Int']['output']>;
-  original_item_tax_total?: Maybe<Scalars['Int']['output']>;
-  original_item_total?: Maybe<Scalars['Int']['output']>;
-  original_shipping_subtotal?: Maybe<Scalars['Int']['output']>;
-  original_shipping_tax_total?: Maybe<Scalars['Int']['output']>;
-  original_shipping_total?: Maybe<Scalars['Int']['output']>;
-  original_subtotal?: Maybe<Scalars['Int']['output']>;
-  original_tax_total?: Maybe<Scalars['Int']['output']>;
-  original_total?: Maybe<Scalars['Int']['output']>;
+  original_item_subtotal: Scalars['Int']['output'];
+  original_item_tax_total: Scalars['Int']['output'];
+  original_item_total: Scalars['Int']['output'];
+  original_shipping_subtotal: Scalars['Int']['output'];
+  original_shipping_tax_total: Scalars['Int']['output'];
+  original_shipping_total: Scalars['Int']['output'];
+  original_subtotal: Scalars['Int']['output'];
+  original_tax_total: Scalars['Int']['output'];
+  original_total: Scalars['Int']['output'];
   payment_collection?: Maybe<PaymentCollection>;
   promo_codes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  promotions?: Maybe<Array<Maybe<Promotion>>>;
+  promotions: Array<Maybe<Promotion>>;
   region?: Maybe<Region>;
   region_id?: Maybe<Scalars['String']['output']>;
   shipping_address?: Maybe<Address>;
-  shipping_methods?: Maybe<Array<ShippingMethod>>;
-  shipping_subtotal?: Maybe<Scalars['Int']['output']>;
-  shipping_tax_total?: Maybe<Scalars['Int']['output']>;
-  shipping_total?: Maybe<Scalars['Int']['output']>;
-  subtotal?: Maybe<Scalars['Int']['output']>;
-  tax_total?: Maybe<Scalars['Int']['output']>;
-  total?: Maybe<Scalars['Int']['output']>;
+  shipping_methods?: Maybe<Array<Maybe<ShippingMethod>>>;
+  shipping_subtotal: Scalars['Int']['output'];
+  shipping_tax_total: Scalars['Int']['output'];
+  shipping_total: Scalars['Int']['output'];
+  subtotal: Scalars['Int']['output'];
+  tax_total: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
   updated_at?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -359,17 +375,17 @@ export type Order = {
 
 export type PaymentCollection = {
   __typename?: 'PaymentCollection';
-  amount?: Maybe<Scalars['Int']['output']>;
-  currency_code?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-  payment_providers?: Maybe<Array<Maybe<PaymentProviders>>>;
+  amount: Scalars['Int']['output'];
+  currency_code: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  payment_providers: Array<Maybe<PaymentProviders>>;
   payment_sessions?: Maybe<Array<Maybe<PaymentSessions>>>;
-  status?: Maybe<PaymentStatus>;
+  status: PaymentStatus;
 };
 
 export type PaymentProviders = {
   __typename?: 'PaymentProviders';
-  id?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
 };
 
 export enum PaymentSessionStatus {
@@ -383,12 +399,12 @@ export enum PaymentSessionStatus {
 
 export type PaymentSessions = {
   __typename?: 'PaymentSessions';
-  amount?: Maybe<Scalars['Int']['output']>;
-  currency_code?: Maybe<Scalars['String']['output']>;
-  data?: Maybe<Scalars['JSON']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-  provider_id?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<PaymentSessionStatus>;
+  amount: Scalars['Int']['output'];
+  currency_code: Scalars['String']['output'];
+  data: Scalars['JSON']['output'];
+  id: Scalars['String']['output'];
+  provider_id: Scalars['String']['output'];
+  status: PaymentSessionStatus;
 };
 
 export enum PaymentStatus {
@@ -494,6 +510,7 @@ export type ProductVariant = {
   options?: Maybe<Array<Maybe<ProductVariantOption>>>;
   originalPrice?: Maybe<Price>;
   price?: Maybe<Price>;
+  product?: Maybe<Product>;
   sku?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -507,21 +524,28 @@ export type ProductVariantOption = {
 
 export type Promotion = {
   __typename?: 'Promotion';
-  id?: Maybe<Scalars['String']['output']>;
+  application_method?: Maybe<ApplicationMethod>;
+  code?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  is_automatic?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  cart?: Maybe<Cart>;
   collection?: Maybe<Collection>;
   collections: Array<Collection>;
   footer?: Maybe<Footer>;
-  getCart?: Maybe<Cart>;
   me?: Maybe<Customer>;
   product?: Maybe<Product>;
   productCategories: Array<ProductCategory>;
   productCategory?: Maybe<ProductCategory>;
   products: ProductListResponse;
   searchProducts: SearchProducts;
+};
+
+export type Query_CartArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type Query_CollectionArgs = {
@@ -532,10 +556,6 @@ export type Query_CollectionsArgs = {
   handle?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type Query_GetCartArgs = {
-  id: Scalars['ID']['input'];
 };
 
 export type Query_ProductArgs = {
@@ -634,14 +654,14 @@ export type SearchProducts = {
 
 export type ShippingMethod = {
   __typename?: 'ShippingMethod';
-  amount?: Maybe<Scalars['Int']['output']>;
+  amount: Scalars['Int']['output'];
   cart_id?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-  is_tax_inclusive?: Maybe<Scalars['Boolean']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  created_at: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  is_tax_inclusive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
   shipping_option_id?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
+  updated_at: Scalars['DateTime']['output'];
 };
 
 export type SocialLink = {
@@ -721,32 +741,34 @@ export type AddressFieldsFragment = {
 
 export type ShippingMethodFieldsFragment = {
   __typename?: 'ShippingMethod';
-  id?: string | null;
+  id: string;
   cart_id?: string | null;
-  name?: string | null;
-  amount?: number | null;
-  is_tax_inclusive?: boolean | null;
+  name: string;
+  amount: number;
+  is_tax_inclusive: boolean;
   shipping_option_id?: string | null;
+  created_at: any;
+  updated_at: any;
 };
 
 export type PaymentCollectionFieldsFragment = {
   __typename?: 'PaymentCollection';
-  id?: string | null;
-  currency_code?: string | null;
-  amount?: number | null;
-  status?: PaymentStatus | null;
-  payment_providers?: Array<{
+  id: string;
+  currency_code: string;
+  amount: number;
+  status: PaymentStatus;
+  payment_providers: Array<{
     __typename?: 'PaymentProviders';
-    id?: string | null;
-  } | null> | null;
+    id: string;
+  } | null>;
   payment_sessions?: Array<{
     __typename?: 'PaymentSessions';
-    id?: string | null;
-    amount?: number | null;
-    currency_code?: string | null;
-    provider_id?: string | null;
-    data?: any | null;
-    status?: PaymentSessionStatus | null;
+    id: string;
+    amount: number;
+    currency_code: string;
+    provider_id: string;
+    data: any;
+    status: PaymentSessionStatus;
   } | null> | null;
 };
 
@@ -772,19 +794,44 @@ export type RegionFieldsFragment = {
   > | null;
 };
 
+export type PromotionFieldsFragment = {
+  __typename?: 'Promotion';
+  id: string;
+  code?: string | null;
+};
+
 export type CartFieldsFragment = {
   __typename?: 'Cart';
   id: string;
+  customer_id?: string | null;
   region_id?: string | null;
   email?: string | null;
-  total?: number | null;
-  subtotal?: number | null;
-  tax_total?: number | null;
-  discount_total?: number | null;
-  gift_card_total?: number | null;
-  shipping_subtotal?: number | null;
-  original_total?: number | null;
+  total: number;
+  subtotal: number;
+  tax_total: number;
+  discount_total: number;
+  shipping_subtotal: number;
+  original_total: number;
   currency_code: string;
+  original_item_total: number;
+  original_item_subtotal: number;
+  original_item_tax_total: number;
+  item_total: number;
+  item_subtotal: number;
+  item_tax_total: number;
+  original_subtotal: number;
+  original_tax_total: number;
+  discount_tax_total: number;
+  shipping_total: number;
+  shipping_tax_total: number;
+  original_shipping_total: number;
+  original_shipping_subtotal: number;
+  original_shipping_tax_total: number;
+  gift_card_total: number;
+  gift_card_tax_total: number;
+  promotions: Array<
+    ({ __typename?: 'Promotion' } & PromotionFieldsFragment) | null
+  >;
   items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
   shipping_address?:
     | ({ __typename?: 'Address' } & AddressFieldsFragment)
@@ -792,7 +839,7 @@ export type CartFieldsFragment = {
   billing_address?: ({ __typename?: 'Address' } & AddressFieldsFragment) | null;
   region?: ({ __typename?: 'Region' } & RegionFieldsFragment) | null;
   shipping_methods?: Array<
-    { __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment
+    ({ __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment) | null
   > | null;
   payment_collection?:
     | ({ __typename?: 'PaymentCollection' } & PaymentCollectionFieldsFragment)
@@ -991,7 +1038,7 @@ export type CreateLineItemMutation = {
   createLineItem?: {
     __typename?: 'Cart';
     id: string;
-    total?: number | null;
+    total: number;
     items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
   } | null;
 };
@@ -1007,7 +1054,7 @@ export type UpdateLineItemMutation = {
   updateLineItem?: {
     __typename?: 'Cart';
     id: string;
-    total?: number | null;
+    total: number;
     items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
   } | null;
 };
@@ -1037,10 +1084,10 @@ export type AddShippingMethodMutation = {
   addShippingMethod?: {
     __typename?: 'Cart';
     id: string;
-    total?: number | null;
+    total: number;
     items?: Array<{ __typename?: 'LineItem' } & CartItemFieldsFragment> | null;
     shipping_methods?: Array<
-      { __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment
+      ({ __typename?: 'ShippingMethod' } & ShippingMethodFieldsFragment) | null
     > | null;
   } | null;
 };
@@ -1064,7 +1111,7 @@ export type CompleteCartMutation = {
         cart?: {
           __typename?: 'Cart';
           id: string;
-          total?: number | null;
+          total: number;
           items?: Array<
             { __typename?: 'LineItem' } & CartItemFieldsFragment
           > | null;
@@ -1135,7 +1182,7 @@ export type GetCartQueryVariables = Exact<{
 
 export type GetCartQuery = {
   __typename?: 'Query';
-  getCart?: ({ __typename?: 'Cart' } & CartFieldsFragment) | null;
+  cart?: ({ __typename?: 'Cart' } & CartFieldsFragment) | null;
 };
 
 export type GetCustomerQueryVariables = Exact<{ [key: string]: never }>;
@@ -1381,6 +1428,26 @@ export type SearchSuggestionsQuery = {
   };
 };
 
+export const PromotionFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PromotionFieldsFragment, unknown>;
 export const PriceFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1719,6 +1786,8 @@ export const ShippingMethodFieldsFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -1788,16 +1857,76 @@ export const CartFieldsFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'customer_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tax_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discount_total' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'original_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency_code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_subtotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_tax_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'original_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discount_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shipping_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'gift_card_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'promotions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'PromotionFields' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'items' },
@@ -1954,6 +2083,8 @@ export const CartFieldsFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -2049,6 +2180,21 @@ export const CartFieldsFragmentDoc = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
         ],
       },
     },
@@ -2841,6 +2987,8 @@ export const CreateCartDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -2941,6 +3089,21 @@ export const CreateCartDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CartFields' },
       typeCondition: {
         kind: 'NamedType',
@@ -2950,16 +3113,76 @@ export const CreateCartDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'customer_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tax_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discount_total' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'original_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency_code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_subtotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_tax_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'original_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discount_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shipping_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'gift_card_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'promotions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'PromotionFields' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'items' },
@@ -3287,6 +3510,8 @@ export const UpdateCartDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -3387,6 +3612,21 @@ export const UpdateCartDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CartFields' },
       typeCondition: {
         kind: 'NamedType',
@@ -3396,16 +3636,76 @@ export const UpdateCartDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'customer_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tax_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discount_total' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'original_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency_code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_subtotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_tax_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'original_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discount_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shipping_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'gift_card_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'promotions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'PromotionFields' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'items' },
@@ -4186,6 +4486,8 @@ export const AddShippingMethodDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -4541,6 +4843,8 @@ export const CompleteCartDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -4746,6 +5050,8 @@ export const TransferCartDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -4846,6 +5152,21 @@ export const TransferCartDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CartFields' },
       typeCondition: {
         kind: 'NamedType',
@@ -4855,16 +5176,76 @@ export const TransferCartDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'customer_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tax_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discount_total' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'original_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency_code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_subtotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_tax_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'original_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discount_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shipping_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'gift_card_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'promotions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'PromotionFields' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'items' },
@@ -5176,6 +5557,8 @@ export const ApplyPromotionsDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -5276,6 +5659,21 @@ export const ApplyPromotionsDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CartFields' },
       typeCondition: {
         kind: 'NamedType',
@@ -5285,16 +5683,76 @@ export const ApplyPromotionsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'customer_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tax_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discount_total' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'original_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency_code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_subtotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_tax_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'original_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discount_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shipping_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'gift_card_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'promotions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'PromotionFields' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'items' },
@@ -5574,7 +6032,7 @@ export const GetCartDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'getCart' },
+            name: { kind: 'Name', value: 'cart' },
             arguments: [
               {
                 kind: 'Argument',
@@ -5673,6 +6131,8 @@ export const GetCartDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'shipping_option_id' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updated_at' } },
         ],
       },
     },
@@ -5773,6 +6233,21 @@ export const GetCartDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PromotionFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Promotion' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CartFields' },
       typeCondition: {
         kind: 'NamedType',
@@ -5782,16 +6257,76 @@ export const GetCartDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'customer_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tax_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discount_total' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'original_total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency_code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_item_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_subtotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'item_tax_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'original_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discount_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shipping_subtotal' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shipping_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_subtotal' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'original_shipping_tax_total' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'gift_card_total' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'gift_card_tax_total' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'promotions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'PromotionFields' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'items' },

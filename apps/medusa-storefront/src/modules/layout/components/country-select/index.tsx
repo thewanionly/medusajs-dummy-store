@@ -35,7 +35,7 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
   >(undefined);
 
   const { countryCode } = useParams();
-  const currentPath = usePathname().split(`/${countryCode}`)[1];
+  const currentPath = usePathname().split(`/${countryCode}`)[1] ?? 'gb';
 
   const { state, close } = toggleState;
 
@@ -71,7 +71,9 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
         onChange={handleChange}
         defaultValue={
           countryCode
-            ? options?.find((o) => o?.country === countryCode)
+            ? options?.find(
+                (o): o is CountryOption => o?.country === countryCode
+              )
             : undefined
         }
       >

@@ -1,3 +1,8 @@
+enum ApplicationType {
+  fixed
+  percentage
+}
+
 type LineItem {
   id: ID!
   title: String
@@ -26,13 +31,25 @@ type Address {
   last_name: String
   phone: String
   address_1: String
+  address_2: String
+  company: String
+  province: String
   city: String
   country_code: String
   postal_code: String
 }
 
+type ApplicationMethod {
+  value: Int!
+  type: ApplicationType!
+  currency_code: String!
+}
+
 type Promotion {
-  id: String
+  id: String!
+  code: String
+  is_automatic: Boolean
+  application_method: ApplicationMethod
 }
 
 type Country {
@@ -55,42 +72,42 @@ type Region {
 }
 
 type ShippingMethod {
-  id: String
+  id: String!
   cart_id: String
-  name: String
-  amount: Int
-  is_tax_inclusive: Boolean
-  created_at: DateTime
-  updated_at: DateTime
+  name: String!
+  amount: Int!
+  is_tax_inclusive: Boolean!
+  created_at: DateTime!
+  updated_at: DateTime!
   shipping_option_id: String
 }
 
 type Cart {
   id: ID!
   currency_code: String!
-  original_item_total: Int
-  original_item_subtotal: Int
-  original_item_tax_total: Int
-  item_total: Int
-  item_subtotal: Int
-  item_tax_total: Int
-  original_total: Int
-  original_subtotal: Int
-  original_tax_total: Int
-  total: Int
-  subtotal: Int
-  tax_total: Int
-  discount_total: Int
-  discount_tax_total: Int
-  gift_card_total: Int
-  gift_card_tax_total: Int
-  shipping_total: Int
-  shipping_subtotal: Int
-  shipping_tax_total: Int
-  original_shipping_total: Int
-  original_shipping_subtotal: Int
-  original_shipping_tax_total: Int
-  promotions: [Promotion]
+  original_item_total: Int!
+  original_item_subtotal: Int!
+  original_item_tax_total: Int!
+  item_total: Int!
+  item_subtotal: Int!
+  item_tax_total: Int!
+  original_total: Int!
+  original_subtotal: Int!
+  original_tax_total: Int!
+  total: Int!
+  subtotal: Int!
+  tax_total: Int!
+  discount_total: Int!
+  discount_tax_total: Int!
+  gift_card_total: Int!
+  gift_card_tax_total: Int!
+  shipping_total: Int!
+  shipping_subtotal: Int!
+  shipping_tax_total: Int!
+  original_shipping_total: Int!
+  original_shipping_subtotal: Int!
+  original_shipping_tax_total: Int!
+  promotions: [Promotion]!
   email: String
   items: [LineItem!]
   region_id: String
@@ -99,9 +116,10 @@ type Cart {
   created_at: DateTime
   updated_at: DateTime
   promo_codes: [String]
-  shipping_methods: [ShippingMethod!]
+  shipping_methods: [ShippingMethod]
   region: Region
   payment_collection: PaymentCollection
+  customer_id: String
 }
 
 input AddressInput {
@@ -171,7 +189,7 @@ type CompleteCartOrderResult {
 union CompleteCartResponse = CompleteCartErrorResult | CompleteCartOrderResult
 
 extend type Query {
-  getCart(id: ID!): Cart
+  cart(id: ID!): Cart
 }
 
 extend type Mutation {
