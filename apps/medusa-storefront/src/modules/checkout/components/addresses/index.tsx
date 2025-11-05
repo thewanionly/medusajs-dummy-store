@@ -6,9 +6,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setAddresses } from '@lib/data/cart';
 import { Customer } from '@lib/gql/generated-types/graphql';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import compareAddresses from '@lib/util/compare-addresses';
 import { CheckCircleSolid } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import { Heading, Text, useToggleState } from '@medusajs/ui';
 import Divider from '@modules/common/components/divider';
 import Spinner from '@modules/common/icons/spinner';
@@ -22,7 +22,7 @@ const Addresses = ({
   cart,
   customer,
 }: {
-  cart: HttpTypes.StoreCart | null;
+  cart: Cart;
   customer: Customer | null;
 }) => {
   const searchParams = useSearchParams();

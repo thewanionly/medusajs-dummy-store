@@ -3,13 +3,13 @@
 import React from 'react';
 
 import { isStripe } from '@lib/constants';
-import { HttpTypes } from '@medusajs/types';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { loadStripe } from '@stripe/stripe-js';
 
 import StripeWrapper from './stripe-wrapper';
 
 type PaymentWrapperProps = {
-  cart: HttpTypes.StoreCart;
+  cart: Cart;
   children: React.ReactNode;
 };
 
@@ -18,12 +18,12 @@ const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
   const paymentSession = cart.payment_collection?.payment_sessions?.find(
-    (s) => s.status === 'pending'
+    (s) => s?.status === 'pending'
   );
 
   if (
-    isStripe(paymentSession?.provider_id) &&
-    paymentSession &&
+    paymentSession?.provider_id &&
+    isStripe(paymentSession.provider_id) &&
     stripePromise
   ) {
     return (
