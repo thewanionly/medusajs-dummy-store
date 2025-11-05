@@ -656,12 +656,12 @@ export type ShippingMethod = {
   __typename?: 'ShippingMethod';
   amount: Scalars['Int']['output'];
   cart_id?: Maybe<Scalars['String']['output']>;
-  created_at: Scalars['DateTime']['output'];
+  created_at?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   is_tax_inclusive: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   shipping_option_id?: Maybe<Scalars['String']['output']>;
-  updated_at: Scalars['DateTime']['output'];
+  updated_at?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type SocialLink = {
@@ -747,8 +747,8 @@ export type ShippingMethodFieldsFragment = {
   amount: number;
   is_tax_inclusive: boolean;
   shipping_option_id?: string | null;
-  created_at: any;
-  updated_at: any;
+  created_at?: any | null;
+  updated_at?: any | null;
 };
 
 export type PaymentCollectionFieldsFragment = {
