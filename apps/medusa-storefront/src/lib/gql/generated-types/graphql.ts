@@ -534,12 +534,12 @@ export type ShippingMethod = {
   __typename?: 'ShippingMethod';
   amount: Scalars['Int']['output'];
   cart_id?: Maybe<Scalars['String']['output']>;
-  created_at: Scalars['DateTime']['output'];
+  created_at?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   is_tax_inclusive: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   shipping_option_id?: Maybe<Scalars['String']['output']>;
-  updated_at: Scalars['DateTime']['output'];
+  updated_at?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type StoreLineItemDeleteResponse = {
@@ -573,7 +573,7 @@ export type CartItemFieldsFragment = { __typename?: 'LineItem', id: string, titl
 
 export type AddressFieldsFragment = { __typename?: 'Address', first_name?: string | null, last_name?: string | null, phone?: string | null, address_1?: string | null, city?: string | null, country_code?: string | null, postal_code?: string | null };
 
-export type ShippingMethodFieldsFragment = { __typename?: 'ShippingMethod', id: string, cart_id?: string | null, name: string, amount: number, is_tax_inclusive: boolean, shipping_option_id?: string | null, created_at: any, updated_at: any };
+export type ShippingMethodFieldsFragment = { __typename?: 'ShippingMethod', id: string, cart_id?: string | null, name: string, amount: number, is_tax_inclusive: boolean, shipping_option_id?: string | null, created_at?: any | null, updated_at?: any | null };
 
 export type PaymentCollectionFieldsFragment = { __typename?: 'PaymentCollection', id: string, currency_code: string, amount: number, status: PaymentStatus, payment_providers: Array<{ __typename?: 'PaymentProviders', id: string } | null>, payment_sessions?: Array<{ __typename?: 'PaymentSessions', id: string, amount: number, currency_code: string, provider_id: string, data: any, status: PaymentSessionStatus } | null> | null };
 

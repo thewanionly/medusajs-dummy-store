@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 
 import { isManual, isStripe } from '@lib/constants';
 import { placeOrder } from '@lib/data/cart';
-import { HttpTypes } from '@medusajs/types';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { Button } from '@medusajs/ui';
 import { useElements, useStripe } from '@stripe/react-stripe-js';
 
 import ErrorMessage from '../error-message';
 
 type PaymentButtonProps = {
-  cart: HttpTypes.StoreCart;
+  cart: Cart;
   'data-testid': string;
 };
 
@@ -51,7 +51,7 @@ const StripePaymentButton = ({
   notReady,
   'data-testid': dataTestId,
 }: {
-  cart: HttpTypes.StoreCart;
+  cart: Cart;
   notReady: boolean;
   'data-testid'?: string;
 }) => {
@@ -73,7 +73,7 @@ const StripePaymentButton = ({
   const card = elements?.getElement('card');
 
   const session = cart.payment_collection?.payment_sessions?.find(
-    (s) => s.status === 'pending'
+    (s) => s?.status === 'pending'
   );
 
   const disabled = !stripe || !elements ? true : false;
@@ -103,7 +103,7 @@ const StripePaymentButton = ({
               postal_code: cart.billing_address?.postal_code ?? undefined,
               state: cart.billing_address?.province ?? undefined,
             },
-            email: cart.email,
+            email: cart.email ?? undefined,
             phone: cart.billing_address?.phone ?? undefined,
           },
         },

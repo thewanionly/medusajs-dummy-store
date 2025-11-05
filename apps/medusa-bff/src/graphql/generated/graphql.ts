@@ -508,12 +508,12 @@ export type Region = {
 export type ShippingMethod = {
   amount: Scalars['Int']['output'];
   cart_id?: Maybe<Scalars['String']['output']>;
-  created_at: Scalars['DateTime']['output'];
+  created_at?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   is_tax_inclusive: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   shipping_option_id?: Maybe<Scalars['String']['output']>;
-  updated_at: Scalars['DateTime']['output'];
+  updated_at?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type StoreLineItemDeleteResponse = {
@@ -1696,7 +1696,11 @@ export type ShippingMethodResolvers<
 > = {
   amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   cart_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  created_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  created_at?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   is_tax_inclusive?: Resolver<
     ResolversTypes['Boolean'],
@@ -1709,7 +1713,11 @@ export type ShippingMethodResolvers<
     ParentType,
     ContextType
   >;
-  updated_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  updated_at?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type StoreLineItemDeleteResponseResolvers<

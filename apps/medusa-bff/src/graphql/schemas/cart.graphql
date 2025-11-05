@@ -77,8 +77,8 @@ type ShippingMethod {
   name: String!
   amount: Int!
   is_tax_inclusive: Boolean!
-  created_at: DateTime!
-  updated_at: DateTime!
+  created_at: DateTime
+  updated_at: DateTime
   shipping_option_id: String
 }
 
