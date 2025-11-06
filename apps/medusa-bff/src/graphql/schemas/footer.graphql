@@ -1,0 +1,107 @@
+type Footer {
+  storeName: String
+  social: [SocialLink!]
+  copyright: String
+  poweredByCta: RichText
+}
+
+type SocialLink {
+  text: String!
+  url: String!
+}
+
+type RichText {
+  text: [RichTextBlock!]!
+}
+
+union RichTextBlock = TextBlock | ImageBlock | FileBlock
+
+type TextBlock {
+  _type: String!
+  _key: String!
+  style: String
+  listItem: String
+  level: Int
+  children: [Span!]!
+  markDefs: [MarkDef!]
+}
+
+type Span {
+  _type: String!
+  _key: String!
+  text: String!
+  marks: [String!]
+}
+
+extend type Query {
+  footer: Footer
+}
+union MarkDef = LinkMark | IconLinkMark
+
+type LinkMark {
+  _type: String!
+  _key: String!
+  href: String!
+  target: String
+}
+
+type IconLinkMark {
+  _type: String!
+  _key: String!
+  href: String!
+  iconType: String!
+  iconClass: String
+  iconComponent: String
+  iconFill: String
+  iconImage: SanityImage
+  iconUrl: String
+  target: String
+}
+
+type ImageBlock {
+  _type: String!
+  _key: String!
+  asset: SanityImageAsset
+  alt: String
+  caption: String
+}
+
+type FileBlock {
+  _type: String!
+  _key: String!
+  asset: SanityFileAsset
+}
+
+type SanityImage {
+  asset: SanityImageAsset
+  alt: String
+  caption: String
+}
+
+type SanityImageAsset {
+  _id: ID!
+  url: String!
+  metadata: ImageMetadata
+}
+
+type SanityFileAsset {
+  _id: ID!
+  url: String!
+  originalFilename: String
+  size: Int
+  mimeType: String
+}
+
+type ImageMetadata {
+  dimensions: ImageDimensions
+  hasAlpha: Boolean
+  isOpaque: Boolean
+}
+
+type ImageDimensions {
+  width: Int!
+  height: Int!
+  aspectRatio: Float!
+}
+
+scalar DateTime

@@ -10,6 +10,7 @@ import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 import { resolvers } from '@graphql/resolvers';
 import { typeDefs } from '@graphql/schemas';
 import { createContext } from '@services/index';
@@ -21,8 +22,7 @@ async function startServer() {
   const httpServer = http.createServer(app);
 
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
     plugins: [
       process.env.NODE_ENV === 'production'
         ? ApolloServerPluginLandingPageProductionDefault({
