@@ -1,7 +1,7 @@
 import { HttpResponse, delay, http } from 'msw';
 
-import { mockedCustomer, mockedToken } from '../../../data/customer';
-import { storefrontMedusaBffWrapper } from '../../../msw/apis';
+import { mockedCustomer, mockedToken } from '../../data/customer';
+import { storefrontMedusaBffWrapper } from '../apis';
 
 export const handlers = [
   storefrontMedusaBffWrapper.mutation('Login', async () => {

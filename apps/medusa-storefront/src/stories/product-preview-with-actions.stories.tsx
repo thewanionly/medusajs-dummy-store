@@ -11,8 +11,8 @@ import {
   addToCartServerError,
   handlers as cartsHandlers,
   createCartSuccess,
-} from '../mocks/msw/handlers/storybook/carts';
-import { handlers as regionsHandlers } from '../mocks/msw/handlers/storybook/regions';
+} from '../mocks/msw/handlers/carts';
+import { handlers as regionsHandlers } from '../mocks/msw/handlers/regions';
 import ProductPreview, {
   ProductPreviewProps,
 } from '../modules/products/components/product-preview';

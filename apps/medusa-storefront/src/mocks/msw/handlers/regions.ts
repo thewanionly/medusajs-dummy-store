@@ -1,6 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
-import { mockedRegions } from '../../../data/regions';
+import { mockedRegions } from '../../data/regions';
 
 export const handlers = [
   http.get('http://localhost:9000/store/regions', () => {

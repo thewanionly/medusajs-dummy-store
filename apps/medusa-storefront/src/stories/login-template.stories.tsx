@@ -9,7 +9,7 @@ import {
   invalidCredentials,
   serverErrorLogin,
   serverErrorRegister,
-} from '../mocks/msw/handlers/storybook/customer';
+} from '../mocks/msw/handlers/customer';
 import { delay } from './utils/delay';
 
 const meta = {
