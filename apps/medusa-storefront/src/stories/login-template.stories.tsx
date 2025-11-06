@@ -5,8 +5,11 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import {
   accountAlreadyExists,
-  handlers as customerHandlers,
+  createCustomerSuccess,
   invalidCredentials,
+  loginBffSuccess,
+  loginRestSuccess,
+  registerSuccess,
   serverErrorLogin,
   serverErrorRegister,
 } from '../mocks/msw/handlers/customer';
@@ -32,7 +35,7 @@ export const LoginSuccess: Story = {
   args: {},
   parameters: {
     msw: {
-      handlers: customerHandlers,
+      handlers: [loginBffSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {
@@ -108,7 +111,7 @@ export const RegisterSuccess: Story = {
   args: {},
   parameters: {
     msw: {
-      handlers: customerHandlers,
+      handlers: [loginRestSuccess, registerSuccess, createCustomerSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {

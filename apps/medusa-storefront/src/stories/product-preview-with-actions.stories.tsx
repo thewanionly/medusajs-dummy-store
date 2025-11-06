@@ -9,10 +9,10 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { mockedProducts, outOfStockProduct } from '../mocks/data/products';
 import {
   addToCartServerError,
-  handlers as cartsHandlers,
+  addToCartSuccess,
   createCartSuccess,
 } from '../mocks/msw/handlers/carts';
-import { handlers as regionsHandlers } from '../mocks/msw/handlers/regions';
+import { getRegionSuccess } from '../mocks/msw/handlers/regions';
 import ProductPreview, {
   ProductPreviewProps,
 } from '../modules/products/components/product-preview';
@@ -65,7 +65,7 @@ export const SuccessAddToCart: Story = {
   args: mockedProps,
   parameters: {
     msw: {
-      handlers: [...cartsHandlers, ...regionsHandlers],
+      handlers: [getRegionSuccess, createCartSuccess, addToCartSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {
@@ -86,7 +86,7 @@ export const ErrorAddToCart: Story = {
   args: mockedProps,
   parameters: {
     msw: {
-      handlers: [...regionsHandlers, createCartSuccess, addToCartServerError],
+      handlers: [getRegionSuccess, createCartSuccess, addToCartServerError],
     },
   },
   play: async ({ canvas, userEvent }) => {
