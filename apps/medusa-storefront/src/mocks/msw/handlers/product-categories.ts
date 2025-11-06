@@ -4,8 +4,9 @@ import { mockedProductCategories } from '../../data/product-categories';
 import { activeGqlMocks } from '../activeMocks';
 import { medusaBff } from '../apis';
 
-export const handlers = [
-  medusaBff.query('GetProductCategories', () => {
+export const getProductCategoriesSuccess = medusaBff.query(
+  'GetProductCategories',
+  () => {
     if (!activeGqlMocks.GetProductCategories) {
       return passthrough();
     }
@@ -15,5 +16,7 @@ export const handlers = [
         productCategories: mockedProductCategories,
       },
     });
-  }),
-];
+  }
+);
+
+export const handlers = [getProductCategoriesSuccess];

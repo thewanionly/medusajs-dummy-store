@@ -3,8 +3,9 @@ import { HttpResponse, delay, http } from 'msw';
 import { mockedCustomer, mockedToken } from '../../data/customer';
 import { storefrontMedusaBffWrapper } from '../apis';
 
-export const handlers = [
-  storefrontMedusaBffWrapper.mutation('Login', async () => {
+export const loginBffSuccess = storefrontMedusaBffWrapper.mutation(
+  'Login',
+  async () => {
     await delay(1000);
 
     return HttpResponse.json({
@@ -14,32 +15,41 @@ export const handlers = [
         },
       },
     });
-  }),
-  http.post('http://localhost:9000/auth/customer/emailpass', async () => {
+  }
+);
+
+export const loginRestSuccess = http.post(
+  'http://localhost:9000/auth/customer/emailpass',
+  async () => {
     await delay(1000);
 
     return HttpResponse.json({
       token: mockedToken,
     });
-  }),
-  http.post(
-    'http://localhost:9000/auth/customer/emailpass/register',
-    async () => {
-      await delay(250);
+  }
+);
 
-      return HttpResponse.json({
-        token: mockedToken,
-      });
-    }
-  ),
-  http.post('http://localhost:9000/store/customers', async () => {
+export const registerSuccess = http.post(
+  'http://localhost:9000/auth/customer/emailpass/register',
+  async () => {
+    await delay(250);
+
+    return HttpResponse.json({
+      token: mockedToken,
+    });
+  }
+);
+
+export const createCustomerSuccess = http.post(
+  'http://localhost:9000/store/customers',
+  async () => {
     await delay(250);
 
     return HttpResponse.json({
       customer: mockedCustomer,
     });
-  }),
-];
+  }
+);
 
 export const invalidCredentials = storefrontMedusaBffWrapper.mutation(
   'Login',
@@ -97,3 +107,10 @@ export const serverErrorRegister = http.post(
     );
   }
 );
+
+export const handlers = [
+  loginBffSuccess,
+  loginRestSuccess,
+  registerSuccess,
+  createCustomerSuccess,
+];

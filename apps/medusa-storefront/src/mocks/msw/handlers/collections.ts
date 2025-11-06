@@ -7,19 +7,21 @@ import {
 import { activeGqlMocks } from '../activeMocks';
 import { medusaBff } from '../apis';
 
-export const handlers = [
-  medusaBff.query('GetCollections', () => {
-    if (!activeGqlMocks.GetCollections) {
-      return passthrough();
-    }
+export const getCollectionsSuccess = medusaBff.query('GetCollections', () => {
+  if (!activeGqlMocks.GetCollections) {
+    return passthrough();
+  }
 
-    return HttpResponse.json({
-      data: {
-        collections: mockedCollections,
-      },
-    });
-  }),
-  medusaBff.query('GetCollectionsSummary', () => {
+  return HttpResponse.json({
+    data: {
+      collections: mockedCollections,
+    },
+  });
+});
+
+export const getCollectionsSummarySuccess = medusaBff.query(
+  'GetCollectionsSummary',
+  () => {
     if (!activeGqlMocks.GetCollectionsSummary) {
       return passthrough();
     }
@@ -29,5 +31,7 @@ export const handlers = [
         collections: [mockedCollectionSummary],
       },
     });
-  }),
-];
+  }
+);
+
+export const handlers = [getCollectionsSuccess, getCollectionsSummarySuccess];
