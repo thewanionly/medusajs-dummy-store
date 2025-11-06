@@ -1,8 +1,10 @@
 import { HttpResponse, delay, http } from 'msw';
 
 import { mockedCustomer, mockedToken } from '../../data/customer';
-import { storefrontMedusaBffWrapper } from '../apis';
+import { storefrontMedusaBffWrapper } from '../utils/apis';
+import { withActiveMockGate } from '../utils/withActiveMockGate';
 
+// Happy paths
 export const loginBffSuccess = storefrontMedusaBffWrapper.mutation(
   'Login',
   async () => {
@@ -51,6 +53,16 @@ export const createCustomerSuccess = http.post(
   }
 );
 
+// Handlers used in the application.
+// Use `withActiveMockGate` to enable/disable the handler based on activeMock config
+export const handlers = [
+  withActiveMockGate('Login', loginBffSuccess),
+  withActiveMockGate('Login', loginRestSuccess),
+  withActiveMockGate('Register', registerSuccess),
+  withActiveMockGate('CreateCustomer', createCustomerSuccess),
+];
+
+// Other paths
 export const invalidCredentials = storefrontMedusaBffWrapper.mutation(
   'Login',
   async () => {
@@ -107,10 +119,3 @@ export const serverErrorRegister = http.post(
     );
   }
 );
-
-export const handlers = [
-  loginBffSuccess,
-  loginRestSuccess,
-  registerSuccess,
-  createCustomerSuccess,
-];

@@ -4,14 +4,11 @@ import {
   mockedCollectionSummary,
   mockedCollections,
 } from '../../data/collections';
-import { activeGqlMocks } from '../activeMocks';
-import { medusaBff } from '../apis';
+import { medusaBff } from '../utils/apis';
+import { withActiveMockGate } from '../utils/withActiveMockGate';
 
+// Happy paths
 export const getCollectionsSuccess = medusaBff.query('GetCollections', () => {
-  if (!activeGqlMocks.GetCollections) {
-    return passthrough();
-  }
-
   return HttpResponse.json({
     data: {
       collections: mockedCollections,
@@ -22,10 +19,6 @@ export const getCollectionsSuccess = medusaBff.query('GetCollections', () => {
 export const getCollectionsSummarySuccess = medusaBff.query(
   'GetCollectionsSummary',
   () => {
-    if (!activeGqlMocks.GetCollectionsSummary) {
-      return passthrough();
-    }
-
     return HttpResponse.json({
       data: {
         collections: [mockedCollectionSummary],
@@ -34,4 +27,9 @@ export const getCollectionsSummarySuccess = medusaBff.query(
   }
 );
 
-export const handlers = [getCollectionsSuccess, getCollectionsSummarySuccess];
+// Handlers used in the application.
+// Use `withActiveMockGate` to enable/disable the handler based on activeMock config
+export const handlers = [
+  withActiveMockGate('GetCollections', getCollectionsSuccess),
+  withActiveMockGate('GetCollectionsSummary', getCollectionsSummarySuccess),
+];

@@ -1,14 +1,11 @@
 import { HttpResponse, passthrough } from 'msw';
 
 import { mockedProducts } from '../../data/products';
-import { activeGqlMocks } from '../activeMocks';
-import { medusaBff } from '../apis';
+import { medusaBff } from '../utils/apis';
+import { withActiveMockGate } from '../utils/withActiveMockGate';
 
+// Happy paths
 export const getProductsSuccess = medusaBff.query('GetProducts', () => {
-  if (!activeGqlMocks.GetProducts) {
-    return passthrough();
-  }
-
   return HttpResponse.json({
     data: {
       products: {
@@ -19,4 +16,6 @@ export const getProductsSuccess = medusaBff.query('GetProducts', () => {
   });
 });
 
-export const handlers = [getProductsSuccess];
+// Handlers used in the application.
+// Use `withActiveMockGate` to enable/disable the handler based on activeMock config
+export const handlers = [withActiveMockGate('GetProducts', getProductsSuccess)];

@@ -1,7 +1,9 @@
 import { HttpResponse, delay, http } from 'msw';
 
 import { mockedAddToCartResponse, mockedCart } from '../../data/carts';
+import { withActiveMockGate } from '../utils/withActiveMockGate';
 
+// Happy paths
 export const createCartSuccess = http.post(
   'http://localhost:9000/store/carts',
   async () => {
@@ -24,6 +26,14 @@ export const addToCartSuccess = http.post(
   }
 );
 
+// Handlers used in the application.
+// Use `withActiveMockGate` to enable/disable the handler based on activeMock config
+export const handlers = [
+  withActiveMockGate('CreateCart', createCartSuccess),
+  withActiveMockGate('AddToCart', addToCartSuccess),
+];
+
+// Other paths
 export const addToCartServerError = http.post(
   'http://localhost:9000/store/carts/:id/line-items',
   async () => {
@@ -35,5 +45,3 @@ export const addToCartServerError = http.post(
     );
   }
 );
-
-export const handlers = [createCartSuccess, addToCartSuccess];
