@@ -1,11 +1,11 @@
 import { HttpResponse } from 'msw';
 
 import { mockedProductCategories } from '../../data/product-categories';
-import { medusaBff } from '../utils/apis';
+import { storefrontMedusaBffWrapper } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
-export const getProductCategoriesSuccess = medusaBff.query(
+export const getProductCategoriesSuccess = storefrontMedusaBffWrapper.query(
   'GetProductCategories',
   () => {
     return HttpResponse.json({

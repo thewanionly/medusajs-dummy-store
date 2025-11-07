@@ -2,7 +2,7 @@ export const mockedCollections = [
   {
     __typename: 'Collection',
     products: {
-      __typename: 'CollectionProducts',
+      __typename: 'ProductList',
       count: 10,
       items: [
         {
@@ -1034,7 +1034,7 @@ export const mockedCollections = [
   {
     __typename: 'Collection',
     products: {
-      __typename: 'CollectionProducts',
+      __typename: 'ProductList',
       count: 10,
       items: [
         {
@@ -1797,7 +1797,7 @@ export const mockedCollections = [
   {
     __typename: 'Collection',
     products: {
-      __typename: 'CollectionProducts',
+      __typename: 'ProductList',
       count: 3,
       items: [
         {
@@ -2011,7 +2011,7 @@ export const mockedCollections = [
   {
     __typename: 'Collection',
     products: {
-      __typename: 'CollectionProducts',
+      __typename: 'ProductList',
       count: 2,
       items: [
         {
@@ -2229,7 +2229,7 @@ export const mockedCollections = [
 export const mockedCollectionSummary = {
   __typename: 'Collection',
   products: {
-    __typename: 'CollectionProducts',
+    __typename: 'ProductList',
     count: 10,
   },
   id: 'pcol_01K5BYHPD5JCK0FDPSFWAXSZY2',

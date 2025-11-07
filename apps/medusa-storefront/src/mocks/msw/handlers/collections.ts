@@ -4,19 +4,22 @@ import {
   mockedCollectionSummary,
   mockedCollections,
 } from '../../data/collections';
-import { medusaBff } from '../utils/apis';
+import { storefrontMedusaBffWrapper } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
-export const getCollectionsSuccess = medusaBff.query('GetCollections', () => {
-  return HttpResponse.json({
-    data: {
-      collections: mockedCollections,
-    },
-  });
-});
+export const getCollectionsSuccess = storefrontMedusaBffWrapper.query(
+  'GetCollections',
+  () => {
+    return HttpResponse.json({
+      data: {
+        collections: mockedCollections,
+      },
+    });
+  }
+);
 
-export const getCollectionsSummarySuccess = medusaBff.query(
+export const getCollectionsSummarySuccess = storefrontMedusaBffWrapper.query(
   'GetCollectionsSummary',
   () => {
     return HttpResponse.json({
