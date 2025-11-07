@@ -1,4 +1,4 @@
-import { HttpResponse, passthrough } from 'msw';
+import { HttpResponse, delay, passthrough } from 'msw';
 
 import { mockedSearchSuggestions } from '../../data/search';
 import { activeGqlMocks } from '../activeMocks';
@@ -12,7 +12,7 @@ export const handlers = [
 
     const { query } = variables as { query: string };
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await delay(500);
 
     const searchTerm = query.toLowerCase();
     const filteredItems = mockedSearchSuggestions.filter((item) =>

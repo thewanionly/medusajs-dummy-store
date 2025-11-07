@@ -19,11 +19,7 @@ export class AlgoliaSearchService {
   private client: SearchClient;
   private defaultIndex: string;
 
-  constructor() {
-    const appId = process.env.ALGOLIA_APP_ID;
-    const apiKey = process.env.ALGOLIA_API_KEY;
-    const index = process.env.ALGOLIA_PRODUCT_INDEX_NAME;
-
+  constructor(appId?: string, apiKey?: string, index?: string) {
     if (!appId || !apiKey) {
       throw new Error(
         'Missing Algolia credentials. Set ALGOLIA_APP_ID and ALGOLIA_API_KEY.'
@@ -54,13 +50,13 @@ export class AlgoliaSearchService {
       });
 
       return {
-        total: response.nbHits ?? 0,
-        page: response.page ?? 0,
-        totalPages: response.nbPages ?? 0,
-        hitsPerPage: response.hitsPerPage ?? 20,
-        query: response.query,
-        params: response.params,
-        items: response.hits.map(
+        total: response?.nbHits ?? 0,
+        page: response?.page ?? 0,
+        totalPages: response?.nbPages ?? 0,
+        hitsPerPage: response?.hitsPerPage ?? 20,
+        query: response?.query,
+        params: response?.params,
+        items: response?.hits.map(
           ({ id, title, description, thumbnail, handle }) => ({
             id,
             title,

@@ -52,6 +52,12 @@ export function createContext({
   const session = req.session;
   const medusa = createMedusa(session);
 
+  const algoliaService = new AlgoliaSearchService(
+    process.env.ALGOLIA_APP_ID,
+    process.env.ALGOLIA_API_KEY,
+    process.env.ALGOLIA_PRODUCT_INDEX_NAME
+  );
+
   return {
     req,
     res,
@@ -72,8 +78,7 @@ export function createContext({
       return _collectionService;
     },
     get algoliaSearchService() {
-      if (!_algoliaSearchService)
-        _algoliaSearchService = new AlgoliaSearchService();
+      if (!_algoliaSearchService) _algoliaSearchService = algoliaService;
       return _algoliaSearchService;
     },
   };
