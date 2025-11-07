@@ -1,4 +1,4 @@
-import { HttpResponse, passthrough } from 'msw';
+import { HttpResponse } from 'msw';
 
 import {
   mockedCollectionSummary,

@@ -1,4 +1,4 @@
-import { HttpResponse, passthrough } from 'msw';
+import { HttpResponse } from 'msw';
 
 import { mockedProducts } from '../../data/products';
 import { medusaBff } from '../utils/apis';
