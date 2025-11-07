@@ -78,7 +78,7 @@ Reference: https://dev.to/ajth-in/mock-client-side-server-side-api-requests-usin
 ## How Mock Routing Works
 
 - If a mock is **enabled**, `withActiveMockGate` will return the MSW handler specified.
-- If **disabled** (`false`), `withActiveMockGate` will return `passthrough`, which when invoked, it will let the real request hit your backend service.
+- If **disabled** (`false`), `withActiveMockGate` will return `undefined`, so the handler is omitted and the request naturally reaches your backend service.
 
 ## Adding New Mock Endpoints
 
