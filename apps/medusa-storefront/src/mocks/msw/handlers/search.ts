@@ -1,11 +1,11 @@
 import { HttpResponse, delay } from 'msw';
 
 import { mockedSearchSuggestions } from '../../data/search';
-import { medusaBff } from '../utils/apis';
+import { storefrontMedusaBffWrapper } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
-export const searchSuggestionsSuccess = medusaBff.query(
+export const searchSuggestionsSuccess = storefrontMedusaBffWrapper.query(
   'SearchSuggestions',
   async ({ variables }) => {
     const { query } = variables as { query: string };
@@ -32,3 +32,19 @@ export const searchSuggestionsSuccess = medusaBff.query(
 export const handlers = [
   withActiveMockGate('SearchSuggestions', searchSuggestionsSuccess),
 ];
+
+// Other paths
+export const serverError = storefrontMedusaBffWrapper.query(
+  'SearchSuggestions',
+  async () => {
+    await delay(1000);
+
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Something went wrong. Please try again.',
+        },
+      ],
+    });
+  }
+);
