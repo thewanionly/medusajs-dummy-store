@@ -15,17 +15,11 @@ import {
   CartUnredeemReward,
 } from './store/carts/[id]/redeem-reward/validators';
 import { PostStoreCreateWishlistItem } from './store/customers/me/wishlists/items/validators';
-import { SearchSchema } from './store/products/search/route';
 
 export const GetRewardsSchema = createFindParams();
 
 export default defineMiddlewares({
   routes: [
-    {
-      matcher: '/store/products/search',
-      method: ['POST'],
-      middlewares: [validateAndTransformBody(SearchSchema)],
-    },
     {
       matcher: '/admin/rewards',
       method: 'POST',
