@@ -10,17 +10,11 @@ import { handlers as searchHandlers } from './search';
 
 const allHandlers = [
   ...cartHandlers,
-
   ...collectionsHandlers,
-
   ...customerHandlers,
-
   ...productCategoriesHandlers,
-
   ...productsHandlers,
-
   ...regionHandlers,
-
   ...searchHandlers,
 ];
 
