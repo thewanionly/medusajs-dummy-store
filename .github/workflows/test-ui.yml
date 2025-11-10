@@ -19,6 +19,11 @@ jobs:
         with:
           node-version: 22.18.0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.18.2
+
       - name: Install dependencies
         run: pnpm ci
 
