@@ -19,7 +19,7 @@
     "ci": "npm run lint && npm run check-types && npm run test:coverage:threshold && npm run build",
     "pre-commit": "npm run lint && npm run check-types && npm run test",
     "validate": "npm run lint && npm run check-types && npm run test:coverage:threshold",
-    "publish-schema": "rover subgraph publish ${APOLLO_GRAPH_REF} --name bff --schema-path schema.graphql --routing-url ${BFF_URL:-http://localhost:4000/graphql}",
+    "publish-schema": "rover subgraph publish ${APOLLO_GRAPH_REF} --name products --schema schema.graphql --routing-url ${APOLLO_GRAPH_ROUTING_URL}",
     "generate-schema": "rover subgraph introspect ${BFF_URL:-http://localhost:4000/graphql} > schema.graphql"
   },
   "dependencies": {
@@ -55,6 +55,7 @@
     "@types/express-session": "1.18.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.0.0",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.31.0",
     "graphql-tag": "^2.12.6",
     "jest": "^29.7.0",
