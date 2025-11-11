@@ -12,6 +12,10 @@ export const handlers = [
     return HttpResponse.json({ cart: createMockCart() });
   }),
 
+  http.post(`${process.env.MEDUSA_API_URL}/store/carts/:id`, async () => {
+    return HttpResponse.json({ cart: createMockCart() });
+  }),
+
   http.post(
     `${process.env.MEDUSA_API_URL}/store/carts/:id/line-items`,
     async () => {
