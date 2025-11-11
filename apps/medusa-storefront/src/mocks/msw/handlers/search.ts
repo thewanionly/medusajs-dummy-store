@@ -1,15 +1,13 @@
-import { HttpResponse, delay, passthrough } from 'msw';
+import { HttpResponse, delay } from 'msw';
 
 import { mockedSearchSuggestions } from '../../data/search';
-import { activeGqlMocks } from '../activeMocks';
-import { medusaBff } from '../apis';
+import { storefrontMedusaBffWrapper } from '../utils/apis';
+import { withActiveMockGate } from '../utils/withActiveMockGate';
 
-export const handlers = [
-  medusaBff.query('SearchSuggestions', async ({ variables }) => {
-    if (!activeGqlMocks.SearchSuggestions) {
-      return passthrough();
-    }
-
+// Happy paths
+export const searchSuggestionsSuccess = storefrontMedusaBffWrapper.query(
+  'SearchSuggestions',
+  async ({ variables }) => {
     const { query } = variables as { query: string };
 
     await delay(500);
@@ -26,5 +24,27 @@ export const handlers = [
         },
       },
     });
-  }),
+  }
+);
+
+// Handlers used in the application.
+// Use `withActiveMockGate` to enable/disable the handler based on activeMock config
+export const handlers = [
+  withActiveMockGate('SearchSuggestions', searchSuggestionsSuccess),
 ];
+
+// Other paths
+export const serverError = storefrontMedusaBffWrapper.query(
+  'SearchSuggestions',
+  async () => {
+    await delay(1000);
+
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Something went wrong. Please try again.',
+        },
+      ],
+    });
+  }
+);

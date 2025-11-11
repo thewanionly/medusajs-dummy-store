@@ -1,0 +1,13 @@
+export const activeMocks = {
+  GetProducts: false,
+  GetCollections: false,
+  GetCollectionsSummary: false,
+  GetProductCategories: false,
+  GetRegions: false,
+  Login: false,
+  Register: false,
+  CreateCustomer: false,
+  CreateCart: false,
+  AddToCart: false,
+  SearchSuggestions: false,
+};

@@ -83,11 +83,7 @@ export async function signup(_currentState: unknown, formData: FormData) {
       ...(await getAuthHeaders()),
     };
 
-    const { customer: createdCustomer } = await sdk.store.customer.create(
-      customerForm,
-      {},
-      headers
-    );
+    await sdk.store.customer.create(customerForm, {}, headers);
 
     const loginToken = await sdk.auth.login('customer', 'emailpass', {
       email: customerForm.email,
@@ -101,9 +97,15 @@ export async function signup(_currentState: unknown, formData: FormData) {
 
     await transferCart();
 
-    return createdCustomer;
+    return {
+      message: 'Registration successful',
+      status: 'success',
+    };
   } catch (error: any) {
-    return error.toString();
+    return {
+      message: error.toString(),
+      status: 'error',
+    };
   }
 }
 

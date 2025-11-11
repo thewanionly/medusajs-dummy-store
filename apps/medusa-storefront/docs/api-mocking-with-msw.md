@@ -29,18 +29,20 @@ Mock Service Worker (MSW) intercepts actual network requests (REST, GraphQL, etc
 ```text
 src/
   mocks/
+    data/                 // Static mock data for handlers
     msw/
       handlers/           // All mock endpoint/query handlers
+      utils/
+         activeMocks.ts   // Specifies which mocks are currently enabled
+         apis.ts             // Base API URLs used by handlers
+         withActiveMockGate  // Util function that handles enabling/disabling MSW handler depending on activeMock config
       browser.ts          // Browser entrypoint for MSW setup
       node.ts             // Node entrypoint for MSW setup
-      activeMocks.ts      // Specifies wich mocks are currently enabled
-      apis.ts             // Base API URLs used by handlers
-    data/                 // Static mock data for handlers
 ```
 
 - Handlers (GraphQL queries, REST endpoints) live in `src/mocks/msw/handlers`.
 - Mock data is pulled from `src/mocks/data` to simulate backend responses.
-- Handler activation is controlled in `src/mocks/msw/activeMocks.ts`.
+- Handler activation is controlled in `src/mocks/msw/utils/activeMocks.ts`.
 
 ## How MSW is Initialized in this Project
 
@@ -58,41 +60,40 @@ Reference: https://dev.to/ajth-in/mock-client-side-server-side-api-requests-usin
 
 ## How to Enable or Disable API Mocks
 
-1. Open `src/mocks/msw/activeMocks.ts`.
+1. Open `src/mocks/msw/utils/activeMocks.ts`.
 2. Set the value for the GraphQL or REST handler you want to `true` (enables mock) or `false` (uses real API).
 
    Example:
 
    ```js
-   export const activeGqlMocks = {
+   export const activeMocks = {
      GetProducts: true, // <------ ENABLES Product mock
      GetCollections: false,
      ...
    };
-   export const activeHttpMocks = {};
    ```
 
 3. **Restart** the dev server (e.g. `pnpm run dev`) for changes to take effect.
 
 ## How Mock Routing Works
 
-- If a mock is **enabled**, the handler will return the mock data.
-- If **disabled** (`false`), the handler will call `passthrough()`, letting the real request hit your backend service.
+- If a mock is **enabled**, `withActiveMockGate` will return the MSW handler specified.
+- If **disabled** (`false`), `withActiveMockGate` will return `undefined`, so the handler is omitted and the request naturally reaches your backend service.
 
 ## Adding New Mock Endpoints
 
 1. Add a new mock data file or update an existing one in `src/mocks/data/`.
-2. Create a handler in `src/mocks/msw/handlers/`, or add to an existing handler file, using your mock data.
+2. Create handlers in `src/mocks/msw/handlers/`, or add to an existing handler file, using your mock data. Export `handlers` array which contains the happy path endpoints. In each of the handler in this array, wrap them with `withActiveMockGate` function which will enable/disable the handler depending on activeMock config.
 3. Register your new handler in the `handlers/index.ts` (exported array is merged automatically).
-4. Add a toggle to `src/mocks/msw/activeMocks.ts` if needed.
+4. Add a toggle to `src/mocks/msw/utils/activeMocks.ts` if needed.
 5. (Optionally) Document your new handler in this file or elsewhere!
 
 ## See It in Action: Example
 
-- Enable `GetProducts` in `activeGqlMocks`:
+- Enable `GetProducts` in `activeMocks`:
 
   ```js
-  export const activeGqlMocks = {
+  export const activeMocks = {
     GetProducts: true,
     ...
   }
