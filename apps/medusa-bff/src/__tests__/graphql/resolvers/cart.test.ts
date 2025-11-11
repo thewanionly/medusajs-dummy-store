@@ -5,6 +5,7 @@ import Medusa from '@medusajs/js-sdk';
 import { createMockCart } from '@mocks/cart';
 import { internalServerErrorHandler } from '@mocks/msw/handlers/cart';
 import { server } from '@mocks/msw/node';
+import { createMockOrder } from '@mocks/order';
 
 const mockRes = {
   clearCookie: jest.fn(),
@@ -15,7 +16,7 @@ const medusa = new Medusa({
   apiKey: process.env.MEDUSA_PUBLISHABLE_KEY,
 });
 
-describe('Customer Resolvers', () => {
+describe('Cart Resolvers', () => {
   let testContext: GraphQLContext;
 
   beforeAll(() => {
@@ -124,6 +125,67 @@ describe('Customer Resolvers', () => {
         object: 'line-item-name',
         deleted: true,
       });
+    });
+  });
+
+  describe('Mutation.addShippingMethod', () => {
+    it('should add a shipping method to the cart successfully', async () => {
+      const result = await cartResolvers.Mutation.addShippingMethod(
+        {},
+        {
+          cartId: 'cart_123',
+          optionId: 'option_123',
+        },
+        testContext
+      );
+
+      expect(result).toEqual(normalizeCart(createMockCart()));
+    });
+  });
+
+  describe('Mutation.completeCart', () => {
+    it('should complete the cart successfully', async () => {
+      const result = await cartResolvers.Mutation.completeCart(
+        {},
+        {
+          cartId: 'cart_123',
+        },
+        testContext
+      );
+
+      expect(result).toEqual({
+        type: 'order',
+        order: createMockOrder(),
+      });
+    });
+  });
+
+  describe('Mutation.transferCart', () => {
+    it('should transfer the cart successfully', async () => {
+      const result = await cartResolvers.Mutation.transferCart(
+        {},
+        {
+          cartId: 'cart_123',
+        },
+        testContext
+      );
+
+      expect(result).toEqual(normalizeCart(createMockCart()));
+    });
+  });
+
+  describe('Mutation.applyPromotions', () => {
+    it('should apply promotions to the cart successfully', async () => {
+      const result = await cartResolvers.Mutation.applyPromotions(
+        {},
+        {
+          cartId: 'cart_123',
+          codes: ['code_123'],
+        },
+        testContext
+      );
+
+      expect(result).toEqual(normalizeCart(createMockCart()));
     });
   });
 });
