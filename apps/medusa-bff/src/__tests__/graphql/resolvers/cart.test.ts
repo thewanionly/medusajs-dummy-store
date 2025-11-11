@@ -3,7 +3,10 @@ import { normalizeCart } from '@graphql/resolvers/cart/util/transforms';
 import { GraphQLContext } from '@graphql/types/context';
 import Medusa from '@medusajs/js-sdk';
 import { createMockCart } from '@mocks/cart';
-import { internalServerErrorHandler } from '@mocks/msw/handlers/cart';
+import {
+  internalServerErrorHandler,
+  invalidCartHandler,
+} from '@mocks/msw/handlers/cart';
 import { server } from '@mocks/msw/node';
 import { createMockOrder } from '@mocks/order';
 
@@ -52,11 +55,18 @@ describe('Cart Resolvers', () => {
       expect(result).toEqual(normalizeCart(mockCart));
     });
 
-    it('should handle errors when retrieving cart', async () => {
+    it('should throw on server error', async () => {
       server.use(internalServerErrorHandler);
 
       await expect(
         cartResolvers.Query.cart({}, { id: 'cart_123' }, testContext)
+      ).rejects.toThrow();
+    });
+
+    it('should throw on cart not found', async () => {
+      server.use(invalidCartHandler);
+      await expect(
+        cartResolvers.Query.cart({}, { id: 'invalid_cart' }, testContext)
       ).rejects.toThrow();
     });
   });

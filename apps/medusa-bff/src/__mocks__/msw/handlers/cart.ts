@@ -108,32 +108,6 @@ export const invalidCartHandler = http.get(
     HttpResponse.json({ message: 'Cart not found or invalid' }, { status: 404 })
 );
 
-export const invalidAddLineItemHandler = http.post(
-  `${process.env.MEDUSA_API_URL}/store/carts/:id/line-items/:line_id`,
-  ({ params }) => {
-    const { line_id } = params;
-    return HttpResponse.json(
-      {
-        message: `Line item with id "${line_id}" not found.`,
-      },
-      { status: 404 }
-    );
-  }
-);
-
-export const invalidDeleteLineItemHandler = http.delete(
-  `${process.env.MEDUSA_API_URL}/store/carts/:id/line-items/:line_id`,
-  ({ params }) => {
-    const { id, line_id } = params;
-    return HttpResponse.json(
-      {
-        message: `Line item with id "${line_id}" not found in cart "${id}".`,
-      },
-      { status: 404 }
-    );
-  }
-);
-
 export const unauthorizedAccessHandler = http.get(
   `${process.env.MEDUSA_API_URL}/store/carts/:id`,
   () => HttpResponse.json({ message: 'Unauthorized' }, { status: 401 })
