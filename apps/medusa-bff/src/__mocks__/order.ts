@@ -1,0 +1,46 @@
+import { StoreOrder } from '@medusajs/types';
+
+export const createMockOrder = (overrides: Partial<StoreOrder> = {}) => ({
+  id: overrides.id || 'order_01JABCDE123456',
+  region_id: overrides.region_id || 'reg_01JREGION123',
+  customer_id: overrides.customer_id || 'cust_01JCUST123',
+  sales_channel_id: overrides.sales_channel_id || 'sc_01JCHANNEL123',
+  email: overrides.email || 'user@example.com',
+  currency_code: overrides.currency_code || 'usd',
+  payment_status: 'paid',
+  fulfillment_status: 'fulfilled',
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+  items: [
+    {
+      id: 'item_01JITEM123',
+      title: 'Mock Product',
+      quantity: 1,
+      unit_price: 2500,
+      variant_id: 'var_01JVARIANT123',
+      product_id: 'prod_01JPROD123',
+      requires_shipping: true,
+      is_discountable: true,
+      is_tax_inclusive: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      metadata: {},
+    },
+  ],
+  shipping_methods: [
+    {
+      id: 'ship_01JSHIP123',
+      order_id: 'order_01JABCDE123456',
+      name: 'Standard Shipping',
+      amount: 500,
+      is_tax_inclusive: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+  ],
+  total: 3000,
+  subtotal: 2500,
+  tax_total: 0,
+  discount_total: 0,
+  ...overrides,
+});

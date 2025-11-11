@@ -1,3 +1,4 @@
+import { handlers as cartHandlers } from './cart';
 import { handlers as customerHandlers } from './customer';
 import { handlers as productHandlers } from './product';
 import { handlers as sanityHandlers } from './sanity';
@@ -8,4 +9,6 @@ export const handlers = [
   ...sanityHandlers,
   ...customerHandlers,
   ...searchHandlers,
+  ...customerHandlers,
+  ...cartHandlers,
 ];
