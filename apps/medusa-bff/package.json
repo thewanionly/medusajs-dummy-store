@@ -19,8 +19,8 @@
     "ci": "npm run lint && npm run check-types && npm run test:coverage:threshold && npm run build",
     "pre-commit": "npm run lint && npm run check-types && npm run test",
     "validate": "npm run lint && npm run check-types && npm run test:coverage:threshold",
-    "publish-schema": "source .env && rover subgraph publish ${APOLLO_GRAPH_REF} --name ${APOLLO_SUBGRAPH_NAME} --schema schema.graphql --routing-url ${APOLLO_GRAPH_ROUTING_URL}",
-    "generate-schema": "source .env && rover subgraph introspect ${BFF_URL} > schema.graphql"
+    "publish-schema": "dotenv -e .env -- sh -c 'rover subgraph publish \"$APOLLO_GRAPH_REF\" --name \"$APOLLO_SUBGRAPH_NAME\" --schema schema.graphql --routing-url \"$APOLLO_GRAPH_ROUTING_URL\"'",
+    "generate-schema": "dotenv -e .env -- sh -c 'rover subgraph introspect \"${BFF_URL}\" > schema.graphql'"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
