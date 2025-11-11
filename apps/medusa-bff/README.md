@@ -353,7 +353,7 @@ pnpm run generate-schema
 
 This command:
 
-- Connects to the BFF server at `http://localhost:4000/graphql` (or the URL specified in `BFF_URL`)
+- Connects to the BFF server at the URL specified in `BFF_URL`
 - Introspects the GraphQL schema
 - Outputs the federation-compatible schema to `schema.graphql`
 
@@ -370,8 +370,8 @@ pnpm run publish-schema
 This command:
 
 - Reads the `schema.graphql` file
-- Publishes it to Apollo Studio as a subgraph named "bff"
-- Uses the routing URL from `BFF_URL` environment variable (defaults to `http://localhost:4000/graphql`)
+- Publishes it to Apollo Studio as a subgraph from environment variables `APOLLO_SUBGRAPH_NAME`
+- Uses the routing URL from `APOLLO_GRAPH_ROUTING_URL` environment variable(the URL can be found in Apollo Studio under schemas -> subgraphs -> your-subgraph-name -> routing URL)
 
 ### Environment Configuration
 
@@ -381,6 +381,7 @@ Add these environment variables to your `.env` file:
 # Apollo Studio Configuration
 APOLLO_GRAPH_REF="your-graph-id@current"  # Your Apollo Studio graph reference
 APOLLO_GRAPH_ROUTING_URL="your-graph-routing-url"  # Your Apollo Studio graph routing URL
+APOLLO_SUBGRAPH_NAME="your-subgraph-name"  # Your Apollo Studio subgraph name
 ```
 
 ### Workflow Example
@@ -397,7 +398,7 @@ APOLLO_GRAPH_ROUTING_URL="your-graph-routing-url"  # Your Apollo Studio graph ro
    pnpm run generate-schema
    ```
 
-3. Publish to Apollo Studio (requires `APOLLO_GRAPH_REF` to be set):
+3. Publish to Apollo Studio (requires `APOLLO_GRAPH_REF`, `APOLLO_SUBGRAPH_NAME` and `APOLLO_GRAPH_ROUTING_URL` to be set):
    ```bash
    pnpm run publish-schema
    ```
