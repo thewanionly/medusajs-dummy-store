@@ -1,0 +1,40 @@
+name: UI Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      # Make sure to grab the latest version of the Playwright image
+      # https://playwright.dev/docs/docker#pull-the-image
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Load test env vars
+        shell: bash
+        run: |
+          while IFS= read -r line || [[ -n "$line" ]]; do
+            line="${line%%$'\r'}"
+            if [[ -z "$line" || "$line" == \#* ]]; then
+              continue
+            fi
+            echo "$line" >> "$GITHUB_ENV"
+          done < apps/medusa-storefront/.env.test
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.18.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.18.2
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Storybook tests in medusa-storefront
+        run: pnpm --filter medusa-storefront run test-storybook
