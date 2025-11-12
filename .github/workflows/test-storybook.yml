@@ -1,6 +1,6 @@
 name: Storybook Tests
 
-on: [push]
+on: deployment_status
 
 jobs:
   test:
@@ -9,6 +9,7 @@ jobs:
       # Make sure to grab the latest version of the Playwright image
       # https://playwright.dev/docs/docker#pull-the-image
       image: mcr.microsoft.com/playwright:v1.56.1-noble
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     steps:
       - uses: actions/checkout@v4
 
@@ -38,3 +39,5 @@ jobs:
 
       - name: Run Storybook tests in medusa-storefront
         run: pnpm --filter medusa-storefront run test-storybook
+        env:
+          SB_URL: "${{ github.event.deployment_status.environment_url }}"

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
@@ -19,7 +20,10 @@ export default defineConfig({
         plugins: [
           // The plugin will run tests for the stories defined in your Storybook config
           // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({ configDir: path.join(dirname, '.storybook') }),
+          storybookTest({
+            configDir: path.join(dirname, '.storybook'),
+            storybookUrl: process.env.SB_URL,
+          }),
         ],
         test: {
           name: 'storybook',
