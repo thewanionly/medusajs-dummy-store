@@ -16,6 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug deployment payload
+        run: |
+          echo 'deployment_status payload:'
+          echo '${{ toJson(github.event.deployment_status) }}'
+
       - name: Load test env vars
         shell: bash
         run: |
