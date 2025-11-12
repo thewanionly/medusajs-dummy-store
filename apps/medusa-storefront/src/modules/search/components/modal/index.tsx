@@ -56,7 +56,7 @@ export default function SearchModal({ buttonClassName }: SearchModalProps) {
       <Modal
         isOpen={isOpen}
         close={() => setIsOpen(false)}
-        // aria-label="Search modal"
+        aria-label="Search modal"
       >
         <div className="flex h-full max-h-[75vh] min-h-0 flex-col">
           <div className="shrink-0">
