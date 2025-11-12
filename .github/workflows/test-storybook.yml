@@ -9,7 +9,10 @@ jobs:
       # Make sure to grab the latest version of the Playwright image
       # https://playwright.dev/docs/docker#pull-the-image
       image: mcr.microsoft.com/playwright:v1.56.1-noble
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    if: |
+      github.event_name == 'deployment_status' &&
+      github.event.deployment_status.state == 'success' &&
+      contains(github.event.deployment_status.environment_url, 'medusajs-dummy-store-storybook')
     steps:
       - uses: actions/checkout@v4
 
