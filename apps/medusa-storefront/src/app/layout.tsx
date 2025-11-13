@@ -16,7 +16,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <main className="relative">
           <ApolloClientProvider>
-            <TooltipProvider delayDuration={100}>{props.children}</TooltipProvider>
+            <TooltipProvider delayDuration={100}>
+              {props.children}
+            </TooltipProvider>
           </ApolloClientProvider>
         </main>
       </body>
