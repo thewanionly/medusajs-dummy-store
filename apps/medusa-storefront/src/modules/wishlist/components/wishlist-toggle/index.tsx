@@ -1,11 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useMutation } from '@apollo/client/react';
 import { Heart, Loader } from '@medusajs/icons';
 import { cn } from '@mds/ui/lib/utils';
-import { IconButton } from '@medusajs/ui';
+import { IconButton, Tooltip } from '@medusajs/ui';
 
 import {
   ADD_WISHLIST_ITEM_MUTATION,
@@ -34,6 +34,9 @@ const getAccessibleLabel = (title: string, isInWishlist: boolean) =>
   isInWishlist
     ? `Remove ${title} from wishlist`
     : `Add ${title} to wishlist`;
+
+const GENERIC_ERROR_MESSAGE =
+  'We could not update your wishlist. Please try again.';
 
 export function WishlistToggleButton({
   productId,
@@ -93,6 +96,34 @@ export function WishlistToggleButton({
 
   const { isInWishlist, wishlistItemId } = currentStatus;
   const [feedbackMessage, setFeedbackMessage] = useState<string>('');
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [tooltipMessage, setTooltipMessage] = useState('');
+  const tooltipTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const showTooltip = useCallback((message: string) => {
+    if (!message) {
+      return;
+    }
+
+    if (tooltipTimer.current) {
+      clearTimeout(tooltipTimer.current);
+    }
+
+    setTooltipMessage(message);
+    setIsTooltipVisible(true);
+
+    tooltipTimer.current = setTimeout(() => {
+      setIsTooltipVisible(false);
+    }, 2000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (tooltipTimer.current) {
+        clearTimeout(tooltipTimer.current);
+      }
+    };
+  }, []);
 
   const [addWishlistItem, addState] = useMutation<
     AddWishlistItemMutationResult,
@@ -112,9 +143,10 @@ export function WishlistToggleButton({
   const notify = useCallback(
     (nextState: WishlistToggleStatus, message: string) => {
       setFeedbackMessage(message);
+      showTooltip(message);
       onStatusChange?.(nextState);
     },
-    [onStatusChange]
+    [onStatusChange, showTooltip]
   );
 
   const handleAddToWishlist = useCallback(async () => {
@@ -189,11 +221,8 @@ export function WishlistToggleButton({
       }
     } catch (error) {
       console.error('Wishlist toggle failed', error);
-      setFeedbackMessage(
-        error instanceof Error
-          ? error.message
-          : 'Unable to update wishlist right now.'
-      );
+      setFeedbackMessage(GENERIC_ERROR_MESSAGE);
+      showTooltip(GENERIC_ERROR_MESSAGE);
     }
   }, [
     disabled,
@@ -205,30 +234,35 @@ export function WishlistToggleButton({
 
   return (
     <div className={cn('flex flex-col items-center gap-y-1', className)}>
-      <IconButton
-        type="button"
-        variant="transparent"
-        aria-pressed={isInWishlist}
-        aria-label={ariaLabel}
-        disabled={disabled || isMutating}
-        onClick={handleToggle}
-        data-testid="wishlist-toggle-button"
-        className={cn(
-          'h-9 w-9 rounded-full border border-transparent bg-ui-bg-base shadow-borders-base transition-all duration-200 hover:text-ui-fg-interactive focus-visible:ring-2 focus-visible:ring-ui-bg-interactive focus-visible:ring-offset-2 disabled:cursor-not-allowed',
-          isInWishlist &&
-            'border-ui-border-interactive bg-ui-bg-interactive text-ui-fg-on-color',
-          (disabled || isMutating) && 'opacity-60'
-        )}
+      <Tooltip
+        open={Boolean(isTooltipVisible && tooltipMessage)}
+        content={tooltipMessage}
       >
-        {isMutating ? (
-          <Loader className="h-4 w-4 animate-spin" />
-        ) : (
-          <Heart
-            className="h-4 w-4"
-            color={isInWishlist ? 'currentColor' : undefined}
-          />
-        )}
-      </IconButton>
+        <IconButton
+          type="button"
+          variant="transparent"
+          aria-pressed={isInWishlist}
+          aria-label={ariaLabel}
+          disabled={disabled || isMutating}
+          onClick={handleToggle}
+          data-testid="wishlist-toggle-button"
+          className={cn(
+            'h-9 w-9 rounded-full border border-transparent bg-ui-bg-base shadow-borders-base transition-all duration-200 hover:text-ui-fg-interactive focus-visible:ring-2 focus-visible:ring-ui-bg-interactive focus-visible:ring-offset-2 disabled:cursor-not-allowed',
+            isInWishlist &&
+              'border-ui-border-interactive bg-ui-bg-interactive text-ui-fg-on-color',
+            (disabled || isMutating) && 'opacity-60'
+          )}
+        >
+          {isMutating ? (
+            <Loader className="h-4 w-4 animate-spin" />
+          ) : (
+            <Heart
+              className="h-4 w-4"
+              color={isInWishlist ? 'currentColor' : undefined}
+            />
+          )}
+        </IconButton>
+      </Tooltip>
       <span aria-live="polite" className="sr-only">
         {feedbackMessage}
       </span>

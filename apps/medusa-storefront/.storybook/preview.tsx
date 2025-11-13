@@ -5,6 +5,7 @@ import 'styles/globals.css';
 
 import type { Preview } from '@storybook/nextjs-vite';
 
+import { TooltipProvider } from '@medusajs/ui';
 import { ApolloClientProvider } from '../src/lib/context/apollo-context';
 
 initialize();
@@ -29,7 +30,9 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <ApolloClientProvider>
-        <Story />
+        <TooltipProvider delayDuration={100}>
+          <Story />
+        </TooltipProvider>
       </ApolloClientProvider>
     ),
   ],
