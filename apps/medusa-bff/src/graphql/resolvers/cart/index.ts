@@ -2,6 +2,7 @@ import { GraphQLContext } from '@graphql/types/context';
 import type { HttpTypes } from '@medusajs/types';
 
 import {
+  camelToSnakeCase,
   normalizeCart,
   normalizeCompleteCartResponse,
 } from './util/transforms';
@@ -28,7 +29,7 @@ export const cartResolvers = {
       { data }: { data: HttpTypes.StoreCreateCart },
       { medusa }: GraphQLContext
     ) => {
-      const { cart } = await medusa.store.cart.create(data);
+      const { cart } = await medusa.store.cart.create(camelToSnakeCase(data));
       return normalizeCart(cart);
     },
 
@@ -37,7 +38,12 @@ export const cartResolvers = {
       { id, data }: { id: string; data: HttpTypes.StoreUpdateCart },
       { medusa }: GraphQLContext
     ) => {
-      const { cart } = await medusa.store.cart.update(id, data);
+      console.log('Submitting cart update:', JSON.stringify(data, null, 2));
+
+      const { cart } = await medusa.store.cart.update(
+        id,
+        camelToSnakeCase(data)
+      );
       return normalizeCart(cart);
     },
 
@@ -49,7 +55,10 @@ export const cartResolvers = {
       }: { cartId: string; data: HttpTypes.StoreAddCartLineItem },
       { medusa }: GraphQLContext
     ) => {
-      const { cart } = await medusa.store.cart.createLineItem(cartId, data);
+      const { cart } = await medusa.store.cart.createLineItem(
+        cartId,
+        camelToSnakeCase(data)
+      );
       return normalizeCart(cart);
     },
 

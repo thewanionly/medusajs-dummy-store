@@ -117,25 +117,23 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                     <Text className="txt-small-plus flex w-4/5 items-baseline gap-x-1 pr-1">
                       <span className="truncate" data-testid="discount-code">
                         <Badge
-                          color={promotion?.is_automatic ? 'green' : 'grey'}
+                          color={promotion?.isAutomatic ? 'green' : 'grey'}
                           size="small"
                         >
                           {promotion?.code}
                         </Badge>{' '}
                         (
-                        {promotion?.application_method?.value !== undefined &&
-                          promotion.application_method.currency_code !==
+                        {promotion?.applicationMethod?.value !== undefined &&
+                          promotion.applicationMethod.currencyCode !==
                             undefined && (
                             <>
-                              {promotion.application_method.type ===
-                              'percentage'
-                                ? `${promotion.application_method.value}%`
+                              {promotion.applicationMethod.type === 'percentage'
+                                ? `${promotion.applicationMethod.value}%`
                                 : convertToLocale({
                                     amount:
-                                      promotion.application_method.value ?? 0,
+                                      promotion.applicationMethod.value ?? 0,
                                     currency_code:
-                                      promotion.application_method
-                                        .currency_code,
+                                      promotion.applicationMethod.currencyCode,
                                   })}
                             </>
                           )}
@@ -147,7 +145,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                         )} */}
                       </span>
                     </Text>
-                    {!promotion?.is_automatic && (
+                    {!promotion?.isAutomatic && (
                       <button
                         className="flex items-center"
                         onClick={() => {

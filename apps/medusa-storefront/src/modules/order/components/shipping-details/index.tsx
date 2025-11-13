@@ -1,10 +1,10 @@
+import { Order } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { Heading, Text } from '@medusajs/ui';
 import Divider from '@modules/common/components/divider';
 
 type ShippingDetailsProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
 };
 
 const ShippingDetails = ({ order }: ShippingDetailsProps) => {
@@ -22,19 +22,16 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
             Shipping Address
           </Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {order.shipping_address?.first_name}{' '}
-            {order.shipping_address?.last_name}
+            {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}
           </Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {order.shipping_address?.address_1}{' '}
-            {order.shipping_address?.address_2}
+            {order.shippingAddress?.address1} {order.shippingAddress?.address2}
           </Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {order.shipping_address?.postal_code},{' '}
-            {order.shipping_address?.city}
+            {order.shippingAddress?.postalCode}, {order.shippingAddress?.city}
           </Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {order.shipping_address?.country_code?.toUpperCase()}
+            {order.shippingAddress?.countryCode?.toUpperCase()}
           </Text>
         </div>
 
@@ -44,7 +41,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
         >
           <Text className="txt-medium-plus mb-1 text-ui-fg-base">Contact</Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {order.shipping_address?.phone}
+            {order.shippingAddress?.phone}
           </Text>
           <Text className="txt-medium text-ui-fg-subtle">{order.email}</Text>
         </div>
@@ -55,10 +52,10 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
         >
           <Text className="txt-medium-plus mb-1 text-ui-fg-base">Method</Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {(order as any).shipping_methods[0]?.name} (
+            {order.shippingMethods?.[0]?.name} (
             {convertToLocale({
-              amount: order.shipping_methods?.[0].total ?? 0,
-              currency_code: order.currency_code,
+              amount: order.shippingMethods?.[0]?.total ?? 0,
+              currency_code: order.currencyCode,
             })
               .replace(/,/g, '')
               .replace(/\./g, ',')}

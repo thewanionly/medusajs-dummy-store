@@ -1,4 +1,9 @@
 import {
+  CompleteCartErrorResult,
+  CompleteCartOrderResult,
+  CompleteCartResponse,
+} from '@graphql/generated/graphql';
+import {
   StoreCart,
   StoreCompleteCartResponse,
   StorePaymentCollection,
@@ -6,17 +11,54 @@ import {
 
 const normalizeInt = (v: number | null | undefined): number => v ?? 0;
 
+function isOrderResponse(
+  response: CompleteCartResponse
+): response is CompleteCartOrderResult {
+  return response.type === 'order';
+}
+
+function isCartResponse(
+  response: CompleteCartResponse
+): response is CompleteCartErrorResult {
+  return response.type === 'cart';
+}
+
 export function normalizeCompleteCartResponse(
   response: StoreCompleteCartResponse
-): StoreCompleteCartResponse {
-  if (response.type === 'order') {
+): any {
+  if (isOrderResponse(response)) {
+    const order = response.order;
+
     return {
       type: 'order',
-      order: response.order,
+      order: {
+        id: order?.id,
+        regionId: order?.regionId ?? '',
+        customerId: order?.customerId ?? '',
+        salesChannelId: order?.salesChannelId ?? '',
+        email: order?.email ?? '',
+        paymentStatus: order?.paymentStatus ?? '',
+        fulfillmentStatus: order?.fulfillmentStatus ?? '',
+        total: order?.total ?? 0,
+        status: order?.status ?? '',
+        createdAt: order?.createdAt ?? '',
+        updatedAt: order?.updatedAt ?? '',
+        currencyCode: order?.currencyCode ?? '',
+        items: normalizeLineItems(order?.items ?? []),
+        shippingMethods:
+          order?.shippingMethods?.map((method) => ({
+            id: method.id,
+            name: method.name,
+            amount: method.amount,
+            shippingOptionId: method.shippingOptionId,
+          })) ?? [],
+
+        shippingAddress: normalizeAddress(order?.shippingAddress),
+      },
     };
   }
 
-  if (response.type === 'cart') {
+  if (isCartResponse(response)) {
     if (!response.cart) {
       throw new Error(
         'Expected cart to be defined for CompleteCartResponse of type "cart"'
@@ -25,7 +67,7 @@ export function normalizeCompleteCartResponse(
 
     return {
       type: 'cart',
-      cart: normalizeCart(response.cart),
+      cart: response.cart,
       error: {
         message: response.error?.message ?? '',
         name: response.error?.name ?? '',
@@ -39,78 +81,153 @@ export function normalizeCompleteCartResponse(
 
 export function normalizePaymentCollection(
   collection: StorePaymentCollection | null | undefined
-): StorePaymentCollection | undefined {
+): any | undefined {
   if (!collection) return;
 
   return {
     id: collection.id ?? '',
     amount: normalizeInt(collection.amount),
-    currency_code: collection.currency_code ?? '',
-    payment_providers: collection.payment_providers ?? [],
-    payment_sessions:
+    currencyCode: collection.currency_code ?? '',
+    paymentProviders: collection.payment_providers ?? [],
+    paymentSessions:
       collection.payment_sessions?.map((s) => ({
-        amount: s.amount ?? 0,
-        currency_code: s.currency_code ?? 'eur',
         id: s.id ?? '',
-        provider_id: s.provider_id ?? '',
+        amount: s.amount ?? 0,
+        currencyCode: s.currency_code ?? 'eur',
+        providerId: s.provider_id ?? '',
         status: s.status ?? '',
         data: s.data ?? {},
       })) ?? [],
-    created_at: collection.created_at,
-    updated_at: collection.updated_at,
+    createdAt: collection.created_at,
+    updatedAt: collection.updated_at,
     status: collection.status ?? 'not_paid',
   };
 }
 
-export function normalizeCart(cart: StoreCart): StoreCart {
+function normalizeLineItems(items: any[] = [], cartId?: string) {
+  return items.map((item) => ({
+    id: item.id,
+    title: item.title ?? '',
+    quantity: item.quantity ?? 0,
+    requiresShipping: item.requires_shipping ?? false,
+    isDiscountable: item.is_discountable ?? false,
+    isTaxInclusive: item.is_tax_inclusive ?? false,
+    unitPrice: item.unit_price ?? 0,
+    total: item.total ?? 0,
+    originalTotal: item.original_total ?? 0,
+    cartId: item.cart_id ?? cartId ?? '',
+    thumbnail: item.thumbnail ?? '',
+    productHandle: item.variant?.product?.handle ?? '',
+    productTitle: item.variant?.product?.title ?? '',
+    createdAt: item.created_at ?? '',
+    variant: item.variant ?? null,
+  }));
+}
+
+function normalizeAddress(address: any) {
+  if (!address) return null;
+  return {
+    id: address.id,
+    metadata: address.metadata ?? {},
+    createdAt: address.created_at,
+    updatedAt: address.updated_at,
+    firstName: address.first_name,
+    lastName: address.last_name,
+    phone: address.phone,
+    address1: address.address_1,
+    address2: address.address_2,
+    company: address.company,
+    province: address.province,
+    city: address.city,
+    countryCode: address.country_code,
+    postalCode: address.postal_code,
+  };
+}
+
+export function normalizeCart(cart: StoreCart): any {
   return {
     id: cart.id,
-    currency_code: cart.currency_code ?? '',
+    currencyCode: cart.currency_code ?? '',
 
-    original_item_total: normalizeInt(cart.original_item_total),
-    original_item_subtotal: normalizeInt(cart.original_item_subtotal),
-    original_item_tax_total: normalizeInt(cart.original_item_tax_total),
-    item_total: normalizeInt(cart.item_total),
-    item_subtotal: normalizeInt(cart.item_subtotal),
-    item_tax_total: normalizeInt(cart.item_tax_total),
+    originalItemTotal: normalizeInt(cart.original_item_total),
+    originalItemSubtotal: normalizeInt(cart.original_item_subtotal),
+    originalItemTaxTotal: normalizeInt(cart.original_item_tax_total),
+    itemTotal: normalizeInt(cart.item_total),
+    itemSubtotal: normalizeInt(cart.item_subtotal),
+    itemTaxTotal: normalizeInt(cart.item_tax_total),
 
-    original_total: normalizeInt(cart.original_total),
-    original_subtotal: normalizeInt(cart.original_subtotal),
-    original_tax_total: normalizeInt(cart.original_tax_total),
+    originalTotal: normalizeInt(cart.original_total),
+    originalSubtotal: normalizeInt(cart.original_subtotal),
+    originalTaxTotal: normalizeInt(cart.original_tax_total),
     total: normalizeInt(cart.total),
     subtotal: normalizeInt(cart.subtotal),
-    tax_total: normalizeInt(cart.tax_total),
-    discount_total: normalizeInt(cart.discount_total),
-    discount_tax_total: normalizeInt(cart.discount_tax_total),
-    shipping_total: normalizeInt(cart.shipping_total),
-    shipping_subtotal: normalizeInt(cart.shipping_subtotal),
-    shipping_tax_total: normalizeInt(cart.shipping_tax_total),
-    original_shipping_total: normalizeInt(cart.original_shipping_total),
-    original_shipping_subtotal: normalizeInt(cart.original_shipping_subtotal),
-    original_shipping_tax_total: normalizeInt(cart.original_shipping_tax_total),
-    gift_card_total: normalizeInt(cart.gift_card_total),
-    gift_card_tax_total: normalizeInt(cart.gift_card_tax_total),
+    taxTotal: normalizeInt(cart.tax_total),
+    discountTotal: normalizeInt(cart.discount_total),
+    discountTaxTotal: normalizeInt(cart.discount_tax_total),
+    shippingTotal: normalizeInt(cart.shipping_total),
+    shippingSubtotal: normalizeInt(cart.shipping_subtotal),
+    shippingTaxTotal: normalizeInt(cart.shipping_tax_total),
+    originalShippingTotal: normalizeInt(cart.original_shipping_total),
+    originalShippingSubtotal: normalizeInt(cart.original_shipping_subtotal),
+    originalShippingTaxTotal: normalizeInt(cart.original_shipping_tax_total),
+    giftCardTotal: normalizeInt(cart.gift_card_total),
+    giftCardTaxTotal: normalizeInt(cart.gift_card_tax_total),
 
     promotions: cart.promotions ?? [],
     email: cart.email ?? '',
-    items: cart.items ?? [],
-    region_id: cart.region_id ?? '',
-    shipping_address: cart.shipping_address,
-    billing_address: cart.billing_address,
-    created_at: cart.created_at,
-    updated_at: cart.updated_at,
-    shipping_methods: (cart.shipping_methods ?? []).map((sm) => ({
+    items: normalizeLineItems(cart.items, cart.id),
+    regionId: cart.region_id ?? '',
+    shippingAddress: normalizeAddress(cart.shipping_address),
+    billingAddress: normalizeAddress(cart.billing_address),
+    createdAt: cart.created_at,
+    updatedAt: cart.updated_at,
+    shippingMethods: (cart.shipping_methods ?? []).map((sm) => ({
       id: sm.id ?? '',
-      cart_id: sm.cart_id ?? cart.id ?? '',
+      cartId: sm.cart_id ?? cart.id ?? '',
       name: sm.name ?? '',
       amount: sm.amount ?? 0,
-      is_tax_inclusive: sm.is_tax_inclusive ?? false,
-      created_at: sm.created_at,
-      updated_at: sm.updated_at,
-      shipping_option_id: sm.shipping_option_id,
+      isTaxInclusive: sm.is_tax_inclusive ?? false,
+      createdAt: sm.created_at,
+      updatedAt: sm.updated_at,
+      shippingOptionId: sm.shipping_option_id,
     })),
-    region: cart.region,
-    payment_collection: normalizePaymentCollection(cart.payment_collection),
-    customer_id: cart.customer_id ?? '',
+    region: cart.region
+      ? {
+          id: cart.region.id ?? '',
+          name: cart.region.name ?? '',
+          currencyCode: cart.region.currency_code ?? '',
+          automaticTaxes: cart.region.automatic_taxes ?? false,
+          countries: (cart.region.countries ?? []).map((c) => ({
+            id: c.id,
+            iso2: c.iso_2,
+            iso3: c.iso_3,
+            name: c.name,
+            displayName: c.display_name,
+          })),
+          createdAt: cart.region.created_at,
+          updatedAt: cart.region.updated_at,
+        }
+      : null,
+    paymentCollection: normalizePaymentCollection(cart.payment_collection),
+    customerId: cart.customer_id ?? '',
   };
+}
+
+export function camelToSnakeCase(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(camelToSnakeCase);
+  } else if (obj && typeof obj === 'object' && obj.constructor === Object) {
+    return Object.entries(obj).reduce(
+      (acc, [key, value]) => {
+        const snakeKey = key
+          .replace(/([A-Z])/g, '_$1') // handle camelCase letters
+          .replace(/([a-z])([0-9])/g, '$1_$2') // handle letters followed by numbers
+          .toLowerCase();
+        acc[snakeKey] = camelToSnakeCase(value);
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+  }
+  return obj;
 }

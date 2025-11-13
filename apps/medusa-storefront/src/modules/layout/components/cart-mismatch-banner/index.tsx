@@ -13,7 +13,7 @@ function CartMismatchBanner(props: { customer: Customer; cart: Cart }) {
   const [isPending, setIsPending] = useState(false);
   const [actionText, setActionText] = useState('Run transfer again');
 
-  if (!customer || !!cart.customer_id) {
+  if (!customer || !!cart.customerId) {
     return;
   }
 

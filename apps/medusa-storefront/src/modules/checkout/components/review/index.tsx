@@ -12,12 +12,12 @@ const Review = ({ cart }: { cart: Cart }) => {
 
   const isOpen = searchParams.get('step') === 'review';
 
-  const paidByGiftcard = cart?.gift_card_total > 0 && cart?.total === 0;
+  const paidByGiftcard = cart?.giftCardTotal > 0 && cart?.total === 0;
 
   const previousStepsCompleted =
-    cart?.shipping_address &&
-    (cart?.shipping_methods?.length ?? 0) > 0 &&
-    (cart?.payment_collection || paidByGiftcard);
+    cart?.shippingAddress &&
+    (cart?.shippingMethods?.length ?? 0) > 0 &&
+    (cart?.paymentCollection || paidByGiftcard);
 
   return (
     <div className="bg-white">

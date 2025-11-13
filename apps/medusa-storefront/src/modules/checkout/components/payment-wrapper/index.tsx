@@ -17,13 +17,13 @@ const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
-  const paymentSession = cart.payment_collection?.payment_sessions?.find(
+  const paymentSession = cart.paymentCollection?.paymentSessions?.find(
     (s) => s?.status === 'pending'
   );
 
   if (
-    paymentSession?.provider_id &&
-    isStripe(paymentSession.provider_id) &&
+    paymentSession?.providerId &&
+    isStripe(paymentSession.providerId) &&
     stripePromise
   ) {
     return (

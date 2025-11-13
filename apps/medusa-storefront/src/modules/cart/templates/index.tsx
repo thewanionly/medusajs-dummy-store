@@ -1,5 +1,5 @@
 import { Customer } from '@lib/gql/generated-types/graphql';
-import { Cart, Maybe } from '@lib/gql/generated-types/graphql';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import Divider from '@modules/common/components/divider';
 
 import EmptyCartMessage from '../components/empty-cart-message';

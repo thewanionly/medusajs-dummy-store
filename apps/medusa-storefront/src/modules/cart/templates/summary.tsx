@@ -12,9 +12,9 @@ type SummaryProps = {
 };
 
 function getCheckoutStep(cart: Cart) {
-  if (!cart?.shipping_address?.address_1 || !cart.email) {
+  if (!cart?.shippingAddress?.address1 || !cart.email) {
     return 'address';
-  } else if (cart?.shipping_methods?.length === 0) {
+  } else if (cart?.shippingMethods?.length === 0) {
     return 'delivery';
   } else {
     return 'payment';

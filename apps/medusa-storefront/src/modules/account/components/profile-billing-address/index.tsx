@@ -3,8 +3,7 @@
 import React, { useActionState, useEffect, useMemo } from 'react';
 
 import { addCustomerAddress, updateCustomerAddress } from '@lib/data/customer';
-import { Customer } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { Customer, Region } from '@lib/gql/generated-types/graphql';
 import Input from '@modules/common/components/input';
 import NativeSelect from '@modules/common/components/native-select';
 
@@ -12,7 +11,7 @@ import AccountInfo from '../account-info';
 
 type MyInformationProps = {
   customer: Customer;
-  regions: HttpTypes.StoreRegion[];
+  regions: Region[];
 };
 
 const ProfileBillingAddress: React.FC<MyInformationProps> = ({
@@ -24,8 +23,8 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
       regions
         ?.map((region) => {
           return region.countries?.map((country) => ({
-            value: country.iso_2,
-            label: country.display_name,
+            value: country?.iso2,
+            label: country?.displayName,
           }));
         })
         .flat() || []
@@ -168,7 +167,7 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
             <option value="">-</option>
             {regionOptions.map((option, i) => {
               return (
-                <option key={i} value={option?.value}>
+                <option key={i} value={option?.value ?? ''}>
                   {option?.label}
                 </option>
               );

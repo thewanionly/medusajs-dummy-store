@@ -20,7 +20,7 @@ const computeTarget = (cart: Cart, price: HttpTypes.StorePrice) => {
     (pr) => pr.attribute === 'item_total'
   )!;
 
-  const currentAmount = cart.item_total;
+  const currentAmount = cart.itemTotal;
   const targetAmount = parseFloat(priceRule.value);
 
   if (priceRule.operator === 'gt') {
@@ -98,7 +98,7 @@ export default function ShippingPriceNudge({
       // 2. Have a rule that is set on item_total
       const validCurrencyPrices = shippingOption.prices.filter(
         (price) =>
-          price.currency_code === cart.currency_code &&
+          price.currency_code === cart.currencyCode &&
           (price.price_rules || []).some(
             (priceRule) => priceRule.attribute === 'item_total'
           )
@@ -164,7 +164,7 @@ function FreeShippingInline({
             <span className="text-neutral-950">
               {convertToLocale({
                 amount: price.target_remaining,
-                currency_code: cart.currency_code,
+                currency_code: cart.currencyCode,
               })}
             </span>{' '}
             away
@@ -240,7 +240,7 @@ function FreeShippingPopup({
                 <span className="text-white">
                   {convertToLocale({
                     amount: price.target_remaining,
-                    currency_code: cart.currency_code,
+                    currency_code: cart.currencyCode,
                   })}
                 </span>{' '}
                 away

@@ -4,6 +4,7 @@ import {
   ADDRESS_FRAGMENT,
   CART_FRAGMENT,
   LINE_ITEM_FRAGMENT,
+  PAYMENT_COLLECTION_FRAGMENT,
   SHIPPING_METHODS_FRAGMENT,
 } from '../fragments/cart';
 
@@ -20,12 +21,12 @@ export const UPDATE_CART_MUTATION = gql`
   mutation UpdateCart($id: ID!, $data: UpdateCartInput!) {
     updateCart(id: $id, data: $data) {
       ...CartFields
-      region_id
-      currency_code
-      shipping_address {
+      regionId
+      currencyCode
+      shippingAddress {
         ...AddressFields
       }
-      billing_address {
+      billingAddress {
         ...AddressFields
       }
     }
@@ -82,7 +83,7 @@ export const ADD_SHIPPING_METHOD_MUTATION = gql`
       items {
         ...CartItemFields
       }
-      shipping_methods {
+      shippingMethods {
         ...ShippingMethodFields
       }
     }
@@ -102,13 +103,21 @@ export const COMPLETE_CART_MUTATION = gql`
           email
           status
           total
+          createdAt
+          currencyCode
+          customerId
+          fulfillmentStatus
+          displayId
+          paymentCollections {
+            ...PaymentCollectionFields
+          }
           items {
             ...CartItemFields
           }
-          shipping_methods {
+          shippingMethods {
             ...ShippingMethodFields
           }
-          shipping_address {
+          shippingAddress {
             ...AddressFields
           }
         }
@@ -133,6 +142,7 @@ export const COMPLETE_CART_MUTATION = gql`
   ${LINE_ITEM_FRAGMENT}
   ${ADDRESS_FRAGMENT}
   ${SHIPPING_METHODS_FRAGMENT}
+  ${PAYMENT_COLLECTION_FRAGMENT}
 `;
 
 export const TRANSFER_CART_MUTATION = gql`

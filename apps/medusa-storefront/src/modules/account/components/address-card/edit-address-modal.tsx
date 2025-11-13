@@ -6,10 +6,13 @@ import {
   deleteCustomerAddress,
   updateCustomerAddress,
 } from '@lib/data/customer';
-import { CustomerAddress, Maybe } from '@lib/gql/generated-types/graphql';
+import {
+  CustomerAddress,
+  Maybe,
+  Region,
+} from '@lib/gql/generated-types/graphql';
 import useToggleState from '@lib/hooks/use-toggle-state';
 import { PencilSquare as Edit, Trash } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import { Button, Heading, Text, clx } from '@medusajs/ui';
 import CountrySelect from '@modules/checkout/components/country-select';
 import { SubmitButton } from '@modules/checkout/components/submit-button';
@@ -18,7 +21,7 @@ import Modal from '@modules/common/components/modal';
 import Spinner from '@modules/common/icons/spinner';
 
 type EditAddressProps = {
-  region: HttpTypes.StoreRegion;
+  region: Region;
   address: Maybe<CustomerAddress>;
   isActive?: boolean;
 };

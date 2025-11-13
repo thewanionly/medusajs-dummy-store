@@ -1,15 +1,15 @@
 import { isStripe, paymentInfoMap } from '@lib/constants';
+import { Order } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { Container, Heading, Text } from '@medusajs/ui';
 import Divider from '@modules/common/components/divider';
 
 type PaymentDetailsProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
 };
 
 const PaymentDetails = ({ order }: PaymentDetailsProps) => {
-  const payment = order.payment_collections?.[0].payments?.[0];
+  const payment = order.paymentCollections?.[0]?.payments?.[0];
 
   return (
     <div>
@@ -27,7 +27,7 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
                 className="txt-medium text-ui-fg-subtle"
                 data-testid="payment-method"
               >
-                {paymentInfoMap[payment.provider_id].title}
+                {paymentInfoMap[payment.providerId]?.title}
               </Text>
             </div>
             <div className="flex w-2/3 flex-col">
@@ -36,16 +36,16 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
               </Text>
               <div className="txt-medium flex items-center gap-2 text-ui-fg-subtle">
                 <Container className="flex h-7 w-fit items-center bg-ui-button-neutral-hover p-2">
-                  {paymentInfoMap[payment.provider_id].icon}
+                  {paymentInfoMap[payment.providerId]?.icon}
                 </Container>
                 <Text data-testid="payment-amount">
-                  {isStripe(payment.provider_id) && payment.data?.card_last4
+                  {isStripe(payment.providerId) && payment.data?.card_last4
                     ? `**** **** **** ${payment.data.card_last4}`
                     : `${convertToLocale({
                         amount: payment.amount,
-                        currency_code: order.currency_code,
+                        currency_code: order.currencyCode,
                       })} paid at ${new Date(
-                        payment.created_at ?? ''
+                        payment.createdAt ?? ''
                       ).toLocaleString()}`}
                 </Text>
               </div>

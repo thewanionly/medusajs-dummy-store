@@ -1,16 +1,19 @@
 type Order {
   id: ID!
-  region_id: String
-  customer_id: String
-  sales_channel_id: String
-  email: String
-  items: [LineItem!]
-  shipping_methods: [ShippingMethod!]
-  shipping_address: Address
-  payment_status: String
-  fulfillment_status: String
-  total: Int
-  status: String
-  created_at: String
-  updated_at: String
+  regionId: String!
+  customerId: String!
+  salesChannelId: String!
+  email: String!
+  items: [LineItem!]!
+  shippingMethods: [ShippingMethod!]!
+  shippingAddress: Address
+  paymentStatus: String!
+  fulfillmentStatus: String!
+  total: Int!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  currencyCode: String!
+  displayId: String
+  paymentCollections: [PaymentCollection]
 }

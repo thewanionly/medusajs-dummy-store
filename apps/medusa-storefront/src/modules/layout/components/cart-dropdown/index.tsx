@@ -109,9 +109,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: Cart | null }) => {
                 <div className="no-scrollbar grid max-h-[402px] grid-cols-1 gap-y-8 overflow-y-scroll p-px px-4">
                   {cartState.items
                     .sort((a, b) => {
-                      return (a.created_at ?? '') > (b.created_at ?? '')
-                        ? -1
-                        : 1;
+                      return (a.createdAt ?? '') > (b.createdAt ?? '') ? -1 : 1;
                     })
                     .map((item) => (
                       <div
@@ -120,7 +118,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: Cart | null }) => {
                         data-testid="cart-item"
                       >
                         <LocalizedClientLink
-                          href={`/products/${item.product_handle}`}
+                          href={`/products/${item.productHandle}`}
                           className="w-24"
                         >
                           <Thumbnail
@@ -135,7 +133,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: Cart | null }) => {
                               <div className="mr-4 flex w-[180px] flex-col overflow-ellipsis whitespace-nowrap">
                                 <h3 className="text-base-regular overflow-hidden text-ellipsis">
                                   <LocalizedClientLink
-                                    href={`/products/${item.product_handle}`}
+                                    href={`/products/${item.productHandle}`}
                                     data-testid="product-link"
                                   >
                                     {item.title}
@@ -157,7 +155,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: Cart | null }) => {
                                 <LineItemPrice
                                   item={item}
                                   style="tight"
-                                  currencyCode={cartState.currency_code}
+                                  currencyCode={cartState.currencyCode}
                                 />
                               </div>
                             </div>
@@ -186,7 +184,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: Cart | null }) => {
                     >
                       {convertToLocale({
                         amount: subtotal,
-                        currency_code: cartState.currency_code,
+                        currency_code: cartState.currencyCode,
                       })}
                     </span>
                   </div>

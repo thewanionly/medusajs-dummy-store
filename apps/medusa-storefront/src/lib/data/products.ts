@@ -6,9 +6,9 @@ import {
   GetProductsQuery,
   GetProductsQueryVariables,
   Product,
+  Region,
 } from '@lib/gql/generated-types/graphql';
 import { sortProducts } from '@lib/util/sort-products';
-import { HttpTypes } from '@medusajs/types';
 import { SortOptions } from '@modules/store/components/refinement-list/sort-products';
 
 import { getRegion, retrieveRegion } from './regions';
@@ -34,7 +34,7 @@ export const listProducts = async ({
     throw new Error('Country code or region ID is required');
   }
 
-  let region: HttpTypes.StoreRegion | undefined | null;
+  let region: Region | undefined | null;
 
   if (countryCode) {
     region = await getRegion(countryCode);

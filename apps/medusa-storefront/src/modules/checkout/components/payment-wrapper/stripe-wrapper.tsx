@@ -2,12 +2,12 @@
 
 import { createContext } from 'react';
 
-import { HttpTypes } from '@medusajs/types';
+import { PaymentSessions } from '@lib/gql/generated-types/graphql';
 import { Elements } from '@stripe/react-stripe-js';
 import { Stripe, StripeElementsOptions } from '@stripe/stripe-js';
 
 type StripeWrapperProps = {
-  paymentSession: HttpTypes.StorePaymentSession;
+  paymentSession: PaymentSessions;
   stripeKey?: string;
   stripePromise: Promise<Stripe | null> | null;
   children: React.ReactNode;

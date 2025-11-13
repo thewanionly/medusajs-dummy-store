@@ -45,38 +45,38 @@ export type Scalars = {
 };
 
 export type Address = {
-  address_1?: Maybe<Scalars['String']['output']>;
-  address_2?: Maybe<Scalars['String']['output']>;
+  address1?: Maybe<Scalars['String']['output']>;
+  address2?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   company?: Maybe<Scalars['String']['output']>;
-  country_code?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  first_name?: Maybe<Scalars['String']['output']>;
+  countryCode?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  last_name?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
   metadata?: Maybe<Scalars['JSON']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
-  postal_code?: Maybe<Scalars['String']['output']>;
+  postalCode?: Maybe<Scalars['String']['output']>;
   province?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type AddressInput = {
-  address_1?: InputMaybe<Scalars['String']['input']>;
-  address_2?: InputMaybe<Scalars['String']['input']>;
+  address1?: InputMaybe<Scalars['String']['input']>;
+  address2?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   company?: InputMaybe<Scalars['String']['input']>;
-  country_code?: InputMaybe<Scalars['String']['input']>;
-  customer_id?: InputMaybe<Scalars['String']['input']>;
-  first_name?: InputMaybe<Scalars['String']['input']>;
-  last_name?: InputMaybe<Scalars['String']['input']>;
+  countryCode?: InputMaybe<Scalars['String']['input']>;
+  customerId?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
-  postal_code?: InputMaybe<Scalars['String']['input']>;
+  postalCode?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ApplicationMethod = {
-  currency_code: Scalars['String']['output'];
+  currencyCode: Scalars['String']['output'];
   type: ApplicationType;
   value: Scalars['Int']['output'];
 };
@@ -84,43 +84,43 @@ export type ApplicationMethod = {
 export type ApplicationType = 'fixed' | 'percentage';
 
 export type Cart = {
-  billing_address?: Maybe<Address>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  currency_code: Scalars['String']['output'];
-  customer_id?: Maybe<Scalars['String']['output']>;
-  discount_tax_total: Scalars['Int']['output'];
-  discount_total: Scalars['Int']['output'];
+  billingAddress?: Maybe<Address>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  currencyCode: Scalars['String']['output'];
+  customerId?: Maybe<Scalars['String']['output']>;
+  discountTaxTotal: Scalars['Int']['output'];
+  discountTotal: Scalars['Int']['output'];
   email?: Maybe<Scalars['String']['output']>;
-  gift_card_tax_total: Scalars['Int']['output'];
-  gift_card_total: Scalars['Int']['output'];
+  giftCardTaxTotal: Scalars['Int']['output'];
+  giftCardTotal: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
-  item_subtotal: Scalars['Int']['output'];
-  item_tax_total: Scalars['Int']['output'];
-  item_total: Scalars['Int']['output'];
+  itemSubtotal: Scalars['Int']['output'];
+  itemTaxTotal: Scalars['Int']['output'];
+  itemTotal: Scalars['Int']['output'];
   items?: Maybe<Array<LineItem>>;
-  original_item_subtotal: Scalars['Int']['output'];
-  original_item_tax_total: Scalars['Int']['output'];
-  original_item_total: Scalars['Int']['output'];
-  original_shipping_subtotal: Scalars['Int']['output'];
-  original_shipping_tax_total: Scalars['Int']['output'];
-  original_shipping_total: Scalars['Int']['output'];
-  original_subtotal: Scalars['Int']['output'];
-  original_tax_total: Scalars['Int']['output'];
-  original_total: Scalars['Int']['output'];
-  payment_collection?: Maybe<PaymentCollection>;
-  promo_codes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  originalItemSubtotal: Scalars['Int']['output'];
+  originalItemTaxTotal: Scalars['Int']['output'];
+  originalItemTotal: Scalars['Int']['output'];
+  originalShippingSubtotal: Scalars['Int']['output'];
+  originalShippingTaxTotal: Scalars['Int']['output'];
+  originalShippingTotal: Scalars['Int']['output'];
+  originalSubtotal: Scalars['Int']['output'];
+  originalTaxTotal: Scalars['Int']['output'];
+  originalTotal: Scalars['Int']['output'];
+  paymentCollection?: Maybe<PaymentCollection>;
+  promoCodes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   promotions: Array<Maybe<Promotion>>;
   region?: Maybe<Region>;
-  region_id?: Maybe<Scalars['String']['output']>;
-  shipping_address?: Maybe<Address>;
-  shipping_methods?: Maybe<Array<Maybe<ShippingMethod>>>;
-  shipping_subtotal: Scalars['Int']['output'];
-  shipping_tax_total: Scalars['Int']['output'];
-  shipping_total: Scalars['Int']['output'];
+  regionId?: Maybe<Scalars['String']['output']>;
+  shippingAddress?: Maybe<Address>;
+  shippingMethods?: Maybe<Array<Maybe<ShippingMethod>>>;
+  shippingSubtotal: Scalars['Int']['output'];
+  shippingTaxTotal: Scalars['Int']['output'];
+  shippingTotal: Scalars['Int']['output'];
   subtotal: Scalars['Int']['output'];
-  tax_total: Scalars['Int']['output'];
+  taxTotal: Scalars['Int']['output'];
   total: Scalars['Int']['output'];
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Collection = {
@@ -152,27 +152,27 @@ export type CompleteCartResponse =
   | CompleteCartOrderResult;
 
 export type Country = {
-  display_name?: Maybe<Scalars['String']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  iso_2?: Maybe<Scalars['String']['output']>;
-  iso_3?: Maybe<Scalars['String']['output']>;
+  iso2?: Maybe<Scalars['String']['output']>;
+  iso3?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  num_code?: Maybe<Scalars['String']['output']>;
+  numCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateCartInput = {
-  billing_address?: InputMaybe<AddressInput>;
-  currency_code?: InputMaybe<Scalars['String']['input']>;
+  billingAddress?: InputMaybe<AddressInput>;
+  currencyCode?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   items?: InputMaybe<Array<CreateLineItemInput>>;
-  promo_codes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  region_id?: InputMaybe<Scalars['String']['input']>;
-  shipping_address?: InputMaybe<AddressInput>;
+  promoCodes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  shippingAddress?: InputMaybe<AddressInput>;
 };
 
 export type CreateLineItemInput = {
   quantity: Scalars['Int']['input'];
-  variant_id: Scalars['String']['input'];
+  variantId: Scalars['String']['input'];
 };
 
 export type Customer = {
@@ -253,20 +253,20 @@ export type ImageMetadata = {
 
 export type LineItem = {
   cart?: Maybe<Cart>;
-  cart_id?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
+  cartId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
-  is_discountable?: Maybe<Scalars['Boolean']['output']>;
-  is_tax_inclusive?: Maybe<Scalars['Boolean']['output']>;
-  original_total?: Maybe<Scalars['Int']['output']>;
-  product_handle?: Maybe<Scalars['String']['output']>;
-  product_title?: Maybe<Scalars['String']['output']>;
+  isDiscountable?: Maybe<Scalars['Boolean']['output']>;
+  isTaxInclusive?: Maybe<Scalars['Boolean']['output']>;
+  originalTotal?: Maybe<Scalars['Int']['output']>;
+  productHandle?: Maybe<Scalars['String']['output']>;
+  productTitle?: Maybe<Scalars['String']['output']>;
   quantity: Scalars['Int']['output'];
-  requires_shipping?: Maybe<Scalars['Boolean']['output']>;
+  requiresShipping?: Maybe<Scalars['Boolean']['output']>;
   thumbnail?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   total?: Maybe<Scalars['Int']['output']>;
-  unit_price?: Maybe<Scalars['Int']['output']>;
+  unitPrice?: Maybe<Scalars['Int']['output']>;
   variant?: Maybe<ProductVariant>;
 };
 
@@ -346,28 +346,41 @@ export type MutationUpdateLineItemArgs = {
 };
 
 export type Order = {
-  created_at?: Maybe<Scalars['String']['output']>;
-  customer_id?: Maybe<Scalars['String']['output']>;
-  email?: Maybe<Scalars['String']['output']>;
-  fulfillment_status?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currencyCode: Scalars['String']['output'];
+  customerId: Scalars['String']['output'];
+  displayId?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  fulfillmentStatus: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  items?: Maybe<Array<LineItem>>;
-  payment_status?: Maybe<Scalars['String']['output']>;
-  region_id?: Maybe<Scalars['String']['output']>;
-  sales_channel_id?: Maybe<Scalars['String']['output']>;
-  shipping_address?: Maybe<Address>;
-  shipping_methods?: Maybe<Array<ShippingMethod>>;
-  status?: Maybe<Scalars['String']['output']>;
-  total?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['String']['output']>;
+  items: Array<LineItem>;
+  paymentCollections?: Maybe<Array<Maybe<PaymentCollection>>>;
+  paymentStatus: Scalars['String']['output'];
+  regionId: Scalars['String']['output'];
+  salesChannelId: Scalars['String']['output'];
+  shippingAddress?: Maybe<Address>;
+  shippingMethods: Array<ShippingMethod>;
+  status: Scalars['String']['output'];
+  total: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type Payment = {
+  amount: Scalars['Int']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  currencyCode: Scalars['String']['output'];
+  data?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['String']['output'];
+  providerId: Scalars['String']['output'];
 };
 
 export type PaymentCollection = {
   amount: Scalars['Int']['output'];
-  currency_code: Scalars['String']['output'];
+  currencyCode: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  payment_providers: Array<Maybe<PaymentProviders>>;
-  payment_sessions?: Maybe<Array<Maybe<PaymentSessions>>>;
+  paymentProviders: Array<Maybe<PaymentProviders>>;
+  paymentSessions?: Maybe<Array<Maybe<PaymentSessions>>>;
+  payments?: Maybe<Array<Maybe<Payment>>>;
   status: PaymentStatus;
 };
 
@@ -385,10 +398,10 @@ export type PaymentSessionStatus =
 
 export type PaymentSessions = {
   amount: Scalars['Int']['output'];
-  currency_code: Scalars['String']['output'];
+  currencyCode: Scalars['String']['output'];
   data: Scalars['JSON']['output'];
   id: Scalars['String']['output'];
-  provider_id: Scalars['String']['output'];
+  providerId: Scalars['String']['output'];
   status: PaymentSessionStatus;
 };
 
@@ -495,10 +508,10 @@ export type ProductVariantOption = {
 };
 
 export type Promotion = {
-  application_method?: Maybe<ApplicationMethod>;
+  applicationMethod?: Maybe<ApplicationMethod>;
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  is_automatic?: Maybe<Scalars['Boolean']['output']>;
+  isAutomatic?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type Query = {
@@ -571,13 +584,13 @@ export type QuerySearchProductsArgs = {
 };
 
 export type Region = {
-  automatic_taxes?: Maybe<Scalars['Boolean']['output']>;
+  automaticTaxes?: Maybe<Scalars['Boolean']['output']>;
   countries?: Maybe<Array<Maybe<Country>>>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  currency_code: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  currencyCode: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type RichText = {
@@ -618,13 +631,14 @@ export type SearchProducts = {
 
 export type ShippingMethod = {
   amount: Scalars['Int']['output'];
-  cart_id?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
+  cartId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
-  is_tax_inclusive: Scalars['Boolean']['output'];
+  isTaxInclusive: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
-  shipping_option_id?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
+  shippingOptionId?: Maybe<Scalars['String']['output']>;
+  total?: Maybe<Scalars['Int']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type SocialLink = {
@@ -660,11 +674,11 @@ export type Token = {
 };
 
 export type UpdateCartInput = {
-  billing_address?: InputMaybe<AddressInput>;
+  billingAddress?: InputMaybe<AddressInput>;
   email?: InputMaybe<Scalars['String']['input']>;
-  promo_codes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  region_id?: InputMaybe<Scalars['String']['input']>;
-  shipping_address?: InputMaybe<AddressInput>;
+  promoCodes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  shippingAddress?: InputMaybe<AddressInput>;
 };
 
 export type UpdateLineItemInput = {
@@ -841,6 +855,7 @@ export type ResolversTypes = {
   MarkDef: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['MarkDef']>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Order: ResolverTypeWrapper<Order>;
+  Payment: ResolverTypeWrapper<Payment>;
   PaymentCollection: ResolverTypeWrapper<PaymentCollection>;
   PaymentProviders: ResolverTypeWrapper<PaymentProviders>;
   PaymentSessionStatus: PaymentSessionStatus;
@@ -922,6 +937,7 @@ export type ResolversParentTypes = {
   MarkDef: ResolversUnionTypes<ResolversParentTypes>['MarkDef'];
   Mutation: Record<PropertyKey, never>;
   Order: Order;
+  Payment: Payment;
   PaymentCollection: PaymentCollection;
   PaymentProviders: PaymentProviders;
   PaymentSessions: PaymentSessions;
@@ -966,48 +982,36 @@ export type AddressResolvers<
   ParentType extends
     ResolversParentTypes['Address'] = ResolversParentTypes['Address'],
 > = {
-  address_1?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  address_2?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
+  address1?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   company?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  country_code?: Resolver<
+  countryCode?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
-  created_at?: Resolver<
+  createdAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
-  first_name?: Resolver<
+  firstName?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  last_name?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   metadata?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  postal_code?: Resolver<
+  postalCode?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
   province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  updated_at?: Resolver<
+  updatedAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
@@ -1019,7 +1023,7 @@ export type ApplicationMethodResolvers<
   ParentType extends
     ResolversParentTypes['ApplicationMethod'] = ResolversParentTypes['ApplicationMethod'],
 > = {
-  currency_code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['ApplicationType'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
@@ -1029,79 +1033,71 @@ export type CartResolvers<
   ParentType extends
     ResolversParentTypes['Cart'] = ResolversParentTypes['Cart'],
 > = {
-  billing_address?: Resolver<
+  billingAddress?: Resolver<
     Maybe<ResolversTypes['Address']>,
     ParentType,
     ContextType
   >;
-  created_at?: Resolver<
+  createdAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
-  currency_code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  customer_id?: Resolver<
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  customerId?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
-  discount_tax_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  discount_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  discountTaxTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  discountTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  gift_card_tax_total?: Resolver<
-    ResolversTypes['Int'],
-    ParentType,
-    ContextType
-  >;
-  gift_card_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  giftCardTaxTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  giftCardTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  item_subtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  item_tax_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  item_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  itemSubtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  itemTaxTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  itemTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   items?: Resolver<
     Maybe<Array<ResolversTypes['LineItem']>>,
     ParentType,
     ContextType
   >;
-  original_item_subtotal?: Resolver<
+  originalItemSubtotal?: Resolver<
     ResolversTypes['Int'],
     ParentType,
     ContextType
   >;
-  original_item_tax_total?: Resolver<
+  originalItemTaxTotal?: Resolver<
     ResolversTypes['Int'],
     ParentType,
     ContextType
   >;
-  original_item_total?: Resolver<
+  originalItemTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  originalShippingSubtotal?: Resolver<
     ResolversTypes['Int'],
     ParentType,
     ContextType
   >;
-  original_shipping_subtotal?: Resolver<
+  originalShippingTaxTotal?: Resolver<
     ResolversTypes['Int'],
     ParentType,
     ContextType
   >;
-  original_shipping_tax_total?: Resolver<
+  originalShippingTotal?: Resolver<
     ResolversTypes['Int'],
     ParentType,
     ContextType
   >;
-  original_shipping_total?: Resolver<
-    ResolversTypes['Int'],
-    ParentType,
-    ContextType
-  >;
-  original_subtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  original_tax_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  original_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  payment_collection?: Resolver<
+  originalSubtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  originalTaxTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  originalTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  paymentCollection?: Resolver<
     Maybe<ResolversTypes['PaymentCollection']>,
     ParentType,
     ContextType
   >;
-  promo_codes?: Resolver<
+  promoCodes?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['String']>>>,
     ParentType,
     ContextType
@@ -1112,28 +1108,24 @@ export type CartResolvers<
     ContextType
   >;
   region?: Resolver<Maybe<ResolversTypes['Region']>, ParentType, ContextType>;
-  region_id?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  shipping_address?: Resolver<
+  regionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  shippingAddress?: Resolver<
     Maybe<ResolversTypes['Address']>,
     ParentType,
     ContextType
   >;
-  shipping_methods?: Resolver<
+  shippingMethods?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['ShippingMethod']>>>,
     ParentType,
     ContextType
   >;
-  shipping_subtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  shipping_tax_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  shipping_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  shippingSubtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  shippingTaxTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  shippingTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   subtotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  tax_total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  taxTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  updated_at?: Resolver<
+  updatedAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
@@ -1207,16 +1199,16 @@ export type CountryResolvers<
   ParentType extends
     ResolversParentTypes['Country'] = ResolversParentTypes['Country'],
 > = {
-  display_name?: Resolver<
+  displayName?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  iso_2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  iso_3?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  iso2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  iso3?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  num_code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  numCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
 export type CustomerResolvers<
@@ -1442,40 +1434,40 @@ export type LineItemResolvers<
     ResolversParentTypes['LineItem'] = ResolversParentTypes['LineItem'],
 > = {
   cart?: Resolver<Maybe<ResolversTypes['Cart']>, ParentType, ContextType>;
-  cart_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  created_at?: Resolver<
+  cartId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  is_discountable?: Resolver<
+  isDiscountable?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType
   >;
-  is_tax_inclusive?: Resolver<
+  isTaxInclusive?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType
   >;
-  original_total?: Resolver<
+  originalTotal?: Resolver<
     Maybe<ResolversTypes['Int']>,
     ParentType,
     ContextType
   >;
-  product_handle?: Resolver<
+  productHandle?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
-  product_title?: Resolver<
+  productTitle?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
   quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  requires_shipping?: Resolver<
+  requiresShipping?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType
@@ -1487,7 +1479,7 @@ export type LineItemResolvers<
   >;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   total?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  unit_price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  unitPrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   variant?: Resolver<
     Maybe<ResolversTypes['ProductVariant']>,
     ParentType,
@@ -1604,60 +1596,60 @@ export type OrderResolvers<
   ParentType extends
     ResolversParentTypes['Order'] = ResolversParentTypes['Order'],
 > = {
-  created_at?: Resolver<
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  customerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  displayId?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
-  customer_id?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  fulfillment_status?: Resolver<
-    Maybe<ResolversTypes['String']>,
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  fulfillmentStatus?: Resolver<
+    ResolversTypes['String'],
     ParentType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  items?: Resolver<
-    Maybe<Array<ResolversTypes['LineItem']>>,
+  items?: Resolver<Array<ResolversTypes['LineItem']>, ParentType, ContextType>;
+  paymentCollections?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['PaymentCollection']>>>,
     ParentType,
     ContextType
   >;
-  payment_status?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  region_id?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  sales_channel_id?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  shipping_address?: Resolver<
+  paymentStatus?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  regionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  salesChannelId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  shippingAddress?: Resolver<
     Maybe<ResolversTypes['Address']>,
     ParentType,
     ContextType
   >;
-  shipping_methods?: Resolver<
-    Maybe<Array<ResolversTypes['ShippingMethod']>>,
+  shippingMethods?: Resolver<
+    Array<ResolversTypes['ShippingMethod']>,
     ParentType,
     ContextType
   >;
-  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  total?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  updated_at?: Resolver<
-    Maybe<ResolversTypes['String']>,
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+};
+
+export type PaymentResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Payment'] = ResolversParentTypes['Payment'],
+> = {
+  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  providerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type PaymentCollectionResolvers<
@@ -1666,15 +1658,20 @@ export type PaymentCollectionResolvers<
     ResolversParentTypes['PaymentCollection'] = ResolversParentTypes['PaymentCollection'],
 > = {
   amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  currency_code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  payment_providers?: Resolver<
+  paymentProviders?: Resolver<
     Array<Maybe<ResolversTypes['PaymentProviders']>>,
     ParentType,
     ContextType
   >;
-  payment_sessions?: Resolver<
+  paymentSessions?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['PaymentSessions']>>>,
+    ParentType,
+    ContextType
+  >;
+  payments?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Payment']>>>,
     ParentType,
     ContextType
   >;
@@ -1695,10 +1692,10 @@ export type PaymentSessionsResolvers<
     ResolversParentTypes['PaymentSessions'] = ResolversParentTypes['PaymentSessions'],
 > = {
   amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  currency_code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   data?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  provider_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  providerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<
     ResolversTypes['PaymentSessionStatus'],
     ParentType,
@@ -1954,14 +1951,14 @@ export type PromotionResolvers<
   ParentType extends
     ResolversParentTypes['Promotion'] = ResolversParentTypes['Promotion'],
 > = {
-  application_method?: Resolver<
+  applicationMethod?: Resolver<
     Maybe<ResolversTypes['ApplicationMethod']>,
     ParentType,
     ContextType
   >;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  is_automatic?: Resolver<
+  isAutomatic?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType
@@ -2030,7 +2027,7 @@ export type RegionResolvers<
   ParentType extends
     ResolversParentTypes['Region'] = ResolversParentTypes['Region'],
 > = {
-  automatic_taxes?: Resolver<
+  automaticTaxes?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType
@@ -2040,15 +2037,15 @@ export type RegionResolvers<
     ParentType,
     ContextType
   >;
-  created_at?: Resolver<
+  createdAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
-  currency_code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updated_at?: Resolver<
+  updatedAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
@@ -2147,25 +2144,22 @@ export type ShippingMethodResolvers<
     ResolversParentTypes['ShippingMethod'] = ResolversParentTypes['ShippingMethod'],
 > = {
   amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  cart_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  created_at?: Resolver<
+  cartId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  is_tax_inclusive?: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType
-  >;
+  isTaxInclusive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  shipping_option_id?: Resolver<
+  shippingOptionId?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,
     ContextType
   >;
-  updated_at?: Resolver<
+  total?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  updatedAt?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
     ContextType
@@ -2259,6 +2253,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   MarkDef?: MarkDefResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Order?: OrderResolvers<ContextType>;
+  Payment?: PaymentResolvers<ContextType>;
   PaymentCollection?: PaymentCollectionResolvers<ContextType>;
   PaymentProviders?: PaymentProvidersResolvers<ContextType>;
   PaymentSessions?: PaymentSessionsResolvers<ContextType>;

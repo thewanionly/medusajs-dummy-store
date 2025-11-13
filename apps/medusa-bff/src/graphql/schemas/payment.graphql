@@ -6,6 +6,15 @@ enum PaymentStatus {
   partially_authorized
 }
 
+type Payment {
+  id: String!
+  amount: Int!
+  currencyCode: String!
+  providerId: String!
+  data: JSON
+  createdAt: DateTime
+}
+
 enum PaymentSessionStatus {
   authorized
   captured
@@ -17,11 +26,12 @@ enum PaymentSessionStatus {
 
 type PaymentCollection {
   id: String!
-  currency_code: String!
+  currencyCode: String!
   amount: Int!
   status: PaymentStatus!
-  payment_providers: [PaymentProviders]!
-  payment_sessions: [PaymentSessions]
+  paymentProviders: [PaymentProviders]!
+  paymentSessions: [PaymentSessions]
+  payments: [Payment]
 }
 
 type PaymentProviders {
@@ -31,8 +41,8 @@ type PaymentProviders {
 type PaymentSessions {
   id: String!
   amount: Int!
-  currency_code: String!
-  provider_id: String!
+  currencyCode: String!
+  providerId: String!
   data: JSON!
   status: PaymentSessionStatus!
 }

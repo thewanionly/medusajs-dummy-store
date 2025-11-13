@@ -1,5 +1,8 @@
 import { cartResolvers } from '@graphql/resolvers/cart';
-import { normalizeCart } from '@graphql/resolvers/cart/util/transforms';
+import {
+  normalizeCart,
+  normalizeCompleteCartResponse,
+} from '@graphql/resolvers/cart/util/transforms';
 import { GraphQLContext } from '@graphql/types/context';
 import Medusa from '@medusajs/js-sdk';
 import { createMockCart } from '@mocks/cart';
@@ -163,10 +166,12 @@ describe('Cart Resolvers', () => {
         testContext
       );
 
-      expect(result).toEqual({
-        type: 'order',
-        order: createMockOrder(),
-      });
+      expect(result).toEqual(
+        normalizeCompleteCartResponse({
+          type: 'order',
+          order: createMockOrder(),
+        })
+      );
     });
   });
 

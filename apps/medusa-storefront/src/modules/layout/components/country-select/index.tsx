@@ -14,8 +14,8 @@ import {
   Transition,
 } from '@headlessui/react';
 import { updateRegion } from '@lib/data/cart';
+import { Region } from '@lib/gql/generated-types/graphql';
 import { StateType } from '@lib/hooks/use-toggle-state';
-import { HttpTypes } from '@medusajs/types';
 
 type CountryOption = {
   country: string;
@@ -25,7 +25,7 @@ type CountryOption = {
 
 type CountrySelectProps = {
   toggleState: StateType;
-  regions: HttpTypes.StoreRegion[];
+  regions: Region[];
 };
 
 const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
@@ -43,9 +43,9 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
     return regions
       ?.map((r) => {
         return r.countries?.map((c) => ({
-          country: c.iso_2,
-          region: r.id,
-          label: c.display_name,
+          country: c?.iso2 ?? undefined,
+          region: r.id ?? undefined,
+          label: c?.displayName ?? undefined,
         }));
       })
       .flat()

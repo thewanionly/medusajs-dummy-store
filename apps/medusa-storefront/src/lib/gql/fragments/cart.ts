@@ -7,13 +7,13 @@ export const LINE_ITEM_FRAGMENT = gql`
     id
     title
     quantity
-    unit_price
-    created_at
+    unitPrice
+    createdAt
     thumbnail
-    product_handle
-    product_title
+    productHandle
+    productTitle
     total
-    original_total
+    originalTotal
     variant {
       ...ProductVariant
     }
@@ -23,43 +23,44 @@ export const LINE_ITEM_FRAGMENT = gql`
 
 export const ADDRESS_FRAGMENT = gql`
   fragment AddressFields on Address {
-    first_name
-    last_name
+    firstName
+    lastName
     phone
-    address_1
+    address1
     city
-    country_code
-    postal_code
+    countryCode
+    postalCode
   }
 `;
 
 export const SHIPPING_METHODS_FRAGMENT = gql`
   fragment ShippingMethodFields on ShippingMethod {
     id
-    cart_id
+    cartId
     name
     amount
-    is_tax_inclusive
-    shipping_option_id
-    created_at
-    updated_at
+    isTaxInclusive
+    shippingOptionId
+    createdAt
+    updatedAt
+    total
   }
 `;
 
 export const PAYMENT_COLLECTION_FRAGMENT = gql`
   fragment PaymentCollectionFields on PaymentCollection {
     id
-    currency_code
+    currencyCode
     amount
     status
-    payment_providers {
+    paymentProviders {
       id
     }
-    payment_sessions {
+    paymentSessions {
       id
       amount
-      currency_code
-      provider_id
+      currencyCode
+      providerId
       data
       status
     }
@@ -69,10 +70,10 @@ export const PAYMENT_COLLECTION_FRAGMENT = gql`
 export const COUNTRY_FRAGMENT = gql`
   fragment CountryFields on Country {
     id
-    iso_2
-    iso_3
+    iso2
+    iso3
     name
-    display_name
+    displayName
   }
 `;
 
@@ -80,10 +81,10 @@ export const REGION_FRAGMENT = gql`
   fragment RegionFields on Region {
     id
     name
-    currency_code
-    automatic_taxes
-    created_at
-    updated_at
+    currencyCode
+    automaticTaxes
+    createdAt
+    updatedAt
     countries {
       ...CountryFields
     }
@@ -101,52 +102,52 @@ export const PROMOTION_FRAGMENT = gql`
 export const CART_FRAGMENT = gql`
   fragment CartFields on Cart {
     id
-    customer_id
-    region_id
+    customerId
+    regionId
     email
     total
     subtotal
-    tax_total
-    discount_total
-    shipping_subtotal
-    original_total
-    currency_code
-    original_item_total
-    original_item_subtotal
-    original_item_tax_total
-    item_total
-    item_subtotal
-    item_tax_total
-    original_subtotal
-    original_tax_total
-    discount_tax_total
-    shipping_total
-    shipping_subtotal
-    shipping_tax_total
-    original_shipping_total
-    original_shipping_subtotal
-    original_shipping_tax_total
-    gift_card_total
-    gift_card_tax_total
+    taxTotal
+    discountTotal
+    shippingSubtotal
+    originalTotal
+    currencyCode
+    originalItemTotal
+    originalItemSubtotal
+    originalItemTaxTotal
+    itemTotal
+    itemSubtotal
+    itemTaxTotal
+    originalSubtotal
+    originalTaxTotal
+    discountTaxTotal
+    shippingTotal
+    shippingSubtotal
+    shippingTaxTotal
+    originalShippingTotal
+    originalShippingSubtotal
+    originalShippingTaxTotal
+    giftCardTotal
+    giftCardTaxTotal
     promotions {
       ...PromotionFields
     }
     items {
       ...CartItemFields
     }
-    shipping_address {
+    shippingAddress {
       ...AddressFields
     }
-    billing_address {
+    billingAddress {
       ...AddressFields
     }
     region {
       ...RegionFields
     }
-    shipping_methods {
+    shippingMethods {
       ...ShippingMethodFields
     }
-    payment_collection {
+    paymentCollection {
       ...PaymentCollectionFields
     }
   }

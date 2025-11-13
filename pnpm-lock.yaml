@@ -310,6 +310,9 @@ importers:
       algoliasearch:
         specifier: ^5.35.0
         version: 5.42.0
+      dompurify:
+        specifier: ^3.3.0
+        version: 3.3.0
       graphql:
         specifier: ^16.8.1
         version: 16.12.0

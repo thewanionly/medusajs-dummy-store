@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Radio, RadioGroup } from '@headlessui/react';
 import { setShippingMethod } from '@lib/data/cart';
 import { calculatePriceForShippingOption } from '@lib/data/fulfillment';
-import { Address, Cart } from '@lib/gql/generated-types/graphql';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
 import { CheckCircleSolid, Loader } from '@medusajs/icons';
 import { HttpTypes } from '@medusajs/types';
@@ -40,7 +40,7 @@ const Shipping: React.FC<ShippingProps> = ({
   >({});
   const [error, setError] = useState<string | null>(null);
   const [shippingMethodId, setShippingMethodId] = useState<string | null>(
-    cart.shipping_methods?.at(-1)?.shipping_option_id || null
+    cart.shippingMethods?.at(-1)?.shippingOptionId || null
   );
 
   const searchParams = useSearchParams();
@@ -138,18 +138,18 @@ const Shipping: React.FC<ShippingProps> = ({
             'text-3xl-regular flex flex-row items-baseline gap-x-2',
             {
               'pointer-events-none select-none opacity-50':
-                !isOpen && cart.shipping_methods?.length === 0,
+                !isOpen && cart.shippingMethods?.length === 0,
             }
           )}
         >
           Delivery
-          {!isOpen && (cart.shipping_methods?.length ?? 0) > 0 && (
+          {!isOpen && (cart.shippingMethods?.length ?? 0) > 0 && (
             <CheckCircleSolid />
           )}
         </Heading>
         {!isOpen &&
-          cart?.shipping_address &&
-          cart?.billing_address &&
+          cart?.shippingAddress &&
+          cart?.billingAddress &&
           cart?.email && (
             <Text>
               <button
@@ -251,12 +251,12 @@ const Shipping: React.FC<ShippingProps> = ({
                           {option.price_type === 'flat' ? (
                             convertToLocale({
                               amount: option.amount!,
-                              currency_code: cart?.currency_code,
+                              currency_code: cart?.currencyCode,
                             })
                           ) : calculatedPricesMap[option.id] ? (
                             convertToLocale({
                               amount: calculatedPricesMap[option.id],
-                              currency_code: cart?.currency_code,
+                              currency_code: cart?.currencyCode,
                             })
                           ) : isLoadingPrices ? (
                             <Loader />
@@ -318,7 +318,7 @@ const Shipping: React.FC<ShippingProps> = ({
                           <span className="justify-self-end text-ui-fg-base">
                             {convertToLocale({
                               amount: option.amount!,
-                              currency_code: cart?.currency_code,
+                              currency_code: cart?.currencyCode,
                             })}
                           </span>
                         </Radio>
@@ -340,7 +340,7 @@ const Shipping: React.FC<ShippingProps> = ({
               className="mt"
               onClick={handleSubmit}
               isLoading={isLoading}
-              disabled={!cart.shipping_methods?.[0]}
+              disabled={!cart.shippingMethods?.[0]}
               data-testid="submit-delivery-option-button"
             >
               Continue to payment
@@ -350,16 +350,16 @@ const Shipping: React.FC<ShippingProps> = ({
       ) : (
         <div>
           <div className="text-small-regular">
-            {cart && (cart.shipping_methods?.length ?? 0) > 0 && (
+            {cart && (cart.shippingMethods?.length ?? 0) > 0 && (
               <div className="flex w-1/3 flex-col">
                 <Text className="txt-medium-plus mb-1 text-ui-fg-base">
                   Method
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle">
-                  {cart.shipping_methods?.at(-1)?.name}{' '}
+                  {cart.shippingMethods?.at(-1)?.name}{' '}
                   {convertToLocale({
-                    amount: cart?.shipping_methods?.at(-1)?.amount ?? 0,
-                    currency_code: cart?.currency_code,
+                    amount: cart?.shippingMethods?.at(-1)?.amount ?? 0,
+                    currency_code: cart?.currencyCode,
                   })}
                 </Text>
               </div>

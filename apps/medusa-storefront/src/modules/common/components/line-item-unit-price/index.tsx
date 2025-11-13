@@ -1,10 +1,9 @@
 import { LineItem } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { clx } from '@medusajs/ui';
 
 type LineItemUnitPriceProps = {
-  item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem | LineItem;
+  item: LineItem;
   style?: 'default' | 'tight';
   currencyCode: string;
 };
@@ -15,7 +14,7 @@ const LineItemUnitPrice = ({
   currencyCode,
 }: LineItemUnitPriceProps) => {
   const total = item.total ?? 0;
-  const original_total = item.original_total ?? 0;
+  const original_total = item.originalTotal ?? 0;
   const quantity = item.quantity ?? 0;
 
   const hasReducedPrice = total < original_total;

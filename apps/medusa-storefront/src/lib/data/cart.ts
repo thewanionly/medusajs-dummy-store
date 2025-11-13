@@ -92,7 +92,7 @@ export const getOrSetCart = async (
     >({
       mutation: CREATE_CART_MUTATION,
       variables: {
-        data: { region_id: region.id },
+        data: { regionId: region.id },
       },
     });
 
@@ -109,7 +109,7 @@ export const getOrSetCart = async (
     }
   }
 
-  if (cart && cart.region_id !== region.id) {
+  if (cart && cart.regionId !== region.id) {
     const data = await graphqlMutation<
       UpdateCartMutation,
       UpdateCartMutationVariables
@@ -117,7 +117,7 @@ export const getOrSetCart = async (
       mutation: UPDATE_CART_MUTATION,
       variables: {
         id: cart.id,
-        data: { region_id: region.id },
+        data: { regionId: region.id },
       },
     });
 
@@ -203,7 +203,7 @@ export const addToCart = async ({
       variables: {
         cartId: cart.id,
         data: {
-          variant_id: variantId,
+          variantId: variantId,
           quantity,
         },
       },
@@ -475,36 +475,36 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
     }
 
     const data = {
-      shipping_address: {
-        first_name: formData.get('shipping_address.first_name'),
-        last_name: formData.get('shipping_address.last_name'),
-        address_1: formData.get('shipping_address.address_1'),
-        address_2: '',
-        company: formData.get('shipping_address.company'),
-        postal_code: formData.get('shipping_address.postal_code'),
-        city: formData.get('shipping_address.city'),
-        country_code: formData.get('shipping_address.country_code'),
-        province: formData.get('shipping_address.province'),
-        phone: formData.get('shipping_address.phone'),
+      shippingAddress: {
+        firstName: formData.get('shippingAddress.firstName'),
+        lastName: formData.get('shippingAddress.lastName'),
+        address1: formData.get('shippingAddress.address1'),
+        address2: '',
+        company: formData.get('shippingAddress.company'),
+        postalCode: formData.get('shippingAddress.postalCode'),
+        city: formData.get('shippingAddress.city'),
+        countryCode: formData.get('shippingAddress.countryCode'),
+        province: formData.get('shippingAddress.province'),
+        phone: formData.get('shippingAddress.phone'),
       },
       email: formData.get('email'),
     } as any;
 
-    const sameAsBilling = formData.get('same_as_billing');
-    if (sameAsBilling === 'on') data.billing_address = data.shipping_address;
+    const sameAsBilling = formData.get('same-as-billing');
+    if (sameAsBilling === 'on') data.billingAddress = data.shippingAddress;
 
     if (sameAsBilling !== 'on')
-      data.billing_address = {
-        first_name: formData.get('billing_address.first_name'),
-        last_name: formData.get('billing_address.last_name'),
-        address_1: formData.get('billing_address.address_1'),
-        address_2: '',
-        company: formData.get('billing_address.company'),
-        postal_code: formData.get('billing_address.postal_code'),
-        city: formData.get('billing_address.city'),
-        country_code: formData.get('billing_address.country_code'),
-        province: formData.get('billing_address.province'),
-        phone: formData.get('billing_address.phone'),
+      data.billingAddress = {
+        firstName: formData.get('billingAddress.firstName'),
+        lastName: formData.get('billingAddress.lastName'),
+        address1: formData.get('billingAddress.address1'),
+        address2: '',
+        company: formData.get('billingAddress.company'),
+        postalCode: formData.get('billingAddress.postalCode'),
+        city: formData.get('billingAddress.city'),
+        countryCode: formData.get('billingAddress.countryCode'),
+        province: formData.get('billingAddress.province'),
+        phone: formData.get('billingAddress.phone'),
       };
     await updateCart(data);
   } catch (e: any) {
@@ -512,7 +512,7 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
   }
 
   redirect(
-    `/${formData.get('shipping_address.country_code')}/checkout?step=delivery`
+    `/${formData.get('shippingAddress.countryCode')}/checkout?step=delivery`
   );
 }
 
@@ -544,7 +544,7 @@ export async function placeOrder(cartId?: string) {
     if (completed.__typename === 'CompleteCartOrderResult') {
       const order = completed.order;
       const countryCode =
-        order?.shipping_address?.country_code?.toLowerCase() ?? 'us';
+        order?.shippingAddress?.countryCode?.toLowerCase() ?? 'us';
 
       const orderCacheTag = await getCacheTag('orders');
       revalidateTag(orderCacheTag);
@@ -588,7 +588,7 @@ export async function updateRegion(countryCode: string, currentPath: string) {
   }
 
   if (cartId) {
-    await updateCart({ region_id: region.id });
+    await updateCart({ regionId: region.id });
     const cartCacheTag = await getCacheTag('carts');
     revalidateTag(cartCacheTag);
   }

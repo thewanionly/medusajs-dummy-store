@@ -7,155 +7,156 @@ type LineItem {
   id: ID!
   title: String
   quantity: Int!
-  requires_shipping: Boolean
-  is_discountable: Boolean
-  is_tax_inclusive: Boolean
-  unit_price: Int
+  requiresShipping: Boolean
+  isDiscountable: Boolean
+  isTaxInclusive: Boolean
+  unitPrice: Int
   cart: Cart
-  cart_id: String
-  created_at: DateTime
-  product_handle: String
-  product_title: String
+  cartId: String
+  createdAt: DateTime
+  productHandle: String
+  productTitle: String
   thumbnail: String
   total: Int
-  original_total: Int
+  originalTotal: Int
   variant: ProductVariant
 }
 
 type Address {
   id: String
   metadata: JSON
-  created_at: DateTime
-  updated_at: DateTime
-  first_name: String
-  last_name: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  firstName: String
+  lastName: String
   phone: String
-  address_1: String
-  address_2: String
+  address1: String
+  address2: String
   company: String
   province: String
   city: String
-  country_code: String
-  postal_code: String
+  countryCode: String
+  postalCode: String
 }
 
 type ApplicationMethod {
   value: Int!
   type: ApplicationType!
-  currency_code: String!
+  currencyCode: String!
 }
 
 type Promotion {
   id: String!
   code: String
-  is_automatic: Boolean
-  application_method: ApplicationMethod
+  isAutomatic: Boolean
+  applicationMethod: ApplicationMethod
 }
 
 type Country {
   id: ID
-  iso_2: String
-  iso_3: String
-  num_code: String
+  iso2: String
+  iso3: String
+  numCode: String
   name: String
-  display_name: String
+  displayName: String
 }
 
 type Region {
   id: ID!
   name: String!
-  currency_code: String!
-  automatic_taxes: Boolean
-  created_at: DateTime
-  updated_at: DateTime
+  currencyCode: String!
+  automaticTaxes: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
   countries: [Country]
 }
 
 type ShippingMethod {
   id: String!
-  cart_id: String
+  cartId: String
   name: String!
   amount: Int!
-  is_tax_inclusive: Boolean!
-  created_at: DateTime
-  updated_at: DateTime
-  shipping_option_id: String
+  isTaxInclusive: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+  shippingOptionId: String
+  total: Int
 }
 
 type Cart {
   id: ID!
-  currency_code: String!
-  original_item_total: Int!
-  original_item_subtotal: Int!
-  original_item_tax_total: Int!
-  item_total: Int!
-  item_subtotal: Int!
-  item_tax_total: Int!
-  original_total: Int!
-  original_subtotal: Int!
-  original_tax_total: Int!
+  currencyCode: String!
+  originalItemTotal: Int!
+  originalItemSubtotal: Int!
+  originalItemTaxTotal: Int!
+  itemTotal: Int!
+  itemSubtotal: Int!
+  itemTaxTotal: Int!
+  originalTotal: Int!
+  originalSubtotal: Int!
+  originalTaxTotal: Int!
   total: Int!
   subtotal: Int!
-  tax_total: Int!
-  discount_total: Int!
-  discount_tax_total: Int!
-  gift_card_total: Int!
-  gift_card_tax_total: Int!
-  shipping_total: Int!
-  shipping_subtotal: Int!
-  shipping_tax_total: Int!
-  original_shipping_total: Int!
-  original_shipping_subtotal: Int!
-  original_shipping_tax_total: Int!
+  taxTotal: Int!
+  discountTotal: Int!
+  discountTaxTotal: Int!
+  giftCardTotal: Int!
+  giftCardTaxTotal: Int!
+  shippingTotal: Int!
+  shippingSubtotal: Int!
+  shippingTaxTotal: Int!
+  originalShippingTotal: Int!
+  originalShippingSubtotal: Int!
+  originalShippingTaxTotal: Int!
   promotions: [Promotion]!
   email: String
   items: [LineItem!]
-  region_id: String
-  shipping_address: Address
-  billing_address: Address
-  created_at: DateTime
-  updated_at: DateTime
-  promo_codes: [String]
-  shipping_methods: [ShippingMethod]
+  regionId: String
+  shippingAddress: Address
+  billingAddress: Address
+  createdAt: DateTime
+  updatedAt: DateTime
+  promoCodes: [String]
+  shippingMethods: [ShippingMethod]
   region: Region
-  payment_collection: PaymentCollection
-  customer_id: String
+  paymentCollection: PaymentCollection
+  customerId: String
 }
 
 input AddressInput {
-  customer_id: String
-  first_name: String
-  last_name: String
+  customerId: String
+  firstName: String
+  lastName: String
   phone: String
-  address_1: String
-  address_2: String
+  address1: String
+  address2: String
   company: String
   province: String
   city: String
-  country_code: String
-  postal_code: String
+  countryCode: String
+  postalCode: String
 }
 
 input CreateCartInput {
-  region_id: String
-  shipping_address: AddressInput
-  billing_address: AddressInput
+  regionId: String
+  shippingAddress: AddressInput
+  billingAddress: AddressInput
   email: String
-  currency_code: String
+  currencyCode: String
   items: [CreateLineItemInput!]
-  promo_codes: [String]
+  promoCodes: [String]
 }
 
 input UpdateCartInput {
-  region_id: String
-  shipping_address: AddressInput
-  billing_address: AddressInput
+  regionId: String
+  shippingAddress: AddressInput
+  billingAddress: AddressInput
   email: String
-  promo_codes: [String]
+  promoCodes: [String]
 }
 
 input CreateLineItemInput {
-  variant_id: String!
+  variantId: String!
   quantity: Int!
 }
 
