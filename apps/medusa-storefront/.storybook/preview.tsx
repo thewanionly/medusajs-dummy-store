@@ -3,9 +3,9 @@ import React from 'react';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import 'styles/globals.css';
 
+import { TooltipProvider } from '@medusajs/ui';
 import type { Preview } from '@storybook/nextjs-vite';
 
-import { TooltipProvider } from '@medusajs/ui';
 import { ApolloClientProvider } from '../src/lib/context/apollo-context';
 
 initialize();

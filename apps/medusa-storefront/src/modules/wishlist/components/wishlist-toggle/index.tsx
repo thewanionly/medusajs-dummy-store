@@ -243,8 +243,8 @@ export function WishlistToggleButton({
           className={cn(
             'h-9 w-9 rounded-full border shadow-borders-base transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ui-bg-interactive focus-visible:ring-offset-2 disabled:cursor-not-allowed',
             isInWishlist
-              ? 'border-ui-border-interactive bg-ui-bg-interactive text-ui-fg-on-color hover:bg-ui-bg-interactive/90 hover:text-ui-fg-on-color focus-visible:bg-ui-bg-interactive focus-visible:text-ui-fg-on-color focus-visible:border-ui-border-interactive'
-              : 'border-transparent bg-ui-bg-base text-ui-fg-subtle hover:border-ui-border-interactive hover:text-ui-fg-interactive focus-visible:border-ui-border-interactive focus-visible:text-ui-fg-interactive focus-visible:bg-ui-bg-base',
+              ? 'hover:bg-ui-bg-interactive/90 border-ui-border-interactive bg-ui-bg-interactive text-ui-fg-on-color hover:text-ui-fg-on-color focus-visible:border-ui-border-interactive focus-visible:bg-ui-bg-interactive focus-visible:text-ui-fg-on-color'
+              : 'border-transparent bg-ui-bg-base text-ui-fg-subtle hover:border-ui-border-interactive hover:text-ui-fg-interactive focus-visible:border-ui-border-interactive focus-visible:bg-ui-bg-base focus-visible:text-ui-fg-interactive',
             disabled && 'opacity-60'
           )}
         >
