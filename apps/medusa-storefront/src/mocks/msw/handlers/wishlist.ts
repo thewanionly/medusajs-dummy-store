@@ -46,15 +46,17 @@ export const resetWishlistMocks = () => {
 export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
   'AddWishlistItem',
   async ({ variables }) => {
-    await delay(400);
+    await delay(500);
 
-    const input = ((variables || {}) as {
-      input?: {
-        productId: string;
-        productHandle?: string;
-        productVariantId: string;
-      };
-    }).input;
+    const input = (
+      (variables || {}) as {
+        input?: {
+          productId: string;
+          productHandle?: string;
+          productVariantId: string;
+        };
+      }
+    ).input;
 
     if (!input) {
       return HttpResponse.json(
@@ -95,14 +97,16 @@ export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
 export const removeWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
   'RemoveWishlistItem',
   async ({ variables }) => {
-    await delay(300);
+    await delay(500);
 
-    const input = ((variables || {}) as {
-      input?: {
-        productVariantId: string;
-        wishlistItemId?: string | null;
-      };
-    }).input;
+    const input = (
+      (variables || {}) as {
+        input?: {
+          productVariantId: string;
+          wishlistItemId?: string | null;
+        };
+      }
+    ).input;
 
     if (!input) {
       return HttpResponse.json(
@@ -150,7 +154,7 @@ export const handlers = [
 export const addWishlistItemError = storefrontMedusaBffWrapper.mutation(
   'AddWishlistItem',
   async () => {
-    await delay(400);
+    await delay(500);
 
     return HttpResponse.json(
       {
@@ -170,7 +174,7 @@ export const addWishlistItemError = storefrontMedusaBffWrapper.mutation(
 export const removeWishlistItemError = storefrontMedusaBffWrapper.mutation(
   'RemoveWishlistItem',
   async () => {
-    await delay(300);
+    await delay(500);
 
     return HttpResponse.json(
       {
