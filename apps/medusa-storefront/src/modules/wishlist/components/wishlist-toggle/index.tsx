@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useMutation } from '@apollo/client/react';
-import { Heart, Loader } from '@medusajs/icons';
 import { cn } from '@mds/ui/lib/utils';
+import { Heart } from '@medusajs/icons';
 import { IconButton, Tooltip } from '@medusajs/ui';
 
+import { useWishlistContext } from '../../context/wishlist-context';
 import {
   ADD_WISHLIST_ITEM_MUTATION,
   AddWishlistItemMutationResult,
@@ -15,7 +16,6 @@ import {
   RemoveWishlistItemMutationResult,
   RemoveWishlistItemMutationVariables,
 } from '../../graphql/mutations';
-import { useWishlistContext } from '../../context/wishlist-context';
 import { WishlistToggleStatus } from '../../types';
 
 export type WishlistToggleButtonProps = {
@@ -31,9 +31,7 @@ export type WishlistToggleButtonProps = {
 };
 
 const getAccessibleLabel = (title: string, isInWishlist: boolean) =>
-  isInWishlist
-    ? `Remove ${title} from wishlist`
-    : `Add ${title} to wishlist`;
+  isInWishlist ? `Remove ${title} from wishlist` : `Add ${title} to wishlist`;
 
 const GENERIC_ERROR_MESSAGE =
   'We could not update your wishlist. Please try again.';
@@ -95,6 +93,7 @@ export function WishlistToggleButton({
   );
 
   const { isInWishlist, wishlistItemId } = currentStatus;
+
   const [feedbackMessage, setFeedbackMessage] = useState<string>('');
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [tooltipMessage, setTooltipMessage] = useState('');
@@ -125,16 +124,15 @@ export function WishlistToggleButton({
     };
   }, []);
 
-  const [addWishlistItem, addState] = useMutation<
+  const [addWishlistItem] = useMutation<
     AddWishlistItemMutationResult,
     AddWishlistItemMutationVariables
   >(ADD_WISHLIST_ITEM_MUTATION);
-  const [removeWishlistItem, removeState] = useMutation<
+  const [removeWishlistItem] = useMutation<
     RemoveWishlistItemMutationResult,
     RemoveWishlistItemMutationVariables
   >(REMOVE_WISHLIST_ITEM_MUTATION);
 
-  const isMutating = addState.loading || removeState.loading;
   const ariaLabel = useMemo(
     () => getAccessibleLabel(productTitle, isInWishlist),
     [productTitle, isInWishlist]
@@ -149,87 +147,83 @@ export function WishlistToggleButton({
     [onStatusChange, showTooltip]
   );
 
-  const handleAddToWishlist = useCallback(async () => {
-    const { data } = await addWishlistItem({
-      variables: {
-        input: {
-          productId,
-          productHandle,
-          productVariantId,
-        },
-      },
-    });
-
-    const nextWishlistItemId =
-      data?.addWishlistItem?.wishlistItem?.id ?? null;
-
-    updateStatus({
-      isInWishlist: true,
-      wishlistItemId: nextWishlistItemId,
-    });
-    notify(
-      { isInWishlist: true, wishlistItemId: nextWishlistItemId },
-      'Added to wishlist'
-    );
-  }, [
-    addWishlistItem,
-    notify,
-    productHandle,
-    productId,
-    productVariantId,
-    updateStatus,
-  ]);
-
-  const handleRemoveFromWishlist = useCallback(async () => {
-    await removeWishlistItem({
-      variables: {
-        input: {
-          productVariantId,
-          wishlistItemId,
-        },
-      },
-    });
-
-    updateStatus({
-      isInWishlist: false,
-      wishlistItemId: null,
-    });
-    notify(
-      { isInWishlist: false, wishlistItemId: null },
-      'Removed from wishlist'
-    );
-  }, [
-    notify,
-    productVariantId,
-    removeWishlistItem,
-    updateStatus,
-    wishlistItemId,
-  ]);
-
   const handleToggle = useCallback(async () => {
-    if (disabled || isMutating) {
+    if (disabled) {
       return;
     }
 
     setFeedbackMessage('');
+    const previousState = currentStatus;
+    const revert = () => updateStatus(previousState);
 
     try {
       if (isInWishlist) {
-        await handleRemoveFromWishlist();
+        updateStatus({
+          isInWishlist: false,
+          wishlistItemId: null,
+        });
+
+        await removeWishlistItem({
+          variables: {
+            input: {
+              productVariantId,
+              wishlistItemId: previousState.wishlistItemId,
+            },
+          },
+        });
+
+        notify(
+          { isInWishlist: false, wishlistItemId: null },
+          'Removed from wishlist'
+        );
       } else {
-        await handleAddToWishlist();
+        updateStatus({
+          isInWishlist: true,
+          wishlistItemId: previousState.wishlistItemId,
+        });
+
+        const { data } = await addWishlistItem({
+          variables: {
+            input: {
+              productId,
+              productHandle,
+              productVariantId,
+            },
+          },
+        });
+
+        const nextWishlistItemId =
+          data?.addWishlistItem?.wishlistItem?.id ??
+          previousState.wishlistItemId ??
+          null;
+
+        updateStatus({
+          isInWishlist: true,
+          wishlistItemId: nextWishlistItemId,
+        });
+        notify(
+          { isInWishlist: true, wishlistItemId: nextWishlistItemId },
+          'Added to wishlist'
+        );
       }
     } catch (error) {
+      revert();
       console.error('Wishlist toggle failed', error);
       setFeedbackMessage(GENERIC_ERROR_MESSAGE);
       showTooltip(GENERIC_ERROR_MESSAGE);
     }
   }, [
+    addWishlistItem,
+    currentStatus,
     disabled,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
     isInWishlist,
-    isMutating,
+    notify,
+    productHandle,
+    productId,
+    productVariantId,
+    removeWishlistItem,
+    showTooltip,
+    updateStatus,
   ]);
 
   return (
@@ -243,24 +237,21 @@ export function WishlistToggleButton({
           variant="transparent"
           aria-pressed={isInWishlist}
           aria-label={ariaLabel}
-          disabled={disabled || isMutating}
+          disabled={disabled}
           onClick={handleToggle}
           data-testid="wishlist-toggle-button"
           className={cn(
-            'h-9 w-9 rounded-full border border-transparent bg-ui-bg-base shadow-borders-base transition-all duration-200 hover:text-ui-fg-interactive focus-visible:ring-2 focus-visible:ring-ui-bg-interactive focus-visible:ring-offset-2 disabled:cursor-not-allowed',
-            isInWishlist &&
-              'border-ui-border-interactive bg-ui-bg-interactive text-ui-fg-on-color',
-            (disabled || isMutating) && 'opacity-60'
+            'h-9 w-9 rounded-full border shadow-borders-base transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ui-bg-interactive focus-visible:ring-offset-2 disabled:cursor-not-allowed',
+            isInWishlist
+              ? 'border-ui-border-interactive bg-ui-bg-interactive text-ui-fg-on-color hover:bg-ui-bg-interactive/90 hover:text-ui-fg-on-color focus-visible:bg-ui-bg-interactive focus-visible:text-ui-fg-on-color focus-visible:border-ui-border-interactive'
+              : 'border-transparent bg-ui-bg-base text-ui-fg-subtle hover:border-ui-border-interactive hover:text-ui-fg-interactive focus-visible:border-ui-border-interactive focus-visible:text-ui-fg-interactive focus-visible:bg-ui-bg-base',
+            disabled && 'opacity-60'
           )}
         >
-          {isMutating ? (
-            <Loader className="h-4 w-4 animate-spin" />
-          ) : (
-            <Heart
-              className="h-4 w-4"
-              color={isInWishlist ? 'currentColor' : undefined}
-            />
-          )}
+          <Heart
+            className="h-4 w-4"
+            color={isInWishlist ? 'currentColor' : undefined}
+          />
         </IconButton>
       </Tooltip>
       <span aria-live="polite" className="sr-only">
