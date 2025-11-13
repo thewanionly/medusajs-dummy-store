@@ -10,4 +10,6 @@ export const activeMocks = {
   CreateCart: false,
   AddToCart: false,
   SearchSuggestions: false,
+  AddWishlistItem: false,
+  RemoveWishlistItem: false,
 };
