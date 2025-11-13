@@ -77,7 +77,7 @@ export const AddToWishlistSuccess: Story = {
   args: mockedProps,
   parameters: {
     msw: {
-      handlers: [addWishlistItemSuccess],
+      handlers: [addWishlistItemSuccess, removeWishlistItemSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {
@@ -104,7 +104,7 @@ export const RemoveFromWishlistSuccess: Story = {
       ],
     },
     msw: {
-      handlers: [removeWishlistItemSuccess],
+      handlers: [removeWishlistItemSuccess, addWishlistItemSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {
@@ -126,7 +126,7 @@ export const AddToWishlistError: Story = {
   args: mockedProps,
   parameters: {
     msw: {
-      handlers: [addWishlistItemError],
+      handlers: [addWishlistItemError, removeWishlistItemSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {
@@ -154,7 +154,7 @@ export const RemoveFromWishlistError: Story = {
       ],
     },
     msw: {
-      handlers: [removeWishlistItemError],
+      handlers: [removeWishlistItemError, addWishlistItemSuccess],
     },
   },
   play: async ({ canvas, userEvent }) => {
