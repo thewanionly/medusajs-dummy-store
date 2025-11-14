@@ -39,6 +39,11 @@ const GENERIC_ERROR_MESSAGE =
   'We could not update your wishlist. Please try again.';
 const ADD_SUCCESS_MESSAGE = 'Added to wishlist';
 const REMOVE_SUCCESS_MESSAGE = 'Removed from wishlist';
+type TooltipVariant = 'success' | 'error';
+const TOOLTIP_VARIANT_CLASSES: Record<TooltipVariant, string> = {
+  success: 'bg-green-50 text-green-700',
+  error: 'bg-rose-50 text-rose-700',
+};
 
 const buildWishlistSeeds = (
   wishlist?: WishlistGraphQL | null
@@ -119,24 +124,30 @@ export function WishlistToggleButton({
   const [feedbackMessage, setFeedbackMessage] = useState<string>('');
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [tooltipMessage, setTooltipMessage] = useState('');
+  const [tooltipVariant, setTooltipVariant] =
+    useState<TooltipVariant>('success');
   const tooltipTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const showTooltip = useCallback((message: string) => {
-    if (!message) {
-      return;
-    }
+  const showTooltip = useCallback(
+    (message: string, variant: TooltipVariant = 'success') => {
+      if (!message) {
+        return;
+      }
 
-    if (tooltipTimer.current) {
-      clearTimeout(tooltipTimer.current);
-    }
+      if (tooltipTimer.current) {
+        clearTimeout(tooltipTimer.current);
+      }
 
-    setTooltipMessage(message);
-    setIsTooltipVisible(true);
+      setTooltipMessage(message);
+      setTooltipVariant(variant);
+      setIsTooltipVisible(true);
 
-    tooltipTimer.current = setTimeout(() => {
-      setIsTooltipVisible(false);
-    }, 2000);
-  }, []);
+      tooltipTimer.current = setTimeout(() => {
+        setIsTooltipVisible(false);
+      }, 2000);
+    },
+    []
+  );
 
   useEffect(() => {
     return () => {
@@ -164,11 +175,11 @@ export function WishlistToggleButton({
     (
       nextState: WishlistToggleStatus,
       message: string,
-      options?: { skipTooltip?: boolean }
+      options?: { skipTooltip?: boolean; variant?: TooltipVariant }
     ) => {
       setFeedbackMessage(message);
       if (!options?.skipTooltip) {
-        showTooltip(message);
+        showTooltip(message, options?.variant);
       }
       onStatusChange?.(nextState);
     },
@@ -250,7 +261,7 @@ export function WishlistToggleButton({
       const errorMessage =
         error instanceof Error ? error.message : GENERIC_ERROR_MESSAGE;
       setFeedbackMessage(errorMessage);
-      showTooltip(errorMessage);
+      showTooltip(errorMessage, 'error');
     }
   }, [
     addWishlistItem,
@@ -270,6 +281,7 @@ export function WishlistToggleButton({
       <Tooltip
         open={Boolean(isTooltipVisible && tooltipMessage)}
         content={tooltipMessage}
+        className={TOOLTIP_VARIANT_CLASSES[tooltipVariant]}
       >
         <IconButton
           type="button"
