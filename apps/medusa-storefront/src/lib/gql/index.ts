@@ -5,7 +5,4 @@ export * from './fragments/product';
 export * from './queries/product';
 
 // Export Apollo client and utilities
-export {
-  default as apolloClient,
-  graphqlFetch,
-} from './apollo-client';
+export { default as apolloClient, graphqlFetch } from './apollo-client';

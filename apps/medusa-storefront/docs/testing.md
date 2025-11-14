@@ -10,13 +10,13 @@ Our project enforces a minimum of 80% coverage
 
 src/modules/[module]/components/
 └── [component-name]/
-    ├── __tests__
-    │   └── [component-name].test.tsx
-    ├── [component-name].tsx
-    └── index.tsx
+├── **tests**
+│ └── [component-name].test.tsx
+├── [component-name].tsx
+└── index.tsx
 
 src/utils/
-├── __tests__/
+├── **tests**/
 │ └── helper.test.ts
 └── helper.ts
 
