@@ -28,8 +28,6 @@ export default function ProductPreview({
       {showWishlistToggle && defaultVariant?.id && (
         <div className="absolute right-3 top-3 z-10">
           <WishlistToggleButton
-            productId={product.id}
-            productHandle={product.handle}
             productTitle={product.title}
             productVariantId={defaultVariant.id}
           />

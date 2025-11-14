@@ -15,7 +15,6 @@ const DEFAULT_STATUS: WishlistToggleStatus = {
 };
 
 type WishlistSeedEntry = {
-  productId: string;
   productVariantId: string;
   wishlistItemId?: string | null;
 };
