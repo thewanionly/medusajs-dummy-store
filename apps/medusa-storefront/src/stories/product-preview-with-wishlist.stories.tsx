@@ -4,6 +4,10 @@ import { expect, waitFor } from 'storybook/test';
 import { Product } from '@lib/gql/generated-types/graphql';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
+import {
+  WishlistProvider,
+  WishlistSeedEntry,
+} from '../lib/context/wishlist-context';
 import { mockedProducts } from '../mocks/data/products';
 import {
   addWishlistItemError,
@@ -14,10 +18,6 @@ import {
 import ProductPreview, {
   ProductPreviewProps,
 } from '../modules/products/components/product-preview';
-import {
-  WishlistProvider,
-  WishlistSeedEntry,
-} from '../modules/wishlist/context/wishlist-context';
 
 const ProductPreviewWithWishlist = ({
   product,

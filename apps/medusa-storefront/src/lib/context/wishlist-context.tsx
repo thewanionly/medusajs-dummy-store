@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 
-import { WishlistToggleStatus } from '../types';
+import { WishlistToggleStatus } from '../../modules/wishlist/types';
 
 const DEFAULT_STATUS: WishlistToggleStatus = {
   isInWishlist: false,
