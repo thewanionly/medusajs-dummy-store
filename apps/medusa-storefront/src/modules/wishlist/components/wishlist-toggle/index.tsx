@@ -19,7 +19,7 @@ import { IconButton, Tooltip } from '@medusajs/ui';
 import {
   type WishlistSeedEntry,
   useWishlistContext,
-} from '../../context/wishlist-context';
+} from '../../../../lib/context/wishlist-context';
 import { WishlistToggleStatus } from '../../types';
 
 export type WishlistToggleButtonProps = {
