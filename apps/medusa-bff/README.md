@@ -71,11 +71,13 @@ pnpm start
 
 - `pnpm run dev` - Start development server with hot reload
 - `pnpm run build` - Build the project for production (includes codegen)
-- `pnpm start` - Start the production server
+- `pnpm run start` - Start the production server
 - `pnpm run lint` - Run ESLint
 - `pnpm run check-types` - Run TypeScript type checking
 - `pnpm run codegen` - Generate TypeScript types from GraphQL schema
 - `pnpm run codegen:watch` - Watch mode for type generation during development
+- `pnpm run generate-schema` - Generate GraphQL schema file using Apollo Rover
+- `pnpm run publish-schema` - Publish schema to Apollo Studio
 
 ## Project Structure
 
@@ -322,6 +324,93 @@ export interface GraphQLContext {
 }
 ```
 
+## Apollo Rover Integration
+
+This BFF service is configured for Apollo Federation using Apollo Rover CLI. The service can be used as a subgraph in an Apollo Gateway setup.
+
+### Prerequisites
+
+- Apollo Rover CLI installed (available via `@apollo/rover` package)
+- Apollo Studio account and graph configured (for publishing)
+
+### Available Rover Scripts
+
+#### Authentication
+
+To authenticate with Apollo Rover, you need to create a Personal API Key in the Apollo Studio dashboard.
+
+```bash
+rover config auth
+```
+
+#### Generate Schema
+
+Introspects the running GraphQL server and generates a `schema.graphql` file:
+
+```bash
+pnpm run generate-schema
+```
+
+This command:
+
+- Connects to the BFF server at the URL specified in `BFF_URL`
+- Introspects the GraphQL schema
+- Outputs the federation-compatible schema to `schema.graphql`
+
+**Note**: The BFF server must be running before executing this command.
+
+#### Publish Schema
+
+Publishes the generated schema to Apollo Studio:
+
+```bash
+pnpm run publish-schema
+```
+
+This command:
+
+- Reads the `schema.graphql` file
+- Publishes it to Apollo Studio as a subgraph from environment variables `APOLLO_SUBGRAPH_NAME`
+- Uses the routing URL from `APOLLO_GRAPH_ROUTING_URL` environment variable(the URL can be found in Apollo Studio under schemas -> subgraphs -> your-subgraph-name -> routing URL)
+
+### Environment Configuration
+
+Add these environment variables to your `.env` file:
+
+```bash
+# Apollo Studio Configuration
+APOLLO_GRAPH_REF="your-graph-id@current"  # Your Apollo Studio graph reference
+APOLLO_GRAPH_ROUTING_URL="your-graph-routing-url"  # Your Apollo Studio graph routing URL
+APOLLO_SUBGRAPH_NAME="your-subgraph-name"  # Your Apollo Studio subgraph name
+```
+
+### Workflow Example
+
+1. Start the BFF development server:
+
+   ```bash
+   pnpm run dev
+   ```
+
+2. Generate the schema file:
+
+   ```bash
+   pnpm run generate-schema
+   ```
+
+3. Publish to Apollo Studio (requires `APOLLO_GRAPH_REF`, `APOLLO_SUBGRAPH_NAME` and `APOLLO_GRAPH_ROUTING_URL` to be set):
+   ```bash
+   pnpm run publish-schema
+   ```
+
+### Federation Features
+
+This subgraph includes:
+
+- Apollo Federation v2 directives (`@key`, `@external`, `@requires`, `@provides`, etc.)
+- Subgraph service metadata (`_service` field)
+- Compatible with Apollo Gateway composition
+
 ### Best Practices
 
 - **Error Handling**: Always wrap service calls in try-catch blocks
@@ -331,3 +420,4 @@ export interface GraphQLContext {
 - **Documentation**: Add descriptions to your GraphQL schema fields
 - **Testing**: Write unit tests for your resolvers and services
 - **Schema-First**: Define your GraphQL schema first, then implement resolvers and services
+- **Schema Management**: Regenerate and republish schema after significant changes
