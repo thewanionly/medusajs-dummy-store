@@ -2,7 +2,7 @@ import type { WishlistGraphQL } from '@lib/gql/mutations/wishlist';
 
 const mockedWishlistId = 'wishlist_mock_id';
 export const mockedWishlistItemId = 'wishlist_item_mock_id';
-const mockedProductVariantId = 'product_variant_mock_id';
+export const mockedProductVariantId = 'product_variant_mock_id';
 
 export const mockedWishlistWithItem: WishlistGraphQL = {
   id: mockedWishlistId,

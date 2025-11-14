@@ -10,6 +10,10 @@ import {
 } from '../lib/context/wishlist-context';
 import { mockedProducts } from '../mocks/data/products';
 import {
+  mockedProductVariantId,
+  mockedWishlistItemId,
+} from '../mocks/data/wishlist';
+import {
   addWishlistItemError,
   addWishlistItemSuccess,
   removeWishlistItemError,
@@ -40,6 +44,7 @@ const meta = {
       const initialEntries =
         (context.parameters?.wishlist?.initialEntries as WishlistSeedEntry[]) ||
         [];
+
       return (
         <WishlistProvider initialEntries={initialEntries}>
           <Story />
@@ -56,7 +61,6 @@ const meta = {
     },
   },
 } satisfies Meta<typeof ProductPreviewWithWishlist>;
-
 export default meta;
 
 type Story = StoryObj<typeof meta>;
@@ -67,8 +71,7 @@ const mockedProps: ProductPreviewProps = {
 };
 
 const baseVariantId =
-  mockedProps.product.variants?.[0]?.id ?? 'variant_default_id';
-const defaultWishlistItemId = 'wishlist-item-initial';
+  mockedProps.product.variants?.[0]?.id ?? mockedProductVariantId;
 
 export const AddToWishlistSuccess: Story = {
   args: mockedProps,
@@ -81,9 +84,13 @@ export const AddToWishlistSuccess: Story = {
     await delay(500);
 
     const toggleButton = canvas.getByTestId('wishlist-toggle-button');
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
+
     await userEvent.click(toggleButton);
+
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
     await waitFor(() =>
-      expect(toggleButton).toHaveAttribute('aria-pressed', 'true')
+      expect(canvas.getByText('Added to wishlist')).toBeInTheDocument()
     );
   },
 };
@@ -95,7 +102,7 @@ export const RemoveFromWishlistSuccess: Story = {
       initialEntries: [
         {
           productVariantId: baseVariantId,
-          wishlistItemId: defaultWishlistItemId,
+          wishlistItemId: mockedWishlistItemId,
         },
       ],
     },
@@ -107,13 +114,13 @@ export const RemoveFromWishlistSuccess: Story = {
     await delay(500);
 
     const toggleButton = canvas.getByTestId('wishlist-toggle-button');
-    await waitFor(() =>
-      expect(toggleButton).toHaveAttribute('aria-pressed', 'true')
-    );
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
 
     await userEvent.click(toggleButton);
+
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
     await waitFor(() =>
-      expect(toggleButton).toHaveAttribute('aria-pressed', 'false')
+      expect(canvas.getByText('Removed from wishlist')).toBeInTheDocument()
     );
   },
 };
@@ -129,10 +136,16 @@ export const AddToWishlistError: Story = {
     await delay(500);
 
     const toggleButton = canvas.getByTestId('wishlist-toggle-button');
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
+
     await userEvent.click(toggleButton);
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
 
     await waitFor(() =>
       expect(toggleButton).toHaveAttribute('aria-pressed', 'false')
+    );
+    await waitFor(() =>
+      expect(canvas.getByText('Failed to add to wishlist')).toBeInTheDocument()
     );
   },
 };
@@ -144,7 +157,7 @@ export const RemoveFromWishlistError: Story = {
       initialEntries: [
         {
           productVariantId: baseVariantId,
-          wishlistItemId: defaultWishlistItemId,
+          wishlistItemId: mockedWishlistItemId,
         },
       ],
     },
@@ -156,13 +169,18 @@ export const RemoveFromWishlistError: Story = {
     await delay(500);
 
     const toggleButton = canvas.getByTestId('wishlist-toggle-button');
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
+
+    await userEvent.click(toggleButton);
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
+
     await waitFor(() =>
       expect(toggleButton).toHaveAttribute('aria-pressed', 'true')
     );
-
-    await userEvent.click(toggleButton);
     await waitFor(() =>
-      expect(toggleButton).toHaveAttribute('aria-pressed', 'true')
+      expect(
+        canvas.getByText('Failed to remove from wishlist')
+      ).toBeInTheDocument()
     );
   },
 };
