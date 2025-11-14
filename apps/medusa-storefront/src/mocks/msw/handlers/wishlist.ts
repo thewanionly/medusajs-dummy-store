@@ -5,14 +5,29 @@ import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 type WishlistItem = {
   id: string;
-  productId: string;
-  productHandle?: string | null;
   productVariantId: string;
 };
 
 const wishlistId = 'wishlist_mock_id';
 const wishlistItems = new Map<string, WishlistItem>();
 let wishlistItemSequence = 0;
+
+const buildMockPrice = () => ({
+  amount: 1000,
+  currencyCode: 'USD',
+  priceType: 'default',
+});
+
+const buildMockProductVariant = (productVariantId: string) => ({
+  id: productVariantId,
+  sku: `sku_${productVariantId}`,
+  inventoryQuantity: 10,
+  allowBackorder: false,
+  manageInventory: true,
+  options: [],
+  price: buildMockPrice(),
+  originalPrice: buildMockPrice(),
+});
 
 const buildWishlistItem = (item: Omit<WishlistItem, 'id'>): WishlistItem => {
   wishlistItemSequence += 1;
@@ -35,6 +50,16 @@ const getWishlistItemByVariant = (
   return wishlistItems.get(productVariantId);
 };
 
+const buildWishlistResponse = () => ({
+  id: wishlistId,
+  items: Array.from(wishlistItems.values()).map((item) => ({
+    id: item.id,
+    wishlistId,
+    productVariantId: item.productVariantId,
+    productVariant: buildMockProductVariant(item.productVariantId),
+  })),
+});
+
 /**
  * Storybook helper for resetting wishlist state between stories/tests.
  */
@@ -48,22 +73,16 @@ export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
   async ({ variables }) => {
     await delay(500);
 
-    const input = (
-      (variables || {}) as {
-        input?: {
-          productId: string;
-          productHandle?: string;
-          productVariantId: string;
-        };
-      }
-    ).input;
+    const { productVariantId } = (variables || {}) as {
+      productVariantId?: string;
+    };
 
-    if (!input) {
+    if (!productVariantId) {
       return HttpResponse.json(
         {
           errors: [
             {
-              message: 'Missing AddWishlistItem input',
+              message: 'Missing productVariantId',
             },
           ],
         },
@@ -73,21 +92,16 @@ export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
       );
     }
 
-    const wishlistItem =
-      getWishlistItemByVariant(input.productVariantId) ||
+    if (!getWishlistItemByVariant(productVariantId)) {
       buildWishlistItem({
-        productId: input.productId,
-        productHandle: input.productHandle,
-        productVariantId: input.productVariantId,
+        productVariantId,
       });
+    }
 
     return HttpResponse.json({
       data: {
         addWishlistItem: {
-          wishlist: {
-            id: wishlistId,
-          },
-          wishlistItem,
+          wishlist: buildWishlistResponse(),
         },
       },
     });
@@ -99,21 +113,16 @@ export const removeWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
   async ({ variables }) => {
     await delay(500);
 
-    const input = (
-      (variables || {}) as {
-        input?: {
-          productVariantId: string;
-          wishlistItemId?: string | null;
-        };
-      }
-    ).input;
+    const { wishlistItemId } = (variables || {}) as {
+      wishlistItemId?: string;
+    };
 
-    if (!input) {
+    if (!wishlistItemId) {
       return HttpResponse.json(
         {
           errors: [
             {
-              message: 'Missing RemoveWishlistItem input',
+              message: 'Missing wishlistItemId',
             },
           ],
         },
@@ -123,23 +132,18 @@ export const removeWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
       );
     }
 
-    const existingItem = getWishlistItemByVariant(input.productVariantId);
-    const wishlistItem = existingItem || {
-      id: input.wishlistItemId || `wishlist_item_${input.productVariantId}`,
-      productId: 'unknown-product',
-      productHandle: null,
-      productVariantId: input.productVariantId,
-    };
+    const entryToDelete = Array.from(wishlistItems.entries()).find(
+      ([, item]) => item.id === wishlistItemId
+    );
 
-    wishlistItems.delete(input.productVariantId);
+    if (entryToDelete) {
+      wishlistItems.delete(entryToDelete[0]);
+    }
 
     return HttpResponse.json({
       data: {
         removeWishlistItem: {
-          wishlist: {
-            id: wishlistId,
-          },
-          wishlistItem,
+          wishlist: buildWishlistResponse(),
         },
       },
     });

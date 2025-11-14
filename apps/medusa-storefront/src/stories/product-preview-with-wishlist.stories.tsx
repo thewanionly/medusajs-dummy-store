@@ -70,7 +70,6 @@ const mockedProps: ProductPreviewProps = {
 
 const baseVariantId =
   mockedProps.product.variants?.[0]?.id ?? 'variant_default_id';
-const baseProductId = mockedProps.product.id ?? 'product_default_id';
 const defaultWishlistItemId = 'wishlist-item-initial';
 
 export const AddToWishlistSuccess: Story = {
@@ -97,7 +96,6 @@ export const RemoveFromWishlistSuccess: Story = {
     wishlist: {
       initialEntries: [
         {
-          productId: baseProductId,
           productVariantId: baseVariantId,
           wishlistItemId: defaultWishlistItemId,
         },
@@ -147,7 +145,6 @@ export const RemoveFromWishlistError: Story = {
     wishlist: {
       initialEntries: [
         {
-          productId: baseProductId,
           productVariantId: baseVariantId,
           wishlistItemId: defaultWishlistItemId,
         },
