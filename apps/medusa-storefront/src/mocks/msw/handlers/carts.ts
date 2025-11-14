@@ -1,11 +1,12 @@
 import { HttpResponse, delay, http } from 'msw';
 
 import { mockedAddToCartResponse, mockedCart } from '../../data/carts';
+import { medusaBackend } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
 export const createCartSuccess = http.post(
-  'http://localhost:9000/store/carts',
+  `${medusaBackend}/store/carts`,
   async () => {
     await delay(500);
 
@@ -16,7 +17,7 @@ export const createCartSuccess = http.post(
 );
 
 export const addToCartSuccess = http.post(
-  'http://localhost:9000/store/carts/:id/line-items',
+  `${medusaBackend}/store/carts/:id/line-items`,
   async () => {
     await delay(500);
 
@@ -35,7 +36,7 @@ export const handlers = [
 
 // Other paths
 export const addToCartServerError = http.post(
-  'http://localhost:9000/store/carts/:id/line-items',
+  `${medusaBackend}/store/carts/:id/line-items`,
   async () => {
     await delay(1000);
 

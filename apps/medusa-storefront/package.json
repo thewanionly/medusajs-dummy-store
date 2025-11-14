@@ -19,7 +19,8 @@
     "codegen:watch": "graphql-codegen --config codegen.ts --watch",
     "type:check": "tsc --noEmit --incremental false",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook": "vitest --project=storybook"
   },
   "dependencies": {
     "@apollo/client": "^4.0.4",

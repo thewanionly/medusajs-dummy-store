@@ -26,5 +26,14 @@ const config: StorybookConfig = {
   features: {
     experimentalRSC: true,
   },
+  viteFinal: async (config) => {
+    config.optimizeDeps = config.optimizeDeps ?? {};
+    config.optimizeDeps.include = [
+      ...(config.optimizeDeps.include ?? []),
+      'lodash/isEqual',
+    ];
+
+    return config;
+  },
 };
 export default config;

@@ -1,7 +1,7 @@
 import { HttpResponse, delay, http } from 'msw';
 
 import { mockedCustomer, mockedToken } from '../../data/customer';
-import { storefrontMedusaBffWrapper } from '../utils/apis';
+import { medusaBackend, storefrontMedusaBffWrapper } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
@@ -21,7 +21,7 @@ export const loginBffSuccess = storefrontMedusaBffWrapper.mutation(
 );
 
 export const loginRestSuccess = http.post(
-  'http://localhost:9000/auth/customer/emailpass',
+  `${medusaBackend}/auth/customer/emailpass`,
   async () => {
     await delay(1000);
 
@@ -32,7 +32,7 @@ export const loginRestSuccess = http.post(
 );
 
 export const registerSuccess = http.post(
-  'http://localhost:9000/auth/customer/emailpass/register',
+  `${medusaBackend}/auth/customer/emailpass/register`,
   async () => {
     await delay(250);
 
@@ -43,7 +43,7 @@ export const registerSuccess = http.post(
 );
 
 export const createCustomerSuccess = http.post(
-  'http://localhost:9000/store/customers',
+  `${medusaBackend}/store/customers`,
   async () => {
     await delay(250);
 
@@ -94,7 +94,7 @@ export const serverErrorLogin = storefrontMedusaBffWrapper.mutation(
 );
 
 export const accountAlreadyExists = http.post(
-  'http://localhost:9000/auth/customer/emailpass/register',
+  `${medusaBackend}/auth/customer/emailpass/register`,
   async () => {
     await delay(1000);
 
@@ -109,7 +109,7 @@ export const accountAlreadyExists = http.post(
 );
 
 export const serverErrorRegister = http.post(
-  'http://localhost:9000/auth/customer/emailpass/register',
+  `${medusaBackend}/auth/customer/emailpass/register`,
   async () => {
     await delay(1000);
 

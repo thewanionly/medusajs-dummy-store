@@ -41,7 +41,11 @@ export const Success: Story = {
     await userEvent.type(screen.getByTestId('search-input'), 'shirt');
     await delay(500);
 
-    const suggestions = await screen.findAllByTestId('search-hit');
+    const suggestions = await screen.findAllByTestId(
+      'search-hit',
+      {},
+      { timeout: 5000 }
+    );
     expect(suggestions.length).toBeGreaterThan(0);
   },
 };
