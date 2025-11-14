@@ -1,73 +1,14 @@
 import { HttpResponse, delay } from 'msw';
 
+import {
+  mockedEmptyWishlist,
+  mockedWishlistItemId,
+  mockedWishlistWithItem,
+} from '../../data/wishlist';
 import { storefrontMedusaBffWrapper } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
-type WishlistItem = {
-  id: string;
-  productVariantId: string;
-};
-
-const wishlistId = 'wishlist_mock_id';
-const wishlistItems = new Map<string, WishlistItem>();
-let wishlistItemSequence = 0;
-
-const buildMockPrice = () => ({
-  amount: 1000,
-  currencyCode: 'USD',
-  priceType: 'default',
-});
-
-const buildMockProductVariant = (productVariantId: string) => ({
-  id: productVariantId,
-  sku: `sku_${productVariantId}`,
-  inventoryQuantity: 10,
-  allowBackorder: false,
-  manageInventory: true,
-  options: [],
-  price: buildMockPrice(),
-  originalPrice: buildMockPrice(),
-});
-
-const buildWishlistItem = (item: Omit<WishlistItem, 'id'>): WishlistItem => {
-  wishlistItemSequence += 1;
-  const generatedId = `wishlist_item_${wishlistItemSequence}`;
-
-  // Persist the generated item for later removal mocks
-  const wishlistItem = {
-    id: generatedId,
-    ...item,
-  };
-
-  wishlistItems.set(wishlistItem.productVariantId, wishlistItem);
-
-  return wishlistItem;
-};
-
-const getWishlistItemByVariant = (
-  productVariantId: string
-): WishlistItem | undefined => {
-  return wishlistItems.get(productVariantId);
-};
-
-const buildWishlistResponse = () => ({
-  id: wishlistId,
-  items: Array.from(wishlistItems.values()).map((item) => ({
-    id: item.id,
-    wishlistId,
-    productVariantId: item.productVariantId,
-    productVariant: buildMockProductVariant(item.productVariantId),
-  })),
-});
-
-/**
- * Storybook helper for resetting wishlist state between stories/tests.
- */
-export const resetWishlistMocks = () => {
-  wishlistItems.clear();
-  wishlistItemSequence = 0;
-};
-
+// Happy paths
 export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
   'AddWishlistItem',
   async ({ variables }) => {
@@ -92,16 +33,24 @@ export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
       );
     }
 
-    if (!getWishlistItemByVariant(productVariantId)) {
-      buildWishlistItem({
+    const wishlistResponse = {
+      ...mockedWishlistWithItem,
+      items: mockedWishlistWithItem.items?.map((item) => ({
+        ...item,
         productVariantId,
-      });
-    }
+        productVariant: item.productVariant
+          ? {
+              ...item.productVariant,
+              id: productVariantId,
+            }
+          : null,
+      })),
+    };
 
     return HttpResponse.json({
       data: {
         addWishlistItem: {
-          wishlist: buildWishlistResponse(),
+          wishlist: wishlistResponse,
         },
       },
     });
@@ -132,46 +81,41 @@ export const removeWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
       );
     }
 
-    const entryToDelete = Array.from(wishlistItems.entries()).find(
-      ([, item]) => item.id === wishlistItemId
-    );
-
-    if (entryToDelete) {
-      wishlistItems.delete(entryToDelete[0]);
-    }
+    const response =
+      wishlistItemId === mockedWishlistItemId
+        ? mockedEmptyWishlist
+        : mockedWishlistWithItem;
 
     return HttpResponse.json({
       data: {
         removeWishlistItem: {
-          wishlist: buildWishlistResponse(),
+          wishlist: response,
         },
       },
     });
   }
 );
 
+// Handlers used in the application.
+// Use `withActiveMockGate` to enable/disable the handler based on activeMock config
 export const handlers = [
   withActiveMockGate('AddWishlistItem', addWishlistItemSuccess),
   withActiveMockGate('RemoveWishlistItem', removeWishlistItemSuccess),
 ];
 
+// Other paths
 export const addWishlistItemError = storefrontMedusaBffWrapper.mutation(
   'AddWishlistItem',
   async () => {
     await delay(500);
 
-    return HttpResponse.json(
-      {
-        errors: [
-          {
-            message: 'Failed to add to wishlist',
-          },
-        ],
-      },
-      {
-        status: 500,
-      }
-    );
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Failed to add to wishlist',
+        },
+      ],
+    });
   }
 );
 
@@ -180,17 +124,12 @@ export const removeWishlistItemError = storefrontMedusaBffWrapper.mutation(
   async () => {
     await delay(500);
 
-    return HttpResponse.json(
-      {
-        errors: [
-          {
-            message: 'Failed to remove from wishlist',
-          },
-        ],
-      },
-      {
-        status: 500,
-      }
-    );
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Failed to remove from wishlist',
+        },
+      ],
+    });
   }
 );
