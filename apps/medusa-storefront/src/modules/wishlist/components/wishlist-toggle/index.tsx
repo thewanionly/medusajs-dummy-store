@@ -239,8 +239,10 @@ export function WishlistToggleButton({
     } catch (error) {
       revert();
       console.error('Wishlist toggle failed', error);
-      setFeedbackMessage(GENERIC_ERROR_MESSAGE);
-      showTooltip(GENERIC_ERROR_MESSAGE);
+      const errorMessage =
+        error instanceof Error ? error.message : GENERIC_ERROR_MESSAGE;
+      setFeedbackMessage(errorMessage);
+      showTooltip(errorMessage);
     }
   }, [
     addWishlistItem,

@@ -10,7 +10,6 @@ import {
   addWishlistItemSuccess,
   removeWishlistItemError,
   removeWishlistItemSuccess,
-  resetWishlistMocks,
 } from '../mocks/msw/handlers/wishlist';
 import ProductPreview, {
   ProductPreviewProps,
@@ -38,7 +37,6 @@ const meta = {
   component: ProductPreviewWithWishlist,
   decorators: [
     (Story, context) => {
-      resetWishlistMocks();
       const initialEntries =
         (context.parameters?.wishlist?.initialEntries as WishlistSeedEntry[]) ||
         [];
