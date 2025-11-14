@@ -313,4 +313,3 @@ export function WishlistToggleButton({
 }
 
 export default WishlistToggleButton;
-export type { WishlistToggleStatus } from '../../types';
