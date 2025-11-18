@@ -7,6 +7,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { RadioGroup } from '@headlessui/react';
 import { isStripe as isStripeFunc, paymentInfoMap } from '@lib/constants';
 import { initiatePaymentSession } from '@lib/data/cart';
+import { Cart } from '@lib/gql/generated-types/graphql';
+import { camelToSnakeCase } from '@lib/util/normalizeFunctions';
 import { CheckCircleSolid, CreditCard } from '@medusajs/icons';
 import { Button, Container, Heading, Text, clx } from '@medusajs/ui';
 import ErrorMessage from '@modules/checkout/components/error-message';
@@ -19,10 +21,10 @@ const Payment = ({
   cart,
   availablePaymentMethods,
 }: {
-  cart: any;
+  cart: Cart;
   availablePaymentMethods: any[];
 }) => {
-  const activeSession = cart.payment_collection?.payment_sessions?.find(
+  const activeSession = cart.paymentCollection?.paymentSessions?.find(
     (paymentSession: any) => paymentSession.status === 'pending'
   );
 
@@ -31,7 +33,7 @@ const Payment = ({
   const [cardBrand, setCardBrand] = useState<string | null>(null);
   const [cardComplete, setCardComplete] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
-    activeSession?.provider_id ?? ''
+    activeSession?.providerId ?? 'manual'
   );
 
   const searchParams = useSearchParams();
@@ -46,17 +48,16 @@ const Payment = ({
     setError(null);
     setSelectedPaymentMethod(method);
     if (isStripeFunc(method)) {
-      await initiatePaymentSession(cart, {
+      await initiatePaymentSession(camelToSnakeCase(cart), {
         provider_id: method,
       });
     }
   };
 
-  const paidByGiftcard =
-    cart?.gift_cards && cart?.gift_cards?.length > 0 && cart?.total === 0;
+  const paidByGiftcard = cart?.giftCardTotal > 0 && cart?.total === 0;
 
   const paymentReady =
-    (activeSession && cart?.shipping_methods.length !== 0) || paidByGiftcard;
+    (activeSession && cart?.shippingMethods?.length !== 0) || paidByGiftcard;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -81,10 +82,10 @@ const Payment = ({
         isStripeFunc(selectedPaymentMethod) && !activeSession;
 
       const checkActiveSession =
-        activeSession?.provider_id === selectedPaymentMethod;
+        activeSession?.providerId === selectedPaymentMethod;
 
       if (!checkActiveSession) {
-        await initiatePaymentSession(cart, {
+        await initiatePaymentSession(camelToSnakeCase(cart), {
           provider_id: selectedPaymentMethod,
         });
       }
@@ -215,8 +216,8 @@ const Payment = ({
                   className="txt-medium text-ui-fg-subtle"
                   data-testid="payment-method-summary"
                 >
-                  {paymentInfoMap[activeSession?.provider_id]?.title ||
-                    activeSession?.provider_id}
+                  {paymentInfoMap[activeSession?.providerId]?.title ||
+                    activeSession?.providerId}
                 </Text>
               </div>
               <div className="flex w-1/3 flex-col">

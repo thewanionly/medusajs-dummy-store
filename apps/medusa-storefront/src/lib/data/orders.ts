@@ -2,6 +2,7 @@
 
 import { sdk } from '@lib/config';
 import medusaError from '@lib/util/medusa-error';
+import { normalizeOrder } from '@lib/util/normalizeFunctions';
 import { HttpTypes } from '@medusajs/types';
 
 import { getAuthHeaders, getCacheOptions } from './cookies';
@@ -26,7 +27,7 @@ export const retrieveOrder = async (id: string) => {
       next,
       cache: 'force-cache',
     })
-    .then(({ order }) => order)
+    .then(({ order }) => order && normalizeOrder(order))
     .catch((err) => medusaError(err));
 };
 
@@ -57,7 +58,7 @@ export const listOrders = async (
       next,
       cache: 'force-cache',
     })
-    .then(({ orders }) => orders)
+    .then(({ orders }) => orders.map(normalizeOrder))
     .catch((err) => medusaError(err));
 };
 

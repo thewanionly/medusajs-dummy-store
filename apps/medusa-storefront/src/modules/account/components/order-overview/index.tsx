@@ -1,12 +1,12 @@
 'use client';
 
-import { HttpTypes } from '@medusajs/types';
+import { Order } from '@lib/gql/generated-types/graphql';
 import { Button } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
 import OrderCard from '../order-card';
 
-const OrderOverview = ({ orders }: { orders: HttpTypes.StoreOrder[] }) => {
+const OrderOverview = ({ orders }: { orders: Order[] }) => {
   if (orders?.length) {
     return (
       <div className="flex w-full flex-col gap-y-8">

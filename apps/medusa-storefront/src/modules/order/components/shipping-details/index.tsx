@@ -54,7 +54,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
           <Text className="txt-medium text-ui-fg-subtle">
             {order.shippingMethods?.[0]?.name} (
             {convertToLocale({
-              amount: order.shippingMethods?.[0]?.total ?? 0,
+              amount: order.shippingTotal ?? 0,
               currency_code: order.currencyCode,
             })
               .replace(/,/g, '')

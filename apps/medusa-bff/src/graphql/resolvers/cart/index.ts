@@ -38,8 +38,6 @@ export const cartResolvers = {
       { id, data }: { id: string; data: HttpTypes.StoreUpdateCart },
       { medusa }: GraphQLContext
     ) => {
-      console.log('Submitting cart update:', JSON.stringify(data, null, 2));
-
       const { cart } = await medusa.store.cart.update(
         id,
         camelToSnakeCase(data)

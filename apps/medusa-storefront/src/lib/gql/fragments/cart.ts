@@ -74,6 +74,7 @@ export const COUNTRY_FRAGMENT = gql`
     iso3
     name
     displayName
+    numCode
   }
 `;
 
@@ -109,7 +110,6 @@ export const CART_FRAGMENT = gql`
     subtotal
     taxTotal
     discountTotal
-    shippingSubtotal
     originalTotal
     currencyCode
     originalItemTotal

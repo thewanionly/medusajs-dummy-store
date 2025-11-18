@@ -4,6 +4,7 @@ import React from 'react';
 
 import { isStripe } from '@lib/constants';
 import { Cart } from '@lib/gql/generated-types/graphql';
+import { camelToSnakeCase } from '@lib/util/normalizeFunctions';
 import { loadStripe } from '@stripe/stripe-js';
 
 import StripeWrapper from './stripe-wrapper';
@@ -28,7 +29,7 @@ const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
   ) {
     return (
       <StripeWrapper
-        paymentSession={paymentSession}
+        paymentSession={camelToSnakeCase(paymentSession)}
         stripeKey={stripeKey}
         stripePromise={stripePromise}
       >

@@ -10,7 +10,6 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
-// import { HttpTypes } from '@medusajs/types';
 import { Cart } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
 import { Button } from '@medusajs/ui';

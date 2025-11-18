@@ -6,6 +6,7 @@ import {
 import {
   StoreCart,
   StoreCompleteCartResponse,
+  StoreOrder,
   StorePaymentCollection,
 } from '@medusajs/types';
 
@@ -27,33 +28,34 @@ export function normalizeCompleteCartResponse(
   response: StoreCompleteCartResponse
 ): any {
   if (isOrderResponse(response)) {
-    const order = response.order;
+    const order: StoreOrder = response.order as StoreOrder;
 
     return {
       type: 'order',
       order: {
         id: order?.id,
-        regionId: order?.regionId ?? '',
-        customerId: order?.customerId ?? '',
-        salesChannelId: order?.salesChannelId ?? '',
+        regionId: order?.region_id ?? '',
+        customerId: order?.customer_id ?? '',
+        salesChannelId: order?.sales_channel_id ?? '',
         email: order?.email ?? '',
-        paymentStatus: order?.paymentStatus ?? '',
-        fulfillmentStatus: order?.fulfillmentStatus ?? '',
+        paymentStatus: order?.payment_status ?? '',
+        fulfillmentStatus: order?.fulfillment_status ?? '',
         total: order?.total ?? 0,
         status: order?.status ?? '',
-        createdAt: order?.createdAt ?? '',
-        updatedAt: order?.updatedAt ?? '',
-        currencyCode: order?.currencyCode ?? '',
+        createdAt: order?.created_at ?? null,
+        updatedAt: order?.updated_at ?? null,
+        currencyCode: order?.currency_code ?? '',
         items: normalizeLineItems(order?.items ?? []),
         shippingMethods:
-          order?.shippingMethods?.map((method) => ({
+          order?.shipping_methods?.map((method) => ({
             id: method.id,
             name: method.name,
             amount: method.amount,
-            shippingOptionId: method.shippingOptionId,
+            shippingOptionId: method.shipping_option_id,
+            isTaxInclusive: method.is_tax_inclusive,
           })) ?? [],
 
-        shippingAddress: normalizeAddress(order?.shippingAddress),
+        shippingAddress: normalizeAddress(order?.shipping_address),
       },
     };
   }
@@ -104,7 +106,7 @@ export function normalizePaymentCollection(
   };
 }
 
-function normalizeLineItems(items: any[] = [], cartId?: string) {
+export function normalizeLineItems(items: any[] = [], cartId?: string) {
   return items.map((item) => ({
     id: item.id,
     title: item.title ?? '',
@@ -119,7 +121,7 @@ function normalizeLineItems(items: any[] = [], cartId?: string) {
     thumbnail: item.thumbnail ?? '',
     productHandle: item.variant?.product?.handle ?? '',
     productTitle: item.variant?.product?.title ?? '',
-    createdAt: item.created_at ?? '',
+    createdAt: item.created_at ?? null,
     variant: item.variant ?? null,
   }));
 }

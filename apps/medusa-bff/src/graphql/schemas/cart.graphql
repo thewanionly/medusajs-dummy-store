@@ -53,7 +53,7 @@ type Promotion {
 }
 
 type Country {
-  id: ID
+  id: String
   iso2: String
   iso3: String
   numCode: String

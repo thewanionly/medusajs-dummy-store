@@ -41,11 +41,11 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
 
   const options = useMemo(() => {
     return regions
-      ?.map((r) => {
+      .map((r) => {
         return r.countries?.map((c) => ({
           country: c?.iso2 ?? undefined,
-          region: r.id ?? undefined,
-          label: c?.displayName ?? undefined,
+          region: r.id,
+          label: c?.name ?? undefined,
         }));
       })
       .flat()

@@ -108,6 +108,11 @@ export const COMPLETE_CART_MUTATION = gql`
           customerId
           fulfillmentStatus
           displayId
+          subtotal
+          discountTotal
+          giftCardTotal
+          shippingTotal
+          taxTotal
           paymentCollections {
             ...PaymentCollectionFields
           }

@@ -14,6 +14,11 @@ type Order {
   createdAt: DateTime!
   updatedAt: DateTime!
   currencyCode: String!
-  displayId: String
+  displayId: Int
   paymentCollections: [PaymentCollection]
+  subtotal: Int
+  discountTotal: Int
+  giftCardTotal: Int
+  shippingTotal: Int
+  taxTotal: Int
 }
