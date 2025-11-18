@@ -26,11 +26,13 @@ import ProductPreview, {
 const ProductPreviewWithWishlist = ({
   product,
   isFeatured,
+  disableLink,
 }: ProductPreviewProps) => (
   <div className="w-1/3 min-w-[250px]">
     <ProductPreview
       product={product}
       isFeatured={isFeatured}
+      disableLink={disableLink}
       showWishlistToggle
     />
   </div>
@@ -68,6 +70,7 @@ type Story = StoryObj<typeof meta>;
 const mockedProps: ProductPreviewProps = {
   product: mockedProducts[0] as Product,
   isFeatured: true,
+  disableLink: true,
 };
 
 const baseVariantId =
