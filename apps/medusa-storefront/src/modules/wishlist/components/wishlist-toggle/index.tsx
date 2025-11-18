@@ -17,10 +17,10 @@ import { Heart } from '@medusajs/icons';
 import { IconButton, Tooltip } from '@medusajs/ui';
 
 import {
-  type WishlistSeedEntry,
+  type WishlistItem,
+  type WishlistSyncEntry,
   useWishlistContext,
 } from '../../../../lib/context/wishlist-context';
-import { WishlistToggleStatus } from '../../types';
 
 export type WishlistToggleButtonProps = {
   productTitle: string;
@@ -29,7 +29,7 @@ export type WishlistToggleButtonProps = {
   initialWishlistItemId?: string | null;
   disabled?: boolean;
   className?: string;
-  onStatusChange?: (status: WishlistToggleStatus) => void;
+  onStatusChange?: (entry: WishlistItem | null) => void;
 };
 
 const getAccessibleLabel = (title: string, isInWishlist: boolean) =>
@@ -45,9 +45,9 @@ const TOOLTIP_VARIANT_CLASSES: Record<TooltipVariant, string> = {
   error: 'bg-rose-50 text-rose-700',
 };
 
-const buildWishlistSeeds = (
+const buildWishlistSyncEntries = (
   wishlist?: WishlistGraphQL | null
-): WishlistSeedEntry[] => {
+): WishlistSyncEntry[] => {
   if (!wishlist) {
     return [];
   }
@@ -65,63 +65,7 @@ const getWishlistItemIdFromWishlist = (
   wishlist?.items?.find((item) => item.productVariantId === productVariantId)
     ?.id ?? null;
 
-export function WishlistToggleButton({
-  productTitle,
-  productVariantId,
-  isInitiallyWishlisted = false,
-  initialWishlistItemId = null,
-  disabled = false,
-  className,
-  onStatusChange,
-}: WishlistToggleButtonProps) {
-  const wishlistContext = useWishlistContext();
-  const fallbackStatus = useMemo<WishlistToggleStatus>(
-    () => ({
-      isInWishlist: isInitiallyWishlisted,
-      wishlistItemId: initialWishlistItemId ?? null,
-    }),
-    [initialWishlistItemId, isInitiallyWishlisted]
-  );
-
-  const [localStatus, setLocalStatus] =
-    useState<WishlistToggleStatus>(fallbackStatus);
-
-  useEffect(() => {
-    if (wishlistContext) {
-      wishlistContext.initializeVariantState(productVariantId, fallbackStatus);
-    } else {
-      setLocalStatus(fallbackStatus);
-    }
-  }, [fallbackStatus, productVariantId, wishlistContext]);
-
-  const currentStatus = wishlistContext
-    ? wishlistContext.getVariantState(productVariantId)
-    : localStatus;
-
-  const updateStatus = useCallback(
-    (
-      updater:
-        | WishlistToggleStatus
-        | ((prev: WishlistToggleStatus) => WishlistToggleStatus)
-    ) => {
-      if (wishlistContext) {
-        wishlistContext.setVariantState(productVariantId, updater);
-      } else {
-        setLocalStatus((prev) =>
-          typeof updater === 'function'
-            ? (updater as (prev: WishlistToggleStatus) => WishlistToggleStatus)(
-                prev
-              )
-            : updater
-        );
-      }
-    },
-    [productVariantId, wishlistContext]
-  );
-
-  const { isInWishlist } = currentStatus;
-
-  const [feedbackMessage, setFeedbackMessage] = useState<string>('');
+const useWishlistTooltip = () => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [tooltipMessage, setTooltipMessage] = useState('');
   const [tooltipVariant, setTooltipVariant] =
@@ -157,6 +101,65 @@ export function WishlistToggleButton({
     };
   }, []);
 
+  return { isTooltipVisible, tooltipMessage, tooltipVariant, showTooltip };
+};
+
+export function WishlistToggleButton({
+  productTitle,
+  productVariantId,
+  isInitiallyWishlisted = false,
+  initialWishlistItemId = null,
+  disabled = false,
+  className,
+  onStatusChange,
+}: WishlistToggleButtonProps) {
+  const {
+    getVariantEntry,
+    upsertVariantEntry,
+    removeVariantEntry,
+    syncWishlist,
+  } = useWishlistContext();
+
+  useEffect(() => {
+    if (!isInitiallyWishlisted) {
+      return;
+    }
+
+    if (getVariantEntry(productVariantId)) {
+      return;
+    }
+
+    upsertVariantEntry({
+      productVariantId,
+      wishlistItemId: initialWishlistItemId ?? null,
+    });
+  }, [
+    initialWishlistItemId,
+    isInitiallyWishlisted,
+    productVariantId,
+    getVariantEntry,
+    upsertVariantEntry,
+  ]);
+
+  const currentEntry = getVariantEntry(productVariantId) ?? null;
+
+  const updateEntry = useCallback(
+    (nextEntry: WishlistItem | null) => {
+      if (nextEntry) {
+        upsertVariantEntry(nextEntry);
+      } else {
+        removeVariantEntry(productVariantId);
+      }
+    },
+    [productVariantId, removeVariantEntry, upsertVariantEntry]
+  );
+
+  const isInWishlist = Boolean(currentEntry);
+
+  const [feedbackMessage, setFeedbackMessage] = useState<string>('');
+  const { isTooltipVisible, tooltipMessage, tooltipVariant, showTooltip } =
+    useWishlistTooltip();
+
   const [addWishlistItem] = useMutation<
     AddWishlistItemMutationResult,
     AddWishlistItemMutationVariables
@@ -173,7 +176,7 @@ export function WishlistToggleButton({
 
   const notify = useCallback(
     (
-      nextState: WishlistToggleStatus,
+      nextEntry: WishlistItem | null,
       message: string,
       options?: { skipTooltip?: boolean; variant?: TooltipVariant }
     ) => {
@@ -181,7 +184,7 @@ export function WishlistToggleButton({
       if (!options?.skipTooltip) {
         showTooltip(message, options?.variant);
       }
-      onStatusChange?.(nextState);
+      onStatusChange?.(nextEntry);
     },
     [onStatusChange, showTooltip]
   );
@@ -192,24 +195,19 @@ export function WishlistToggleButton({
     }
 
     setFeedbackMessage('');
-    const previousState = currentStatus;
-    const revert = () => updateStatus(previousState);
+    const previousEntry = currentEntry;
+    const revert = () => updateEntry(previousEntry);
 
     try {
       if (isInWishlist) {
-        const wishlistItemIdToRemove = previousState.wishlistItemId;
+        const wishlistItemIdToRemove = previousEntry?.wishlistItemId;
 
         if (!wishlistItemIdToRemove) {
           throw new Error('Wishlist item ID is missing.');
         }
 
-        const nextState: WishlistToggleStatus = {
-          isInWishlist: false,
-          wishlistItemId: null,
-        };
-
-        updateStatus(nextState);
-        notify(nextState, REMOVE_SUCCESS_MESSAGE);
+        updateEntry(null);
+        notify(null, REMOVE_SUCCESS_MESSAGE);
 
         const { data } = await removeWishlistItem({
           variables: {
@@ -219,17 +217,17 @@ export function WishlistToggleButton({
 
         const nextWishlist = data?.removeWishlistItem?.wishlist;
 
-        if (wishlistContext && nextWishlist) {
-          wishlistContext.seedWishlist(buildWishlistSeeds(nextWishlist));
+        if (nextWishlist) {
+          syncWishlist(buildWishlistSyncEntries(nextWishlist));
         }
       } else {
-        const optimisticState: WishlistToggleStatus = {
-          isInWishlist: true,
-          wishlistItemId: previousState.wishlistItemId,
+        const optimisticEntry: WishlistItem = {
+          productVariantId,
+          wishlistItemId: previousEntry?.wishlistItemId ?? null,
         };
 
-        updateStatus(optimisticState);
-        notify(optimisticState, ADD_SUCCESS_MESSAGE);
+        updateEntry(optimisticEntry);
+        notify(optimisticEntry, ADD_SUCCESS_MESSAGE);
 
         const { data } = await addWishlistItem({
           variables: {
@@ -240,20 +238,20 @@ export function WishlistToggleButton({
         const nextWishlist = data?.addWishlistItem?.wishlist;
         const nextWishlistItemId =
           getWishlistItemIdFromWishlist(nextWishlist, productVariantId) ??
-          previousState.wishlistItemId ??
+          previousEntry?.wishlistItemId ??
           null;
 
-        if (wishlistContext && nextWishlist) {
-          wishlistContext.seedWishlist(buildWishlistSeeds(nextWishlist));
+        if (nextWishlist) {
+          syncWishlist(buildWishlistSyncEntries(nextWishlist));
         }
 
-        const nextState: WishlistToggleStatus = {
-          isInWishlist: true,
+        const nextEntry: WishlistItem = {
+          productVariantId,
           wishlistItemId: nextWishlistItemId,
         };
 
-        updateStatus(nextState);
-        notify(nextState, ADD_SUCCESS_MESSAGE, { skipTooltip: true });
+        updateEntry(nextEntry);
+        notify(nextEntry, ADD_SUCCESS_MESSAGE, { skipTooltip: true });
       }
     } catch (error) {
       revert();
@@ -265,15 +263,15 @@ export function WishlistToggleButton({
     }
   }, [
     addWishlistItem,
-    currentStatus,
+    currentEntry,
     disabled,
     isInWishlist,
     notify,
     productVariantId,
     removeWishlistItem,
     showTooltip,
-    updateStatus,
-    wishlistContext,
+    syncWishlist,
+    updateEntry,
   ]);
 
   return (

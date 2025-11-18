@@ -7,130 +7,118 @@ import {
   useState,
 } from 'react';
 
-import { WishlistToggleStatus } from '../../modules/wishlist/types';
-
-const DEFAULT_STATUS: WishlistToggleStatus = {
-  isInWishlist: false,
-  wishlistItemId: null,
-};
-
-type WishlistSeedEntry = {
+type WishlistSyncEntry = {
   productVariantId: string;
   wishlistItemId?: string | null;
 };
 
-type WishlistStateMap = Record<string, WishlistToggleStatus>;
+type WishlistItem = {
+  productVariantId: string;
+  wishlistItemId: string | null;
+};
 
 type WishlistContextValue = {
-  getVariantState: (variantId: string) => WishlistToggleStatus;
-  setVariantState: (
-    variantId: string,
-    updater:
-      | WishlistToggleStatus
-      | ((prev: WishlistToggleStatus) => WishlistToggleStatus)
-  ) => void;
-  initializeVariantState: (
-    variantId: string,
-    initialState: WishlistToggleStatus
-  ) => void;
-  seedWishlist: (entries: WishlistSeedEntry[]) => void;
+  getVariantEntry: (variantId: string) => WishlistItem | undefined;
+  upsertVariantEntry: (wishlistItem: WishlistItem) => void;
+  removeVariantEntry: (variantId: string) => void;
+  syncWishlist: (entries: WishlistSyncEntry[]) => void;
 };
 
 const WishlistContext = createContext<WishlistContextValue | undefined>(
   undefined
 );
 
-const buildStateFromSeeds = (
-  entries: WishlistSeedEntry[]
-): WishlistStateMap => {
-  return entries.reduce<WishlistStateMap>((acc, entry) => {
-    if (entry.productVariantId) {
-      acc[entry.productVariantId] = {
-        isInWishlist: true,
-        wishlistItemId: entry.wishlistItemId ?? null,
-      };
+const buildStateFromEntries = (
+  entries: WishlistSyncEntry[]
+): WishlistItem[] => {
+  const map = new Map<string, WishlistItem>();
+
+  for (const entry of entries) {
+    if (!entry.productVariantId) {
+      continue;
     }
-    return acc;
-  }, {});
+
+    map.set(entry.productVariantId, {
+      productVariantId: entry.productVariantId,
+      wishlistItemId: entry.wishlistItemId ?? null,
+    });
+  }
+
+  return Array.from(map.values());
 };
 
 type WishlistProviderProps = PropsWithChildren<{
-  initialEntries?: WishlistSeedEntry[];
+  initialEntries?: WishlistSyncEntry[];
 }>;
 
 export function WishlistProvider({
   children,
   initialEntries = [],
 }: WishlistProviderProps) {
-  const [wishlistState, setWishlistState] = useState<WishlistStateMap>(() =>
-    buildStateFromSeeds(initialEntries)
+  const [wishlistState, setWishlistState] = useState<WishlistItem[]>(() =>
+    buildStateFromEntries(initialEntries)
   );
 
-  const getVariantState = useCallback(
-    (variantId: string) => wishlistState[variantId] ?? DEFAULT_STATUS,
+  const getVariantEntry = useCallback(
+    (variantId: string) =>
+      wishlistState.find((entry) => entry.productVariantId === variantId),
     [wishlistState]
   );
 
-  const setVariantState = useCallback(
-    (
-      variantId: string,
-      updater:
-        | WishlistToggleStatus
-        | ((prev: WishlistToggleStatus) => WishlistToggleStatus)
-    ) => {
-      setWishlistState((prev) => {
-        const current = prev[variantId] ?? DEFAULT_STATUS;
-        const nextState =
-          typeof updater === 'function'
-            ? (updater as (prev: WishlistToggleStatus) => WishlistToggleStatus)(
-                current
-              )
-            : updater;
+  const upsertVariantEntry = useCallback((wishlistItem: WishlistItem) => {
+    setWishlistState((prev) => {
+      const index = prev.findIndex(
+        (item) => item.productVariantId === wishlistItem.productVariantId
+      );
 
-        if (
-          current.isInWishlist === nextState.isInWishlist &&
-          current.wishlistItemId === nextState.wishlistItemId
-        ) {
+      if (index !== -1) {
+        const existing = prev[index];
+
+        if (!existing) {
           return prev;
         }
 
-        return {
-          ...prev,
-          [variantId]: nextState,
-        };
-      });
-    },
-    []
-  );
-
-  const initializeVariantState = useCallback(
-    (variantId: string, initialState: WishlistToggleStatus) => {
-      setWishlistState((prev) => {
-        if (prev[variantId]) {
+        if (existing.wishlistItemId === wishlistItem.wishlistItemId) {
           return prev;
         }
 
-        return {
-          ...prev,
-          [variantId]: initialState,
-        };
-      });
-    },
-    []
-  );
+        const nextState = [...prev];
+        nextState[index] = wishlistItem;
+        return nextState;
+      }
 
-  const seedWishlist = useCallback((entries: WishlistSeedEntry[]) => {
-    setWishlistState(buildStateFromSeeds(entries));
+      return [...prev, wishlistItem];
+    });
+  }, []);
+
+  const removeVariantEntry = useCallback((variantId: string) => {
+    setWishlistState((prev) => {
+      const index = prev.findIndex(
+        (entry) => entry.productVariantId === variantId
+      );
+
+      if (index === -1) {
+        return prev;
+      }
+
+      const nextState = [...prev];
+      nextState.splice(index, 1);
+      return nextState;
+    });
+  }, []);
+
+  const syncWishlist = useCallback((entries: WishlistSyncEntry[]) => {
+    setWishlistState(buildStateFromEntries(entries));
   }, []);
 
   const value = useMemo(
     () => ({
-      getVariantState,
-      setVariantState,
-      initializeVariantState,
-      seedWishlist,
+      getVariantEntry,
+      upsertVariantEntry,
+      removeVariantEntry,
+      syncWishlist,
     }),
-    [getVariantState, setVariantState, initializeVariantState, seedWishlist]
+    [getVariantEntry, upsertVariantEntry, removeVariantEntry, syncWishlist]
   );
 
   return (
@@ -141,7 +129,13 @@ export function WishlistProvider({
 }
 
 export function useWishlistContext() {
-  return useContext(WishlistContext);
+  const context = useContext(WishlistContext);
+
+  if (!context) {
+    throw new Error('useWishlistContext must be used within a WishlistProvider');
+  }
+
+  return context;
 }
 
-export type { WishlistSeedEntry };
+export type { WishlistItem, WishlistSyncEntry };

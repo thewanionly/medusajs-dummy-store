@@ -6,7 +6,7 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import {
   WishlistProvider,
-  WishlistSeedEntry,
+  WishlistSyncEntry,
 } from '../lib/context/wishlist-context';
 import { mockedProducts } from '../mocks/data/products';
 import {
@@ -42,7 +42,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const initialEntries =
-        (context.parameters?.wishlist?.initialEntries as WishlistSeedEntry[]) ||
+        (context.parameters?.wishlist?.initialEntries as WishlistSyncEntry[]) ||
         [];
 
       return (
