@@ -2,13 +2,26 @@ import { HttpResponse, delay } from 'msw';
 
 import {
   mockedEmptyWishlist,
-  mockedWishlistItemId,
   mockedWishlistWithItem,
+  mockedWishlistWithMultipleItems,
 } from '../../data/wishlist';
 import { storefrontMedusaBffWrapper } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
+export const getCustomerWishlistSuccess = storefrontMedusaBffWrapper.query(
+  'GetCustomerWishlist',
+  async () => {
+    await delay(500);
+
+    return HttpResponse.json({
+      data: {
+        wishlist: mockedWishlistWithMultipleItems,
+      },
+    });
+  }
+);
+
 export const addWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
   'AddWishlistItem',
   async ({ variables }) => {
@@ -81,10 +94,14 @@ export const removeWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
       );
     }
 
-    const response =
-      wishlistItemId === mockedWishlistItemId
-        ? mockedEmptyWishlist
-        : mockedWishlistWithItem;
+    const remainingItems = mockedWishlistWithMultipleItems.items?.filter(
+      (item) => item.id !== wishlistItemId
+    );
+
+    const response = {
+      ...mockedWishlistWithMultipleItems,
+      items: remainingItems ?? mockedEmptyWishlist.items,
+    };
 
     return HttpResponse.json({
       data: {
@@ -99,11 +116,40 @@ export const removeWishlistItemSuccess = storefrontMedusaBffWrapper.mutation(
 // Handlers used in the application.
 // Use `withActiveMockGate` to enable/disable the handler based on activeMock config
 export const handlers = [
+  withActiveMockGate('GetCustomerWishlist', getCustomerWishlistSuccess),
   withActiveMockGate('AddWishlistItem', addWishlistItemSuccess),
   withActiveMockGate('RemoveWishlistItem', removeWishlistItemSuccess),
 ];
 
 // Other paths
+export const getCustomerWishlistEmpty = storefrontMedusaBffWrapper.query(
+  'GetCustomerWishlist',
+  async () => {
+    await delay(500);
+
+    return HttpResponse.json({
+      data: {
+        wishlist: mockedEmptyWishlist,
+      },
+    });
+  }
+);
+
+export const getCustomerWishlistError = storefrontMedusaBffWrapper.query(
+  'GetCustomerWishlist',
+  async () => {
+    await delay(500);
+
+    return HttpResponse.json({
+      errors: [
+        {
+          message: 'Unable to load wishlist items',
+        },
+      ],
+    });
+  }
+);
+
 export const addWishlistItemError = storefrontMedusaBffWrapper.mutation(
   'AddWishlistItem',
   async () => {

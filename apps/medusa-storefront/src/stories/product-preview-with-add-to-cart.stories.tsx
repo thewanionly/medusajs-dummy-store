@@ -40,7 +40,7 @@ const ProductPreviewWithActions = ({
 );
 
 const meta = {
-  title: 'ProductCard/AddToCart',
+  title: 'ProductCard - AddToCart',
   component: ProductPreviewWithActions,
   parameters: {
     nextjs: {

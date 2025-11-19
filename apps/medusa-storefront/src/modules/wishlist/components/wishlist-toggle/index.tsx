@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import type { PointerEvent } from 'react';
 
 import { useMutation } from '@apollo/client/react';
 import {
@@ -274,6 +281,12 @@ export function WishlistToggleButton({
     updateEntry,
   ]);
 
+  const handlePointerDown = useCallback((event: PointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen' || event.pointerType === 'touch') {
+      event.preventDefault();
+    }
+  }, []);
+
   return (
     <div className={cn('flex flex-col items-center gap-y-1', className)}>
       <Tooltip
@@ -289,6 +302,7 @@ export function WishlistToggleButton({
           disabled={disabled}
           onClick={handleToggle}
           data-testid="wishlist-toggle-button"
+          onPointerDown={handlePointerDown}
           className={cn(
             'h-9 w-9 rounded-full border shadow-borders-base transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ui-bg-interactive focus-visible:ring-offset-2 disabled:cursor-not-allowed',
             isInWishlist

@@ -39,7 +39,7 @@ const ProductPreviewWithWishlist = ({
 );
 
 const meta = {
-  title: 'ProductCard/Wishlist',
+  title: 'ProductCard - Wishlist',
   component: ProductPreviewWithWishlist,
   decorators: [
     (Story, context) => {
