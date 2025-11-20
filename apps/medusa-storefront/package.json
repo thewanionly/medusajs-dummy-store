@@ -12,6 +12,8 @@
     "build": "next build",
     "start": "next start -p 8000",
     "lint": "next lint",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
     "analyze": "ANALYZE=true next build",
     "test": "jest",
     "test:watch": "jest --watch",
