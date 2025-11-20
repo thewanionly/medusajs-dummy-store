@@ -91,6 +91,11 @@ export const PROMOTION_FRAGMENT = gql`
   fragment PromotionFields on Promotion {
     id
     code
+    applicationMethod {
+      value
+      type
+      currencyCode
+    }
   }
 `;
 

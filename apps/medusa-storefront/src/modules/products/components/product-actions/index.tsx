@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { isEqual } from 'lodash';
 
 import { addToCart } from '@lib/data/cart';
-import { Product, Region } from '@lib/gql/generated-types/graphql';
+import { Product } from '@lib/gql/generated-types/graphql';
 import { useIntersection } from '@lib/hooks/use-in-view';
 import { HttpTypes } from '@medusajs/types';
 import { Button } from '@medusajs/ui';

@@ -74,6 +74,14 @@ export type AddressInput = {
   province?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ApplicationMethod = {
+  currencyCode: Scalars['String']['output'];
+  type: ApplicationType;
+  value: Scalars['String']['output'];
+};
+
+export type ApplicationType = 'fixed' | 'percentage';
+
 export type Cart = {
   billingAddress?: Maybe<Address>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -83,7 +91,7 @@ export type Cart = {
   email?: Maybe<Scalars['String']['output']>;
   giftCardTotal: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
-  itemTotal?: Maybe<Scalars['Int']['output']>;
+  itemTotal: Scalars['Int']['output'];
   items?: Maybe<Array<LineItem>>;
   originalTotal: Scalars['Int']['output'];
   paymentCollection?: Maybe<PaymentCollection>;
@@ -483,6 +491,7 @@ export type ProductVariantOption = {
 };
 
 export type Promotion = {
+  applicationMethod?: Maybe<ApplicationMethod>;
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isAutomatic?: Maybe<Scalars['Boolean']['output']>;
@@ -788,6 +797,8 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
 export type ResolversTypes = {
   Address: ResolverTypeWrapper<Address>;
   AddressInput: AddressInput;
+  ApplicationMethod: ResolverTypeWrapper<ApplicationMethod>;
+  ApplicationType: ApplicationType;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Cart: ResolverTypeWrapper<Cart>;
   Collection: ResolverTypeWrapper<Collection>;
@@ -873,6 +884,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Address: Address;
   AddressInput: AddressInput;
+  ApplicationMethod: ApplicationMethod;
   Boolean: Scalars['Boolean']['output'];
   Cart: Cart;
   Collection: Collection;
@@ -980,6 +992,16 @@ export type AddressResolvers<
   province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
+export type ApplicationMethodResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['ApplicationMethod'] = ResolversParentTypes['ApplicationMethod'],
+> = {
+  currencyCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['ApplicationType'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type CartResolvers<
   ContextType = GraphQLContext,
   ParentType extends
@@ -1005,7 +1027,7 @@ export type CartResolvers<
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   giftCardTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  itemTotal?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  itemTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   items?: Resolver<
     Maybe<Array<ResolversTypes['LineItem']>>,
     ParentType,
@@ -1863,6 +1885,11 @@ export type PromotionResolvers<
   ParentType extends
     ResolversParentTypes['Promotion'] = ResolversParentTypes['Promotion'],
 > = {
+  applicationMethod?: Resolver<
+    Maybe<ResolversTypes['ApplicationMethod']>,
+    ParentType,
+    ContextType
+  >;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isAutomatic?: Resolver<
@@ -2120,6 +2147,7 @@ export type TokenResolvers<
 
 export type Resolvers<ContextType = GraphQLContext> = {
   Address?: AddressResolvers<ContextType>;
+  ApplicationMethod?: ApplicationMethodResolvers<ContextType>;
   Cart?: CartResolvers<ContextType>;
   Collection?: CollectionResolvers<ContextType>;
   CompleteCartError?: CompleteCartErrorResolvers<ContextType>;

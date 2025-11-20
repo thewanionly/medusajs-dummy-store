@@ -62,6 +62,18 @@ export type AddressInput = {
   province?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ApplicationMethod = {
+  __typename?: 'ApplicationMethod';
+  currencyCode: Scalars['String']['output'];
+  type: ApplicationType;
+  value: Scalars['String']['output'];
+};
+
+export enum ApplicationType {
+  Fixed = 'fixed',
+  Percentage = 'percentage',
+}
+
 export type Cart = {
   __typename?: 'Cart';
   billingAddress?: Maybe<Address>;
@@ -72,7 +84,7 @@ export type Cart = {
   email?: Maybe<Scalars['String']['output']>;
   giftCardTotal: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
-  itemTotal?: Maybe<Scalars['Int']['output']>;
+  itemTotal: Scalars['Int']['output'];
   items?: Maybe<Array<LineItem>>;
   originalTotal: Scalars['Int']['output'];
   paymentCollection?: Maybe<PaymentCollection>;
@@ -509,6 +521,7 @@ export type ProductVariantOption = {
 
 export type Promotion = {
   __typename?: 'Promotion';
+  applicationMethod?: Maybe<ApplicationMethod>;
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isAutomatic?: Maybe<Scalars['Boolean']['output']>;
@@ -775,6 +788,12 @@ export type PromotionFieldsFragment = {
   __typename?: 'Promotion';
   id: string;
   code?: string | null;
+  applicationMethod?: {
+    __typename?: 'ApplicationMethod';
+    value: string;
+    type: ApplicationType;
+    currencyCode: string;
+  } | null;
 };
 
 export type CartFieldsFragment = {
@@ -786,7 +805,7 @@ export type CartFieldsFragment = {
   total: number;
   subtotal: number;
   taxTotal: number;
-  itemTotal?: number | null;
+  itemTotal: number;
   discountTotal: number;
   originalTotal: number;
   currencyCode: string;
@@ -1418,6 +1437,21 @@ export const PromotionFieldsFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -2110,6 +2144,21 @@ export const CartFieldsFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -3007,6 +3056,21 @@ export const CreateCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -3478,6 +3542,21 @@ export const UpdateCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -5065,6 +5144,21 @@ export const TransferCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -5520,6 +5614,21 @@ export const ApplyPromotionsDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -6042,6 +6151,21 @@ export const GetCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'applicationMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
         ],
       },
     },
