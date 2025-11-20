@@ -234,6 +234,7 @@ export type ProductVariant = {
   options: Array<ProductVariantOption>;
   originalPrice?: Maybe<Price>;
   price?: Maybe<Price>;
+  product?: Maybe<Product>;
   sku?: Maybe<Scalars['String']['output']>;
 };
 
@@ -253,6 +254,7 @@ export type Query = {
   productCategory?: Maybe<ProductCategory>;
   products: ProductListResponse;
   searchProducts: SearchProducts;
+  wishlist?: Maybe<Wishlist>;
 };
 
 export type QueryCollectionArgs = {
@@ -367,6 +369,18 @@ export type TextBlock = {
 
 export type Token = {
   token?: Maybe<Scalars['String']['output']>;
+};
+
+export type Wishlist = {
+  id: Scalars['ID']['output'];
+  items?: Maybe<Array<WishlistItem>>;
+};
+
+export type WishlistItem = {
+  id: Scalars['ID']['output'];
+  productVariant?: Maybe<ProductVariant>;
+  productVariantId: Scalars['ID']['output'];
+  wishlistId: Scalars['ID']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -554,6 +568,8 @@ export type ResolversTypes = {
     }
   >;
   Token: ResolverTypeWrapper<Token>;
+  Wishlist: ResolverTypeWrapper<Wishlist>;
+  WishlistItem: ResolverTypeWrapper<WishlistItem>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -607,6 +623,8 @@ export type ResolversParentTypes = {
     markDefs?: Maybe<Array<ResolversParentTypes['MarkDef']>>;
   };
   Token: Token;
+  Wishlist: Wishlist;
+  WishlistItem: WishlistItem;
 };
 
 export type CollectionResolvers<
@@ -1115,6 +1133,7 @@ export type ProductVariantResolvers<
     ContextType
   >;
   price?: Resolver<Maybe<ResolversTypes['Price']>, ParentType, ContextType>;
+  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
   sku?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
@@ -1176,6 +1195,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     Partial<QuerySearchProductsArgs>
+  >;
+  wishlist?: Resolver<
+    Maybe<ResolversTypes['Wishlist']>,
+    ParentType,
+    ContextType
   >;
 };
 
@@ -1316,6 +1340,34 @@ export type TokenResolvers<
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
+export type WishlistResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['Wishlist'] = ResolversParentTypes['Wishlist'],
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  items?: Resolver<
+    Maybe<Array<ResolversTypes['WishlistItem']>>,
+    ParentType,
+    ContextType
+  >;
+};
+
+export type WishlistItemResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['WishlistItem'] = ResolversParentTypes['WishlistItem'],
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  productVariant?: Resolver<
+    Maybe<ResolversTypes['ProductVariant']>,
+    ParentType,
+    ContextType
+  >;
+  productVariantId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  wishlistId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = GraphQLContext> = {
   Collection?: CollectionResolvers<ContextType>;
   Customer?: CustomerResolvers<ContextType>;
@@ -1355,4 +1407,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Span?: SpanResolvers<ContextType>;
   TextBlock?: TextBlockResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
+  Wishlist?: WishlistResolvers<ContextType>;
+  WishlistItem?: WishlistItemResolvers<ContextType>;
 };

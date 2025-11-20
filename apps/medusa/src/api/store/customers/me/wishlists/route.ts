@@ -36,7 +36,19 @@ export async function GET(
 
   const { data } = await query.graph({
     entity: 'wishlist',
-    fields: ['*', 'items.*', 'items.product_variant.*'],
+    fields: [
+      '*',
+      'items.*',
+      'items.product_variant.*',
+      'items.product_variant.product.*',
+      'items.product_variant.product.options.*',
+      'items.product_variant.product.options.values.*',
+      'items.product_variant.product.variants.*',
+      'items.product_variant.product.variants.options.*',
+      'items.product_variant.product.images.*',
+      'items.product_variant.product.tags.*',
+      'items.product_variant.product.collection.*',
+    ],
     filters: {
       customer_id: req.auth_context.actor_id,
     },

@@ -1,0 +1,19 @@
+extend type Query {
+  wishlist: Wishlist
+}
+
+type Wishlist {
+  id: ID!
+  items: [WishlistItem!]
+}
+
+type WishlistItem {
+  id: ID!
+  wishlistId: ID!
+  productVariantId: ID!
+  productVariant: ProductVariant
+}
+
+extend type ProductVariant {
+  product: Product
+}

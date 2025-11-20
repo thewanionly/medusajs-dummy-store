@@ -105,3 +105,14 @@ export class ServiceUnavailableError extends GraphQLError {
     });
   }
 }
+
+export class UnauthorizedError extends GraphQLError {
+  constructor(path?: (string | number)[]) {
+    super('Unauthorized', {
+      extensions: {
+        code: 'UNAUTHORIZED',
+      },
+      path,
+    });
+  }
+}
