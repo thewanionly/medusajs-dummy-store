@@ -46,7 +46,6 @@ export type Address = {
   phone?: Maybe<Scalars['String']['output']>;
   postalCode?: Maybe<Scalars['String']['output']>;
   province?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type AddressInput = {
@@ -63,42 +62,18 @@ export type AddressInput = {
   province?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type ApplicationMethod = {
-  __typename?: 'ApplicationMethod';
-  currencyCode: Scalars['String']['output'];
-  type: ApplicationType;
-  value: Scalars['Int']['output'];
-};
-
-export enum ApplicationType {
-  Fixed = 'fixed',
-  Percentage = 'percentage',
-}
-
 export type Cart = {
   __typename?: 'Cart';
   billingAddress?: Maybe<Address>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   currencyCode: Scalars['String']['output'];
   customerId?: Maybe<Scalars['String']['output']>;
-  discountTaxTotal: Scalars['Int']['output'];
   discountTotal: Scalars['Int']['output'];
   email?: Maybe<Scalars['String']['output']>;
-  giftCardTaxTotal: Scalars['Int']['output'];
   giftCardTotal: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
-  itemSubtotal: Scalars['Int']['output'];
-  itemTaxTotal: Scalars['Int']['output'];
-  itemTotal: Scalars['Int']['output'];
+  itemTotal?: Maybe<Scalars['Int']['output']>;
   items?: Maybe<Array<LineItem>>;
-  originalItemSubtotal: Scalars['Int']['output'];
-  originalItemTaxTotal: Scalars['Int']['output'];
-  originalItemTotal: Scalars['Int']['output'];
-  originalShippingSubtotal: Scalars['Int']['output'];
-  originalShippingTaxTotal: Scalars['Int']['output'];
-  originalShippingTotal: Scalars['Int']['output'];
-  originalSubtotal: Scalars['Int']['output'];
-  originalTaxTotal: Scalars['Int']['output'];
   originalTotal: Scalars['Int']['output'];
   paymentCollection?: Maybe<PaymentCollection>;
   promoCodes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -107,13 +82,10 @@ export type Cart = {
   regionId?: Maybe<Scalars['String']['output']>;
   shippingAddress?: Maybe<Address>;
   shippingMethods?: Maybe<Array<Maybe<ShippingMethod>>>;
-  shippingSubtotal: Scalars['Int']['output'];
-  shippingTaxTotal: Scalars['Int']['output'];
   shippingTotal: Scalars['Int']['output'];
   subtotal: Scalars['Int']['output'];
   taxTotal: Scalars['Int']['output'];
   total: Scalars['Int']['output'];
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Collection = {
@@ -153,9 +125,7 @@ export type Country = {
   displayName?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   iso2?: Maybe<Scalars['String']['output']>;
-  iso3?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  numCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateCartInput = {
@@ -263,8 +233,6 @@ export type LineItem = {
   cartId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
-  isDiscountable?: Maybe<Scalars['Boolean']['output']>;
-  isTaxInclusive?: Maybe<Scalars['Boolean']['output']>;
   originalTotal?: Maybe<Scalars['Int']['output']>;
   productHandle?: Maybe<Scalars['String']['output']>;
   productTitle?: Maybe<Scalars['String']['output']>;
@@ -370,7 +338,6 @@ export type Order = {
   paymentCollections?: Maybe<Array<Maybe<PaymentCollection>>>;
   paymentStatus: Scalars['String']['output'];
   regionId: Scalars['String']['output'];
-  salesChannelId: Scalars['String']['output'];
   shippingAddress?: Maybe<Address>;
   shippingMethods: Array<ShippingMethod>;
   shippingTotal?: Maybe<Scalars['Int']['output']>;
@@ -378,7 +345,6 @@ export type Order = {
   subtotal?: Maybe<Scalars['Int']['output']>;
   taxTotal?: Maybe<Scalars['Int']['output']>;
   total: Scalars['Int']['output'];
-  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Payment = {
@@ -543,7 +509,6 @@ export type ProductVariantOption = {
 
 export type Promotion = {
   __typename?: 'Promotion';
-  applicationMethod?: Maybe<ApplicationMethod>;
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isAutomatic?: Maybe<Scalars['Boolean']['output']>;
@@ -621,13 +586,11 @@ export type Query_SearchProductsArgs = {
 
 export type Region = {
   __typename?: 'Region';
-  automaticTaxes?: Maybe<Scalars['Boolean']['output']>;
   countries?: Maybe<Array<Maybe<Country>>>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   currencyCode: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type RichText = {
@@ -677,11 +640,9 @@ export type ShippingMethod = {
   cartId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
-  isTaxInclusive: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   shippingOptionId?: Maybe<Scalars['String']['output']>;
   total?: Maybe<Scalars['Int']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type SocialLink = {
@@ -765,10 +726,8 @@ export type ShippingMethodFieldsFragment = {
   cartId?: string | null;
   name: string;
   amount: number;
-  isTaxInclusive: boolean;
   shippingOptionId?: string | null;
   createdAt?: any | null;
-  updatedAt?: any | null;
   total?: number | null;
 };
 
@@ -797,10 +756,8 @@ export type CountryFieldsFragment = {
   __typename?: 'Country';
   id?: string | null;
   iso2?: string | null;
-  iso3?: string | null;
   name?: string | null;
   displayName?: string | null;
-  numCode?: string | null;
 };
 
 export type RegionFieldsFragment = {
@@ -808,9 +765,7 @@ export type RegionFieldsFragment = {
   id: string;
   name: string;
   currencyCode: string;
-  automaticTaxes?: boolean | null;
   createdAt?: any | null;
-  updatedAt?: any | null;
   countries?: Array<
     ({ __typename?: 'Country' } & CountryFieldsFragment) | null
   > | null;
@@ -831,26 +786,12 @@ export type CartFieldsFragment = {
   total: number;
   subtotal: number;
   taxTotal: number;
+  itemTotal?: number | null;
   discountTotal: number;
   originalTotal: number;
   currencyCode: string;
-  originalItemTotal: number;
-  originalItemSubtotal: number;
-  originalItemTaxTotal: number;
-  itemTotal: number;
-  itemSubtotal: number;
-  itemTaxTotal: number;
-  originalSubtotal: number;
-  originalTaxTotal: number;
-  discountTaxTotal: number;
   shippingTotal: number;
-  shippingSubtotal: number;
-  shippingTaxTotal: number;
-  originalShippingTotal: number;
-  originalShippingSubtotal: number;
-  originalShippingTaxTotal: number;
   giftCardTotal: number;
-  giftCardTaxTotal: number;
   promotions: Array<
     ({ __typename?: 'Promotion' } & PromotionFieldsFragment) | null
   >;
@@ -1735,10 +1676,8 @@ export const CountryFieldsFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -1760,9 +1699,7 @@ export const RegionFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -1791,10 +1728,8 @@ export const RegionFieldsFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -1817,10 +1752,8 @@ export const ShippingMethodFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -1897,41 +1830,12 @@ export const CartFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'taxTotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discountTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'originalTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalItemTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemTaxTotal' },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'discountTaxTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingTaxTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTaxTotal' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'giftCardTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'giftCardTaxTotal' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'promotions' },
@@ -2096,10 +2000,8 @@ export const CartFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -2161,10 +2063,8 @@ export const CartFieldsFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -2181,9 +2081,7 @@ export const CartFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -2999,10 +2897,8 @@ export const CreateCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -3064,10 +2960,8 @@ export const CreateCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -3084,9 +2978,7 @@ export const CreateCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -3135,41 +3027,12 @@ export const CreateCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'taxTotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discountTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'originalTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalItemTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemTaxTotal' },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'discountTaxTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingTaxTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTaxTotal' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'giftCardTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'giftCardTaxTotal' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'promotions' },
@@ -3505,10 +3368,8 @@ export const UpdateCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -3570,10 +3431,8 @@ export const UpdateCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -3590,9 +3449,7 @@ export const UpdateCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -3641,41 +3498,12 @@ export const UpdateCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'taxTotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discountTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'originalTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalItemTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemTaxTotal' },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'discountTaxTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingTaxTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTaxTotal' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'giftCardTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'giftCardTaxTotal' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'promotions' },
@@ -4464,10 +4292,8 @@ export const AddShippingMethodDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -4881,10 +4707,8 @@ export const CompleteCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -5131,10 +4955,8 @@ export const TransferCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -5196,10 +5018,8 @@ export const TransferCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -5216,9 +5036,7 @@ export const TransferCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -5267,41 +5085,12 @@ export const TransferCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'taxTotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discountTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'originalTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalItemTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemTaxTotal' },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'discountTaxTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingTaxTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTaxTotal' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'giftCardTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'giftCardTaxTotal' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'promotions' },
@@ -5621,10 +5410,8 @@ export const ApplyPromotionsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -5686,10 +5473,8 @@ export const ApplyPromotionsDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -5706,9 +5491,7 @@ export const ApplyPromotionsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -5757,41 +5540,12 @@ export const ApplyPromotionsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'taxTotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discountTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'originalTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalItemTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemTaxTotal' },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'discountTaxTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingTaxTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTaxTotal' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'giftCardTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'giftCardTaxTotal' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'promotions' },
@@ -6178,10 +5932,8 @@ export const GetCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'cartId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isTaxInclusive' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingOptionId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
         ],
       },
@@ -6243,10 +5995,8 @@ export const GetCartDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iso2' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'iso3' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'numCode' } },
         ],
       },
     },
@@ -6263,9 +6013,7 @@ export const GetCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'automaticTaxes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'countries' },
@@ -6314,41 +6062,12 @@ export const GetCartDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'total' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'taxTotal' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'discountTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'originalTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalItemTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalItemTaxTotal' },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'itemTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'originalTaxTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'discountTaxTotal' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shippingTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingSubtotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'shippingTaxTotal' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingSubtotal' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'originalShippingTaxTotal' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'giftCardTotal' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'giftCardTaxTotal' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'promotions' },

@@ -1,15 +1,8 @@
-enum ApplicationType {
-  fixed
-  percentage
-}
-
 type LineItem {
   id: ID!
   title: String
   quantity: Int!
   requiresShipping: Boolean
-  isDiscountable: Boolean
-  isTaxInclusive: Boolean
   unitPrice: Int
   cart: Cart
   cartId: String
@@ -26,7 +19,6 @@ type Address {
   id: String
   metadata: JSON
   createdAt: DateTime
-  updatedAt: DateTime
   firstName: String
   lastName: String
   phone: String
@@ -39,24 +31,15 @@ type Address {
   postalCode: String
 }
 
-type ApplicationMethod {
-  value: Int!
-  type: ApplicationType!
-  currencyCode: String!
-}
-
 type Promotion {
   id: String!
   code: String
   isAutomatic: Boolean
-  applicationMethod: ApplicationMethod
 }
 
 type Country {
   id: String
   iso2: String
-  iso3: String
-  numCode: String
   name: String
   displayName: String
 }
@@ -65,9 +48,7 @@ type Region {
   id: ID!
   name: String!
   currencyCode: String!
-  automaticTaxes: Boolean
   createdAt: DateTime
-  updatedAt: DateTime
   countries: [Country]
 }
 
@@ -76,9 +57,7 @@ type ShippingMethod {
   cartId: String
   name: String!
   amount: Int!
-  isTaxInclusive: Boolean!
   createdAt: DateTime
-  updatedAt: DateTime
   shippingOptionId: String
   total: Int
 }
@@ -86,28 +65,14 @@ type ShippingMethod {
 type Cart {
   id: ID!
   currencyCode: String!
-  originalItemTotal: Int!
-  originalItemSubtotal: Int!
-  originalItemTaxTotal: Int!
-  itemTotal: Int!
-  itemSubtotal: Int!
-  itemTaxTotal: Int!
   originalTotal: Int!
-  originalSubtotal: Int!
-  originalTaxTotal: Int!
   total: Int!
   subtotal: Int!
   taxTotal: Int!
   discountTotal: Int!
-  discountTaxTotal: Int!
   giftCardTotal: Int!
-  giftCardTaxTotal: Int!
   shippingTotal: Int!
-  shippingSubtotal: Int!
-  shippingTaxTotal: Int!
-  originalShippingTotal: Int!
-  originalShippingSubtotal: Int!
-  originalShippingTaxTotal: Int!
+  itemTotal: Int
   promotions: [Promotion]!
   email: String
   items: [LineItem!]
@@ -115,7 +80,6 @@ type Cart {
   shippingAddress: Address
   billingAddress: Address
   createdAt: DateTime
-  updatedAt: DateTime
   promoCodes: [String]
   shippingMethods: [ShippingMethod]
   region: Region

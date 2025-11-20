@@ -11,8 +11,6 @@ function normalizeLineItems(items: any[] = [], cartId?: string) {
     title: item.title ?? '',
     quantity: item.quantity ?? 0,
     requiresShipping: item.requires_shipping ?? false,
-    isDiscountable: item.is_discountable ?? false,
-    isTaxInclusive: item.is_tax_inclusive ?? false,
     unitPrice: item.unit_price ?? 0,
     total: item.total ?? 0,
     originalTotal: item.original_total ?? 0,
@@ -35,7 +33,6 @@ export const normalizeRegion = (region: HttpTypes.StoreRegion): Region => ({
       name: c.name,
     })) ?? [],
   createdAt: region.created_at,
-  updatedAt: region.updated_at,
 });
 
 export function normalizeOrder(order: HttpTypes.StoreOrder): Order {
@@ -45,7 +42,6 @@ export function normalizeOrder(order: HttpTypes.StoreOrder): Order {
     email: order.email ?? '',
     customerId: order.customer_id ?? '',
     regionId: order.region_id ?? '',
-    salesChannelId: order.sales_channel_id ?? '',
     paymentStatus: order.payment_status ?? '',
     fulfillmentStatus: order.fulfillment_status ?? '',
     total: order.total ?? 0,
@@ -57,15 +53,12 @@ export function normalizeOrder(order: HttpTypes.StoreOrder): Order {
     currencyCode: order.currency_code ?? 'usd',
     status: order.status ?? '',
     createdAt: toISO(order.created_at),
-    updatedAt: toISO(order.updated_at),
     items: normalizeLineItems(order?.items ?? []),
     shippingMethods: (order.shipping_methods ?? []).map((sm) => ({
       id: sm.id ?? '',
       name: sm.name ?? '',
       amount: sm.amount ?? 0,
-      isTaxInclusive: sm.is_tax_inclusive ?? false,
       createdAt: toISO(sm.created_at),
-      updatedAt: toISO(sm.updated_at),
       shippingOptionId: sm.shipping_option_id,
     })),
     shippingAddress: order.shipping_address

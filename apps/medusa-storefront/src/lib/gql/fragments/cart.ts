@@ -39,10 +39,8 @@ export const SHIPPING_METHODS_FRAGMENT = gql`
     cartId
     name
     amount
-    isTaxInclusive
     shippingOptionId
     createdAt
-    updatedAt
     total
   }
 `;
@@ -71,10 +69,8 @@ export const COUNTRY_FRAGMENT = gql`
   fragment CountryFields on Country {
     id
     iso2
-    iso3
     name
     displayName
-    numCode
   }
 `;
 
@@ -83,9 +79,7 @@ export const REGION_FRAGMENT = gql`
     id
     name
     currencyCode
-    automaticTaxes
     createdAt
-    updatedAt
     countries {
       ...CountryFields
     }
@@ -109,26 +103,12 @@ export const CART_FRAGMENT = gql`
     total
     subtotal
     taxTotal
+    itemTotal
     discountTotal
     originalTotal
     currencyCode
-    originalItemTotal
-    originalItemSubtotal
-    originalItemTaxTotal
-    itemTotal
-    itemSubtotal
-    itemTaxTotal
-    originalSubtotal
-    originalTaxTotal
-    discountTaxTotal
     shippingTotal
-    shippingSubtotal
-    shippingTaxTotal
-    originalShippingTotal
-    originalShippingSubtotal
-    originalShippingTaxTotal
     giftCardTotal
-    giftCardTaxTotal
     promotions {
       ...PromotionFields
     }

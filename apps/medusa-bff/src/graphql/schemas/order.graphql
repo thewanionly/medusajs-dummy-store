@@ -2,7 +2,6 @@ type Order {
   id: ID!
   regionId: String!
   customerId: String!
-  salesChannelId: String!
   email: String!
   items: [LineItem!]!
   shippingMethods: [ShippingMethod!]!
@@ -12,7 +11,6 @@ type Order {
   total: Int!
   status: String!
   createdAt: DateTime!
-  updatedAt: DateTime!
   currencyCode: String!
   displayId: Int
   paymentCollections: [PaymentCollection]
