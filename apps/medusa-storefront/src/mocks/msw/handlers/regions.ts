@@ -1,11 +1,12 @@
 import { HttpResponse, http } from 'msw';
 
 import { mockedRegions } from '../../data/regions';
+import { medusaBackend } from '../utils/apis';
 import { withActiveMockGate } from '../utils/withActiveMockGate';
 
 // Happy paths
 export const getRegionSuccess = http.get(
-  'http://localhost:9000/store/regions',
+  `${medusaBackend}/store/regions`,
   () => {
     return HttpResponse.json({
       regions: mockedRegions,
