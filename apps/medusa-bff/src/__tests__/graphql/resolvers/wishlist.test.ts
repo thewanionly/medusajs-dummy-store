@@ -3,7 +3,14 @@ import { transformWishlist } from '@graphql/resolvers/wishlist/util/transform';
 import { GraphQLContext } from '@graphql/types/context';
 import { createMockWishlist } from '@mocks/wishlist';
 import { createMockProduct } from '@mocks/products';
-import { createWishlistHandler, wishlistErrorHandler } from '@mocks/msw/handlers/wishlist';
+import {
+  createWishlistHandler,
+  wishlistErrorHandler,
+  createAddWishlistItemHandler,
+  createRemoveWishlistItemHandler,
+  addWishlistItemErrorHandler,
+  removeWishlistItemErrorHandler,
+} from '@mocks/msw/handlers/wishlist';
 import { server } from '@mocks/msw/node';
 import Medusa from '@medusajs/js-sdk';
 
@@ -206,6 +213,177 @@ describe('wishlistResolvers', () => {
       });
 
       const result = await wishlistResolvers.Query.wishlist({}, {}, context);
+
+      expect(productService.getProducts).toHaveBeenCalledWith({
+        id: [fallbackProduct.id],
+      });
+      expect(result.items?.[0]?.productVariant?.product).toEqual(
+        fallbackProduct
+      );
+    });
+  });
+
+  describe('Mutation.addWishlistItem', () => {
+    it('adds an item to the wishlist', async () => {
+      const { context, medusa, productService } = createContext();
+      const wishlist = createMockWishlist();
+      server.use(createAddWishlistItemHandler(wishlist));
+
+      const fetchSpy = jest.spyOn(medusa.client, 'fetch');
+      const result = await wishlistResolvers.Mutation.addWishlistItem(
+        {},
+        { productVariantId: 'variant_123' },
+        context
+      );
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.stringContaining('/store/customers/me/wishlists/items?fields='),
+        expect.objectContaining({
+          method: 'POST',
+          body: { variant_id: 'variant_123' },
+        })
+      );
+      expect(result).toEqual(transformWishlist(wishlist));
+      expect(productService.getProducts).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
+    it('throws when the customer is not logged in', async () => {
+      const { context, session, medusa } = createContext();
+      session.isCustomerLoggedIn = false;
+
+      const fetchSpy = jest.spyOn(medusa.client, 'fetch');
+      await expect(
+        wishlistResolvers.Mutation.addWishlistItem(
+          {},
+          { productVariantId: 'variant_123' },
+          context
+        )
+      ).rejects.toBeInstanceOf(UnauthorizedError);
+      expect(fetchSpy).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
+    it('propagates Medusa API errors', async () => {
+      const { context } = createContext();
+      server.use(addWishlistItemErrorHandler);
+
+      await expect(
+        wishlistResolvers.Mutation.addWishlistItem(
+          {},
+          { productVariantId: 'variant_123' },
+          context
+        )
+      ).rejects.toThrow('Internal Server Error');
+    });
+
+    it('fetches missing products when the payload lacks them', async () => {
+      const { context, productService } = createContext();
+      const wishlist = createMockWishlist();
+      const productVariant = wishlist.items?.[0]?.product_variant;
+      expect(productVariant).toBeDefined();
+      if (!productVariant || !productVariant.product_id) return;
+
+      productVariant.product = undefined;
+      server.use(createAddWishlistItemHandler(wishlist));
+
+      const fallbackProduct = createMockProduct({ id: productVariant.product_id });
+      productService.getProducts.mockResolvedValue({
+        products: [fallbackProduct],
+        count: 1,
+      });
+
+      const result = await wishlistResolvers.Mutation.addWishlistItem(
+        {},
+        { productVariantId: productVariant.product_id },
+        context
+      );
+
+      expect(productService.getProducts).toHaveBeenCalledWith({
+        id: [fallbackProduct.id],
+      });
+      expect(result.items?.[0]?.productVariant?.product).toEqual(
+        fallbackProduct
+      );
+    });
+  });
+
+  describe('Mutation.removeWishlistItem', () => {
+    it('removes an item from the wishlist', async () => {
+      const { context, medusa, productService } = createContext();
+      const wishlist = createMockWishlist();
+      server.use(createRemoveWishlistItemHandler(wishlist));
+
+      const fetchSpy = jest.spyOn(medusa.client, 'fetch');
+      const result = await wishlistResolvers.Mutation.removeWishlistItem(
+        {},
+        { wishlistItemId: 'wishlist_item_1' },
+        context
+      );
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '/store/customers/me/wishlists/items/wishlist_item_1?fields='
+        ),
+        expect.objectContaining({ method: 'DELETE' })
+      );
+      expect(result).toEqual(transformWishlist(wishlist));
+      expect(productService.getProducts).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
+    it('throws when the customer is not logged in', async () => {
+      const { context, session, medusa } = createContext();
+      session.isCustomerLoggedIn = false;
+
+      const fetchSpy = jest.spyOn(medusa.client, 'fetch');
+      await expect(
+        wishlistResolvers.Mutation.removeWishlistItem(
+          {},
+          { wishlistItemId: 'wishlist_item_1' },
+          context
+        )
+      ).rejects.toBeInstanceOf(UnauthorizedError);
+      expect(fetchSpy).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
+    it('propagates Medusa API errors', async () => {
+      const { context } = createContext();
+      server.use(removeWishlistItemErrorHandler);
+
+      await expect(
+        wishlistResolvers.Mutation.removeWishlistItem(
+          {},
+          { wishlistItemId: 'wishlist_item_1' },
+          context
+        )
+      ).rejects.toThrow('Internal Server Error');
+    });
+
+    it('fetches missing products when the payload lacks them', async () => {
+      const { context, productService } = createContext();
+      const wishlist = createMockWishlist();
+      const productVariant = wishlist.items?.[0]?.product_variant;
+      expect(productVariant).toBeDefined();
+      if (!productVariant || !productVariant.product_id) return;
+
+      productVariant.product = {
+        id: productVariant.product_id,
+      } as typeof productVariant.product;
+      server.use(createRemoveWishlistItemHandler(wishlist));
+
+      const fallbackProduct = createMockProduct({ id: productVariant.product_id });
+      productService.getProducts.mockResolvedValue({
+        products: [fallbackProduct],
+        count: 1,
+      });
+
+      const result = await wishlistResolvers.Mutation.removeWishlistItem(
+        {},
+        { wishlistItemId: 'wishlist_item_1' },
+        context
+      );
 
       expect(productService.getProducts).toHaveBeenCalledWith({
         id: [fallbackProduct.id],

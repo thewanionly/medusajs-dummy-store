@@ -2,6 +2,11 @@ extend type Query {
   wishlist: Wishlist
 }
 
+type Mutation {
+  addWishlistItem(productVariantId: String!): Wishlist
+  removeWishlistItem(wishlistItemId: String!): Wishlist
+}
+
 type Wishlist {
   id: ID!
   items: [WishlistItem!]

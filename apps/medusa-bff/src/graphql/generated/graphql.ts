@@ -141,13 +141,23 @@ export type LogoutResponse = {
 export type MarkDef = IconLinkMark | LinkMark;
 
 export type Mutation = {
+  addWishlistItem?: Maybe<Wishlist>;
   login?: Maybe<Token>;
   logout?: Maybe<LogoutResponse>;
+  removeWishlistItem?: Maybe<Wishlist>;
+};
+
+export type MutationAddWishlistItemArgs = {
+  productVariantId: Scalars['String']['input'];
 };
 
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type MutationRemoveWishlistItemArgs = {
+  wishlistItemId: Scalars['String']['input'];
 };
 
 export type Price = {
@@ -896,6 +906,12 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  addWishlistItem?: Resolver<
+    Maybe<ResolversTypes['Wishlist']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddWishlistItemArgs, 'productVariantId'>
+  >;
   login?: Resolver<
     Maybe<ResolversTypes['Token']>,
     ParentType,
@@ -906,6 +922,12 @@ export type MutationResolvers<
     Maybe<ResolversTypes['LogoutResponse']>,
     ParentType,
     ContextType
+  >;
+  removeWishlistItem?: Resolver<
+    Maybe<ResolversTypes['Wishlist']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationRemoveWishlistItemArgs, 'wishlistItemId'>
   >;
 };
 

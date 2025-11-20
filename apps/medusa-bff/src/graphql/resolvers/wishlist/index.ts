@@ -35,23 +35,85 @@ export const wishlistResolvers = {
       __: unknown,
       { medusa, session, productService }: GraphQLContext
     ) => {
-      if (!session.isCustomerLoggedIn) {
-        throw new UnauthorizedError(['Query', 'wishlist']);
-      }
+      ensureCustomerIsLoggedIn(session, ['Query', 'wishlist']);
 
       try {
         const { wishlist } = (await medusa.client.fetch(
           `/store/customers/me/wishlists?${wishlistFieldsQuery}`
         )) as WishlistApiResponse;
 
-        const productsById = await loadMissingProducts(wishlist, productService);
-
-        return transformWishlist(wishlist, { productsById });
+        return buildWishlistResponse(wishlist, productService);
       } catch (e) {
         handleMedusaError(e, 'run Query.wishlist', ['Query', 'wishlist']);
       }
     },
   },
+  Mutation: {
+    addWishlistItem: async (
+      _: unknown,
+      args: { productVariantId: string },
+      { medusa, session, productService }: GraphQLContext
+    ) => {
+      ensureCustomerIsLoggedIn(session, ['Mutation', 'addWishlistItem']);
+
+      try {
+        const { wishlist } = (await medusa.client.fetch(
+          `/store/customers/me/wishlists/items?${wishlistFieldsQuery}`,
+          {
+            method: 'POST',
+            body: { variant_id: args.productVariantId },
+          }
+        )) as WishlistApiResponse;
+
+        return buildWishlistResponse(wishlist, productService);
+      } catch (e) {
+        handleMedusaError(e, 'run Mutation.addWishlistItem', [
+          'Mutation',
+          'addWishlistItem',
+        ]);
+      }
+    },
+    removeWishlistItem: async (
+      _: unknown,
+      args: { wishlistItemId: string },
+      { medusa, session, productService }: GraphQLContext
+    ) => {
+      ensureCustomerIsLoggedIn(session, ['Mutation', 'removeWishlistItem']);
+
+      try {
+        const { wishlist } = (await medusa.client.fetch(
+          `/store/customers/me/wishlists/items/${args.wishlistItemId}?${wishlistFieldsQuery}`,
+          {
+            method: 'DELETE',
+          }
+        )) as WishlistApiResponse;
+
+        return buildWishlistResponse(wishlist, productService);
+      } catch (e) {
+        handleMedusaError(e, 'run Mutation.removeWishlistItem', [
+          'Mutation',
+          'removeWishlistItem',
+        ]);
+      }
+    },
+  },
+};
+
+const ensureCustomerIsLoggedIn = (
+  session: GraphQLContext['session'],
+  path: (string | number)[]
+) => {
+  if (!session.isCustomerLoggedIn) {
+    throw new UnauthorizedError(path);
+  }
+};
+
+const buildWishlistResponse = async (
+  wishlist: WishlistApiResponse['wishlist'],
+  productService: GraphQLContext['productService']
+) => {
+  const productsById = await loadMissingProducts(wishlist, productService);
+  return transformWishlist(wishlist, { productsById });
 };
 
 async function loadMissingProducts(
