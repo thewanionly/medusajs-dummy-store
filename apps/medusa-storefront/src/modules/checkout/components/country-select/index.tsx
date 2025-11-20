@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 
-import { HttpTypes } from '@medusajs/types';
+import { Region } from '@lib/gql/generated-types/graphql';
 import NativeSelect, {
   NativeSelectProps,
 } from '@modules/common/components/native-select';
@@ -8,7 +8,7 @@ import NativeSelect, {
 const CountrySelect = forwardRef<
   HTMLSelectElement,
   NativeSelectProps & {
-    region?: HttpTypes.StoreRegion;
+    region?: Region | null;
   }
 >(({ placeholder = 'Country', region, defaultValue, ...props }, ref) => {
   const innerRef = useRef<HTMLSelectElement>(null);
@@ -24,8 +24,8 @@ const CountrySelect = forwardRef<
     }
 
     return region.countries?.map((country) => ({
-      value: country.iso_2,
-      label: country.display_name,
+      value: country?.iso2,
+      label: country?.displayName,
     }));
   }, [region]);
 
@@ -37,7 +37,7 @@ const CountrySelect = forwardRef<
       {...props}
     >
       {countryOptions?.map(({ value, label }, index) => (
-        <option key={index} value={value}>
+        <option key={index} value={value ?? ''}>
           {label}
         </option>
       ))}

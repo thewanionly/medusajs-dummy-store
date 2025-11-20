@@ -1,8 +1,8 @@
+import { Order } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 
 type OrderSummaryProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
 };
 
 const OrderSummary = ({ order }: OrderSummaryProps) => {
@@ -13,7 +13,7 @@ const OrderSummary = ({ order }: OrderSummaryProps) => {
 
     return convertToLocale({
       amount,
-      currency_code: order.currency_code,
+      currency_code: order.currencyCode,
     });
   };
 
@@ -26,25 +26,25 @@ const OrderSummary = ({ order }: OrderSummaryProps) => {
           <span>{getAmount(order.subtotal)}</span>
         </div>
         <div className="flex flex-col gap-y-1">
-          {order.discount_total > 0 && (
+          {order.discountTotal && order.discountTotal > 0 && (
             <div className="flex items-center justify-between">
               <span>Discount</span>
-              <span>- {getAmount(order.discount_total)}</span>
+              <span>- {getAmount(order.discountTotal)}</span>
             </div>
           )}
-          {order.gift_card_total > 0 && (
+          {order.giftCardTotal && order.giftCardTotal > 0 && (
             <div className="flex items-center justify-between">
               <span>Discount</span>
-              <span>- {getAmount(order.gift_card_total)}</span>
+              <span>- {getAmount(order.giftCardTotal)}</span>
             </div>
           )}
           <div className="flex items-center justify-between">
             <span>Shipping</span>
-            <span>{getAmount(order.shipping_total)}</span>
+            <span>{getAmount(order.shippingTotal)}</span>
           </div>
           <div className="flex items-center justify-between">
             <span>Taxes</span>
-            <span>{getAmount(order.tax_total)}</span>
+            <span>{getAmount(order.taxTotal)}</span>
           </div>
         </div>
         <div className="my-4 h-px w-full border-b border-dashed border-gray-200" />

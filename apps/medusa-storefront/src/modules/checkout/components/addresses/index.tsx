@@ -6,9 +6,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setAddresses } from '@lib/data/cart';
 import { Customer } from '@lib/gql/generated-types/graphql';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import compareAddresses from '@lib/util/compare-addresses';
 import { CheckCircleSolid } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import { Heading, Text, useToggleState } from '@medusajs/ui';
 import Divider from '@modules/common/components/divider';
 import Spinner from '@modules/common/icons/spinner';
@@ -22,7 +22,7 @@ const Addresses = ({
   cart,
   customer,
 }: {
-  cart: HttpTypes.StoreCart | null;
+  cart: Cart;
   customer: Customer | null;
 }) => {
   const searchParams = useSearchParams();
@@ -32,8 +32,8 @@ const Addresses = ({
   const isOpen = searchParams.get('step') === 'address';
 
   const { state: sameAsBilling, toggle: toggleSameAsBilling } = useToggleState(
-    cart?.shipping_address && cart?.billing_address
-      ? compareAddresses(cart?.shipping_address, cart?.billing_address)
+    cart?.shippingAddress && cart?.billingAddress
+      ? compareAddresses(cart?.shippingAddress, cart?.billingAddress)
       : true
   );
 
@@ -53,7 +53,7 @@ const Addresses = ({
           Shipping Address
           {!isOpen && <CheckCircleSolid />}
         </Heading>
-        {!isOpen && cart?.shipping_address && (
+        {!isOpen && cart?.shippingAddress && (
           <Text>
             <button
               onClick={handleEdit}
@@ -96,7 +96,7 @@ const Addresses = ({
       ) : (
         <div>
           <div className="text-small-regular">
-            {cart && cart.shipping_address ? (
+            {cart && cart.shippingAddress ? (
               <div className="flex items-start gap-x-8">
                 <div className="flex w-full items-start gap-x-1">
                   <div
@@ -107,19 +107,19 @@ const Addresses = ({
                       Shipping Address
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.first_name}{' '}
-                      {cart.shipping_address.last_name}
+                      {cart.shippingAddress.firstName}{' '}
+                      {cart.shippingAddress.lastName}
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.address_1}{' '}
-                      {cart.shipping_address.address_2}
+                      {cart.shippingAddress.address1}{' '}
+                      {cart.shippingAddress.address2}
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.postal_code},{' '}
-                      {cart.shipping_address.city}
+                      {cart.shippingAddress.postalCode},{' '}
+                      {cart.shippingAddress.city}
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.country_code?.toUpperCase()}
+                      {cart.shippingAddress.countryCode?.toUpperCase()}
                     </Text>
                   </div>
 
@@ -131,7 +131,7 @@ const Addresses = ({
                       Contact
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.phone}
+                      {cart.shippingAddress.phone}
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
                       {cart.email}
@@ -153,19 +153,19 @@ const Addresses = ({
                     ) : (
                       <>
                         <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.first_name}{' '}
-                          {cart.billing_address?.last_name}
+                          {cart.billingAddress?.firstName}{' '}
+                          {cart.billingAddress?.lastName}
                         </Text>
                         <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.address_1}{' '}
-                          {cart.billing_address?.address_2}
+                          {cart.billingAddress?.address1}{' '}
+                          {cart.billingAddress?.address2}
                         </Text>
                         <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.postal_code},{' '}
-                          {cart.billing_address?.city}
+                          {cart.billingAddress?.postalCode},{' '}
+                          {cart.billingAddress?.city}
                         </Text>
                         <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.country_code?.toUpperCase()}
+                          {cart.billingAddress?.countryCode?.toUpperCase()}
                         </Text>
                       </>
                     )}

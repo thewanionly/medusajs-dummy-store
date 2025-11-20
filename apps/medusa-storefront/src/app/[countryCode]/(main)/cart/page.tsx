@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { retrieveCart } from '@lib/data/cart';
 import { retrieveCustomer } from '@lib/data/customer';
+import type { Cart } from '@lib/gql/generated-types/graphql';
 import CartTemplate from '@modules/cart/templates';
 
 export const metadata: Metadata = {

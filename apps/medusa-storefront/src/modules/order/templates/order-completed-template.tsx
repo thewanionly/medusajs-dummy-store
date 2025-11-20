@@ -1,6 +1,6 @@
 import { cookies as nextCookies } from 'next/headers';
 
-import { HttpTypes } from '@medusajs/types';
+import { Order } from '@lib/gql/generated-types/graphql';
 import { Heading } from '@medusajs/ui';
 import CartTotals from '@modules/common/components/cart-totals';
 import Help from '@modules/order/components/help';
@@ -11,7 +11,7 @@ import PaymentDetails from '@modules/order/components/payment-details';
 import ShippingDetails from '@modules/order/components/shipping-details';
 
 type OrderCompletedTemplateProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
 };
 
 export default async function OrderCompletedTemplate({

@@ -2,22 +2,22 @@
 
 import { useSearchParams } from 'next/navigation';
 
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { Heading, Text, clx } from '@medusajs/ui';
 
 import PaymentButton from '../payment-button';
 
-const Review = ({ cart }: { cart: any }) => {
+const Review = ({ cart }: { cart: Cart }) => {
   const searchParams = useSearchParams();
 
   const isOpen = searchParams.get('step') === 'review';
 
-  const paidByGiftcard =
-    cart?.gift_cards && cart?.gift_cards?.length > 0 && cart?.total === 0;
+  const paidByGiftcard = cart?.giftCardTotal > 0 && cart?.total === 0;
 
   const previousStepsCompleted =
-    cart.shipping_address &&
-    cart.shipping_methods.length > 0 &&
-    (cart.payment_collection || paidByGiftcard);
+    cart?.shippingAddress &&
+    (cart?.shippingMethods?.length ?? 0) > 0 &&
+    (cart?.paymentCollection || paidByGiftcard);
 
   return (
     <div className="bg-white">

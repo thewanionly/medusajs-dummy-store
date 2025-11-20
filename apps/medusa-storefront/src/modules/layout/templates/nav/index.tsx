@@ -1,14 +1,14 @@
 import { Suspense } from 'react';
 
 import { listRegions } from '@lib/data/regions';
-import { StoreRegion } from '@medusajs/types';
+import { Region } from '@lib/gql/generated-types/graphql';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import CartButton from '@modules/layout/components/cart-button';
 import SideMenu from '@modules/layout/components/side-menu';
 import SearchModal from '@modules/search/components/modal';
 
 export default async function Nav() {
-  const regions = await listRegions().then((regions: StoreRegion[]) => regions);
+  const regions = await listRegions().then((regions: Region[]) => regions);
 
   return (
     <div className="group sticky inset-x-0 top-0 z-50">

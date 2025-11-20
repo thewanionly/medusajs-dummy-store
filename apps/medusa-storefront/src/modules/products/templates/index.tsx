@@ -2,9 +2,8 @@ import React, { Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import { Product } from '@lib/gql/generated-types/graphql';
+import { Product, Region } from '@lib/gql/generated-types/graphql';
 import { Breadcrumbs } from '@mds/ui/components/breadcrumbs/breadcrumbs';
-import { HttpTypes } from '@medusajs/types';
 import ImageGallery from '@modules/products/components/image-gallery';
 import ProductActions from '@modules/products/components/product-actions';
 import ProductOnboardingCta from '@modules/products/components/product-onboarding-cta';
@@ -17,7 +16,7 @@ import ProductActionsWrapper from './product-actions-wrapper';
 
 type ProductTemplateProps = {
   product?: Product | null;
-  region: HttpTypes.StoreRegion;
+  region: Region;
   countryCode: string;
 };
 

@@ -3,13 +3,14 @@
 import React from 'react';
 
 import { isStripe } from '@lib/constants';
-import { HttpTypes } from '@medusajs/types';
+import { Cart } from '@lib/gql/generated-types/graphql';
+import { camelToSnakeCase } from '@lib/util/normalizeFunctions';
 import { loadStripe } from '@stripe/stripe-js';
 
 import StripeWrapper from './stripe-wrapper';
 
 type PaymentWrapperProps = {
-  cart: HttpTypes.StoreCart;
+  cart: Cart;
   children: React.ReactNode;
 };
 
@@ -17,18 +18,18 @@ const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
-  const paymentSession = cart.payment_collection?.payment_sessions?.find(
-    (s) => s.status === 'pending'
+  const paymentSession = cart.paymentCollection?.paymentSessions?.find(
+    (s) => s?.status === 'pending'
   );
 
   if (
-    isStripe(paymentSession?.provider_id) &&
-    paymentSession &&
+    paymentSession?.providerId &&
+    isStripe(paymentSession.providerId) &&
     stripePromise
   ) {
     return (
       <StripeWrapper
-        paymentSession={paymentSession}
+        paymentSession={camelToSnakeCase(paymentSession)}
         stripeKey={stripeKey}
         stripePromise={stripePromise}
       >

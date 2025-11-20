@@ -1,11 +1,11 @@
+import { Cart } from '@lib/gql/generated-types/graphql';
 import repeat from '@lib/util/repeat';
-import { HttpTypes } from '@medusajs/types';
 import { Heading, Table } from '@medusajs/ui';
 import Item from '@modules/cart/components/item';
 import SkeletonLineItem from '@modules/skeletons/components/skeleton-line-item';
 
 type ItemsTemplateProps = {
-  cart?: HttpTypes.StoreCart;
+  cart?: Cart;
 };
 
 const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
@@ -31,16 +31,16 @@ const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
         </Table.Header>
         <Table.Body>
           {items
-            ? items
+            ? [...items]
                 .sort((a, b) => {
-                  return (a.created_at ?? '') > (b.created_at ?? '') ? -1 : 1;
+                  return (a.createdAt ?? '') > (b.createdAt ?? '') ? -1 : 1;
                 })
                 .map((item) => {
                   return (
                     <Item
                       key={item.id}
                       item={item}
-                      currencyCode={cart?.currency_code}
+                      currencyCode={cart?.currencyCode}
                     />
                   );
                 })

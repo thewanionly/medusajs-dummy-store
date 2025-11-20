@@ -1,13 +1,13 @@
 import { Customer } from '@lib/gql/generated-types/graphql';
+import { Order } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { Container } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import ChevronDown from '@modules/common/icons/chevron-down';
 
 type OverviewProps = {
   customer: Customer | null;
-  orders: HttpTypes.StoreOrder[] | null;
+  orders: Order[] | null;
 };
 
 const Overview = ({ customer, orders }: OverviewProps) => {
@@ -94,18 +94,18 @@ const Overview = ({ customer, orders }: OverviewProps) => {
                                 Total amount
                               </span>
                               <span data-testid="order-created-date">
-                                {new Date(order.created_at).toDateString()}
+                                {new Date(order.createdAt).toDateString()}
                               </span>
                               <span
                                 data-testid="order-id"
-                                data-value={order.display_id}
+                                data-value={order.displayId}
                               >
-                                #{order.display_id}
+                                #{order.displayId}
                               </span>
                               <span data-testid="order-amount">
                                 {convertToLocale({
                                   amount: order.total,
-                                  currency_code: order.currency_code,
+                                  currency_code: order.currencyCode,
                                 })}
                               </span>
                             </div>
@@ -114,7 +114,7 @@ const Overview = ({ customer, orders }: OverviewProps) => {
                               data-testid="open-order-button"
                             >
                               <span className="sr-only">
-                                Go to order #{order.display_id}
+                                Go to order #{order.displayId}
                               </span>
                               <ChevronDown className="-rotate-90" />
                             </button>

@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 
+import { Order } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { Button } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import Thumbnail from '@modules/products/components/thumbnail';
 
 type OrderCardProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
 };
 
 const OrderCard = ({ order }: OrderCardProps) => {
@@ -26,16 +26,16 @@ const OrderCard = ({ order }: OrderCardProps) => {
   return (
     <div className="flex flex-col bg-white" data-testid="order-card">
       <div className="text-large-semi mb-1 uppercase">
-        #<span data-testid="order-display-id">{order.display_id}</span>
+        #<span data-testid="order-display-id">{order.displayId}</span>
       </div>
       <div className="text-small-regular flex items-center divide-x divide-gray-200 text-ui-fg-base">
         <span className="pr-2" data-testid="order-created-at">
-          {new Date(order.created_at).toDateString()}
+          {new Date(order.createdAt).toDateString()}
         </span>
         <span className="px-2" data-testid="order-amount">
           {convertToLocale({
             amount: order.total,
-            currency_code: order.currency_code,
+            currency_code: order.currencyCode,
           })}
         </span>
         <span className="pl-2">{`${numberOfLines} ${

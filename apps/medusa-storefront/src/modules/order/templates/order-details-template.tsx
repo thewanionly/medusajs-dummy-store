@@ -2,8 +2,8 @@
 
 import React from 'react';
 
+import { Order } from '@lib/gql/generated-types/graphql';
 import { XMark } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import Help from '@modules/order/components/help';
 import Items from '@modules/order/components/items';
@@ -12,7 +12,7 @@ import OrderSummary from '@modules/order/components/order-summary';
 import ShippingDetails from '@modules/order/components/shipping-details';
 
 type OrderDetailsTemplateProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
 };
 
 const OrderDetailsTemplate: React.FC<OrderDetailsTemplateProps> = ({

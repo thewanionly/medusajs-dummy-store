@@ -1,10 +1,10 @@
+import { LineItem } from '@lib/gql/generated-types/graphql';
 import { getPercentageDiff } from '@lib/util/get-precentage-diff';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { clx } from '@medusajs/ui';
 
 type LineItemPriceProps = {
-  item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem;
+  item: LineItem;
   style?: 'default' | 'tight';
   currencyCode: string;
 };
@@ -14,8 +14,8 @@ const LineItemPrice = ({
   style = 'default',
   currencyCode,
 }: LineItemPriceProps) => {
-  const { total, original_total } = item;
-  const originalPrice = original_total;
+  const { total, originalTotal } = item;
+  const originalPrice = originalTotal;
   const currentPrice = total;
   const hasReducedPrice =
     currentPrice && originalPrice && currentPrice < originalPrice;
@@ -53,7 +53,7 @@ const LineItemPrice = ({
           data-testid="product-price"
         >
           {convertToLocale({
-            amount: currentPrice,
+            amount: currentPrice ?? 0,
             currency_code: currencyCode,
           })}
         </span>

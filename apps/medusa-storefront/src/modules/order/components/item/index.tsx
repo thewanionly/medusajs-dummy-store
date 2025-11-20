@@ -1,4 +1,4 @@
-import { HttpTypes } from '@medusajs/types';
+import { LineItem } from '@lib/gql/generated-types/graphql';
 import { Table, Text } from '@medusajs/ui';
 import LineItemOptions from '@modules/common/components/line-item-options';
 import LineItemPrice from '@modules/common/components/line-item-price';
@@ -6,7 +6,7 @@ import LineItemUnitPrice from '@modules/common/components/line-item-unit-price';
 import Thumbnail from '@modules/products/components/thumbnail';
 
 type ItemProps = {
-  item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem;
+  item: LineItem;
   currencyCode: string;
 };
 
@@ -24,7 +24,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
           className="txt-medium-plus text-ui-fg-base"
           data-testid="product-name"
         >
-          {item.product_title}
+          {item.productTitle}
         </Text>
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
       </Table.Cell>

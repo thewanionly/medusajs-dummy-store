@@ -3,8 +3,8 @@
 import { Fragment } from 'react';
 
 import { Popover, PopoverPanel, Transition } from '@headlessui/react';
+import { Region } from '@lib/gql/generated-types/graphql';
 import { ArrowRightMini, XMark } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import { Text, clx, useToggleState } from '@medusajs/ui';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
@@ -17,7 +17,7 @@ const SideMenuItems = {
   Cart: '/cart',
 };
 
-const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
+const SideMenu = ({ regions }: { regions: Region[] | null }) => {
   const toggleState = useToggleState();
 
   return (

@@ -1,6 +1,5 @@
 import { listProducts } from '@lib/data/products';
-import { Product } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { Product, Region } from '@lib/gql/generated-types/graphql';
 import ProductActions from '@modules/products/components/product-actions';
 
 /**
@@ -11,7 +10,7 @@ export default async function ProductActionsWrapper({
   region,
 }: {
   id: string;
-  region: HttpTypes.StoreRegion;
+  region: Region;
 }) {
   const product = await listProducts({
     queryParams: { id: [id] },

@@ -1,8 +1,8 @@
-import { HttpTypes } from '@medusajs/types';
+import { Order } from '@lib/gql/generated-types/graphql';
 import { Text } from '@medusajs/ui';
 
 type OrderDetailsProps = {
-  order: HttpTypes.StoreOrder;
+  order: Order;
   showStatus?: boolean;
 };
 
@@ -28,11 +28,11 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
       <Text className="mt-2">
         Order date:{' '}
         <span data-testid="order-date">
-          {new Date(order.created_at).toDateString()}
+          {new Date(order.createdAt).toDateString()}
         </span>
       </Text>
       <Text className="mt-2 text-ui-fg-interactive">
-        Order number: <span data-testid="order-id">{order.display_id}</span>
+        Order number: <span data-testid="order-id">{order.displayId}</span>
       </Text>
 
       <div className="text-compact-small mt-4 flex items-center gap-x-4">
@@ -41,16 +41,16 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
             <Text>
               Order status:{' '}
               <span className="text-ui-fg-subtle" data-testid="order-status">
-                {formatStatus(order.fulfillment_status)}
+                {formatStatus(order.fulfillmentStatus)}
               </span>
             </Text>
             <Text>
               Payment status:{' '}
               <span
                 className="text-ui-fg-subtle"
-                sata-testid="order-payment-status"
+                data-testid="order-payment-status"
               >
-                {formatStatus(order.payment_status)}
+                {formatStatus(order.paymentStatus)}
               </span>
             </Text>
           </>

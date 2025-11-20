@@ -1,9 +1,9 @@
+import { LineItem } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { clx } from '@medusajs/ui';
 
 type LineItemUnitPriceProps = {
-  item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem;
+  item: LineItem;
   style?: 'default' | 'tight';
   currencyCode: string;
 };
@@ -13,7 +13,9 @@ const LineItemUnitPrice = ({
   style = 'default',
   currencyCode,
 }: LineItemUnitPriceProps) => {
-  const { total = 0, original_total = 0, quantity = 1 } = item;
+  const total = item.total ?? 0;
+  const original_total = item.originalTotal ?? 0;
+  const quantity = item.quantity ?? 0;
 
   const hasReducedPrice = total < original_total;
 
@@ -52,7 +54,7 @@ const LineItemUnitPrice = ({
         data-testid="product-unit-price"
       >
         {convertToLocale({
-          amount: total / item.quantity,
+          amount: total / quantity,
           currency_code: currencyCode,
         })}
       </span>
