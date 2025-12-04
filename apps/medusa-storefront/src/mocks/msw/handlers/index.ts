@@ -7,6 +7,7 @@ import { handlers as productCategoriesHandlers } from './product-categories';
 import { handlers as productsHandlers } from './products';
 import { handlers as regionHandlers } from './regions';
 import { handlers as searchHandlers } from './search';
+import { handlers as wishlistHandlers } from './wishlist';
 
 const allHandlers = [
   ...cartHandlers,
@@ -16,6 +17,7 @@ const allHandlers = [
   ...productsHandlers,
   ...regionHandlers,
   ...searchHandlers,
+  ...wishlistHandlers,
 ];
 
 const isRequestHandler = (
