@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 import { ProductHit } from '@lib/gql/generated-types/graphql';
 import { cn } from '@mds/ui/lib/utils';
