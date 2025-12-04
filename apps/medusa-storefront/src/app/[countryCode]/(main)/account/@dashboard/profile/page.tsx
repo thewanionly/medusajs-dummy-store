@@ -7,7 +7,6 @@ import ProfilePhone from '@modules/account//components/profile-phone';
 import ProfileBillingAddress from '@modules/account/components/profile-billing-address';
 import ProfileEmail from '@modules/account/components/profile-email';
 import ProfileName from '@modules/account/components/profile-name';
-import ProfilePassword from '@modules/account/components/profile-password';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -50,4 +49,3 @@ export default async function Profile() {
 const Divider = () => {
   return <div className="h-px w-full bg-gray-200" />;
 };
-``;

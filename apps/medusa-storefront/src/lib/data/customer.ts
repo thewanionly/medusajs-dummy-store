@@ -5,12 +5,18 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { sdk } from '@lib/config';
+import { graphqlMutation } from '@lib/gql/apollo-client';
 import { createServerApolloClient, graphqlFetch } from '@lib/gql/apollo-client';
+import {
+  TransferCartMutation,
+  TransferCartMutationVariables,
+} from '@lib/gql/generated-types/graphql';
 import {
   Customer,
   GetCustomerQuery,
   GetCustomerQueryVariables,
 } from '@lib/gql/generated-types/graphql';
+import { TRANSFER_CART_MUTATION } from '@lib/gql/mutations/cart';
 import { GET_CUSTOMER_QUERY } from '@lib/gql/queries/customer';
 import medusaError from '@lib/util/medusa-error';
 import { HttpTypes } from '@medusajs/types';
@@ -148,20 +154,38 @@ export async function postSignout(countryCode: string) {
   redirect(`/${countryCode}/account`);
 }
 
-export async function transferCart() {
+export const transferCart = async (): Promise<
+  TransferCartMutation['transferCart'] | null
+> => {
   const cartId = await getCartId();
 
   if (!cartId) {
-    return;
+    return null;
   }
 
-  const headers = await getAuthHeaders();
+  try {
+    const result = await graphqlMutation<
+      TransferCartMutation,
+      TransferCartMutationVariables
+    >({
+      mutation: TRANSFER_CART_MUTATION,
+      variables: {
+        cartId,
+      },
+    });
 
-  await sdk.store.cart.transferCart(cartId, {}, headers);
+    const cart = result?.transferCart ?? null;
 
-  const cartCacheTag = await getCacheTag('carts');
-  revalidateTag(cartCacheTag);
-}
+    if (cart) {
+      const cartCacheTag = await getCacheTag('carts');
+      revalidateTag(cartCacheTag);
+    }
+
+    return cart;
+  } catch (err) {
+    medusaError(err);
+  }
+};
 
 export const addCustomerAddress = async (
   currentState: Record<string, unknown>,

@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { Customer } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { Customer, Region } from '@lib/gql/generated-types/graphql';
 
 import AddAddress from '../address-card/add-address';
 import EditAddress from '../address-card/edit-address-modal';
 
 type AddressBookProps = {
   customer: Customer;
-  region: HttpTypes.StoreRegion;
+  region: Region;
 };
 
 const AddressBook: React.FC<AddressBookProps> = ({ customer, region }) => {

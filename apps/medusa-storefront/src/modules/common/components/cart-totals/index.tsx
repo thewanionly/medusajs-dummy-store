@@ -8,25 +8,26 @@ type CartTotalsProps = {
   totals: {
     total?: number | null;
     subtotal?: number | null;
-    tax_total?: number | null;
-    shipping_total?: number | null;
-    discount_total?: number | null;
-    gift_card_total?: number | null;
-    currency_code: string;
-    shipping_subtotal?: number | null;
+    taxTotal?: number | null;
+    shippingTotal?: number | null;
+    discountTotal?: number | null;
+    giftCardTotal?: number | null;
+    currencyCode: string;
   };
 };
 
 const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
   const {
-    currency_code,
+    currencyCode,
     total,
     subtotal,
-    tax_total,
-    discount_total,
-    gift_card_total,
-    shipping_subtotal,
+    taxTotal,
+    discountTotal,
+    giftCardTotal,
+    shippingTotal,
   } = totals;
+
+  const shipping_excluded = (subtotal ?? 0) - (shippingTotal ?? 0);
 
   return (
     <div>
@@ -35,45 +36,60 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
           <span className="flex items-center gap-x-1">
             Subtotal (excl. shipping and taxes)
           </span>
-          <span data-testid="cart-subtotal" data-value={subtotal || 0}>
-            {convertToLocale({ amount: subtotal ?? 0, currency_code })}
+          <span data-testid="cart-subtotal" data-value={shipping_excluded}>
+            {convertToLocale({
+              amount: shipping_excluded,
+              currency_code: currencyCode,
+            })}
           </span>
         </div>
-        {!!discount_total && (
+        {!!discountTotal && (
           <div className="flex items-center justify-between">
             <span>Discount</span>
             <span
               className="text-ui-fg-interactive"
               data-testid="cart-discount"
-              data-value={discount_total || 0}
+              data-value={discountTotal || 0}
             >
               -{' '}
-              {convertToLocale({ amount: discount_total ?? 0, currency_code })}
+              {convertToLocale({
+                amount: discountTotal ?? 0,
+                currency_code: currencyCode,
+              })}
             </span>
           </div>
         )}
         <div className="flex items-center justify-between">
           <span>Shipping</span>
-          <span data-testid="cart-shipping" data-value={shipping_subtotal || 0}>
-            {convertToLocale({ amount: shipping_subtotal ?? 0, currency_code })}
+          <span data-testid="cart-shipping" data-value={shippingTotal || 0}>
+            {convertToLocale({
+              amount: shippingTotal ?? 0,
+              currency_code: currencyCode,
+            })}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="flex items-center gap-x-1">Taxes</span>
-          <span data-testid="cart-taxes" data-value={tax_total || 0}>
-            {convertToLocale({ amount: tax_total ?? 0, currency_code })}
+          <span data-testid="cart-taxes" data-value={taxTotal || 0}>
+            {convertToLocale({
+              amount: taxTotal ?? 0,
+              currency_code: currencyCode,
+            })}
           </span>
         </div>
-        {!!gift_card_total && (
+        {!!giftCardTotal && (
           <div className="flex items-center justify-between">
             <span>Gift card</span>
             <span
               className="text-ui-fg-interactive"
               data-testid="cart-gift-card-amount"
-              data-value={gift_card_total || 0}
+              data-value={giftCardTotal || 0}
             >
               -{' '}
-              {convertToLocale({ amount: gift_card_total ?? 0, currency_code })}
+              {convertToLocale({
+                amount: giftCardTotal ?? 0,
+                currency_code: currencyCode,
+              })}
             </span>
           </div>
         )}
@@ -86,7 +102,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
           data-testid="cart-total"
           data-value={total || 0}
         >
-          {convertToLocale({ amount: total ?? 0, currency_code })}
+          {convertToLocale({ amount: total ?? 0, currency_code: currencyCode })}
         </span>
       </div>
       <div className="mt-4 h-px w-full border-b border-gray-200" />

@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 
 import { isManual, isStripe } from '@lib/constants';
 import { placeOrder } from '@lib/data/cart';
-import { HttpTypes } from '@medusajs/types';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { Button } from '@medusajs/ui';
 import { useElements, useStripe } from '@stripe/react-stripe-js';
 
 import ErrorMessage from '../error-message';
 
 type PaymentButtonProps = {
-  cart: HttpTypes.StoreCart;
+  cart: Cart;
   'data-testid': string;
 };
 
@@ -21,15 +21,15 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 }) => {
   const notReady =
     !cart ||
-    !cart.shipping_address ||
-    !cart.billing_address ||
+    !cart.shippingAddress ||
+    !cart.billingAddress ||
     !cart.email ||
-    (cart.shipping_methods?.length ?? 0) < 1;
+    (cart.shippingMethods?.length ?? 0) < 1;
 
-  const paymentSession = cart.payment_collection?.payment_sessions?.[0];
+  const paymentSession = cart.paymentCollection?.paymentSessions?.[0];
 
   switch (true) {
-    case isStripe(paymentSession?.provider_id):
+    case isStripe(paymentSession?.providerId):
       return (
         <StripePaymentButton
           notReady={notReady}
@@ -37,7 +37,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
           data-testid={dataTestId}
         />
       );
-    case isManual(paymentSession?.provider_id):
+    case isManual(paymentSession?.providerId):
       return (
         <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
       );
@@ -51,7 +51,7 @@ const StripePaymentButton = ({
   notReady,
   'data-testid': dataTestId,
 }: {
-  cart: HttpTypes.StoreCart;
+  cart: Cart;
   notReady: boolean;
   'data-testid'?: string;
 }) => {
@@ -72,8 +72,8 @@ const StripePaymentButton = ({
   const elements = useElements();
   const card = elements?.getElement('card');
 
-  const session = cart.payment_collection?.payment_sessions?.find(
-    (s) => s.status === 'pending'
+  const session = cart.paymentCollection?.paymentSessions?.find(
+    (s) => s?.status === 'pending'
   );
 
   const disabled = !stripe || !elements ? true : false;
@@ -92,19 +92,19 @@ const StripePaymentButton = ({
           card: card,
           billing_details: {
             name:
-              cart.billing_address?.first_name +
+              cart.billingAddress?.firstName +
               ' ' +
-              cart.billing_address?.last_name,
+              cart.billingAddress?.lastName,
             address: {
-              city: cart.billing_address?.city ?? undefined,
-              country: cart.billing_address?.country_code ?? undefined,
-              line1: cart.billing_address?.address_1 ?? undefined,
-              line2: cart.billing_address?.address_2 ?? undefined,
-              postal_code: cart.billing_address?.postal_code ?? undefined,
-              state: cart.billing_address?.province ?? undefined,
+              city: cart.billingAddress?.city ?? undefined,
+              country: cart.billingAddress?.countryCode ?? undefined,
+              line1: cart.billingAddress?.address1 ?? undefined,
+              line2: cart.billingAddress?.address2 ?? undefined,
+              postal_code: cart.billingAddress?.postalCode ?? undefined,
+              state: cart.billingAddress?.province ?? undefined,
             },
-            email: cart.email,
-            phone: cart.billing_address?.phone ?? undefined,
+            email: cart.email ?? undefined,
+            phone: cart.billingAddress?.phone ?? undefined,
           },
         },
       })

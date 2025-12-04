@@ -1,10 +1,10 @@
-import { HttpTypes } from '@medusajs/types';
+import { Maybe, ProductVariant } from '@lib/gql/generated-types/graphql';
 import { Text } from '@medusajs/ui';
 
 type LineItemOptionsProps = {
-  variant: HttpTypes.StoreProductVariant | undefined;
+  variant?: Maybe<ProductVariant>;
   'data-testid'?: string;
-  'data-value'?: HttpTypes.StoreProductVariant;
+  'data-value'?: Maybe<ProductVariant>;
 };
 
 const LineItemOptions = ({

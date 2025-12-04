@@ -10,8 +10,8 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { convertToLocale } from '@lib/util/money';
-import { HttpTypes } from '@medusajs/types';
 import { Button } from '@medusajs/ui';
 import DeleteButton from '@modules/common/components/delete-button';
 import LineItemOptions from '@modules/common/components/line-item-options';
@@ -19,11 +19,7 @@ import LineItemPrice from '@modules/common/components/line-item-price';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 import Thumbnail from '@modules/products/components/thumbnail';
 
-const CartDropdown = ({
-  cart: cartState,
-}: {
-  cart?: HttpTypes.StoreCart | null;
-}) => {
+const CartDropdown = ({ cart: cartState }: { cart?: Cart | null }) => {
   const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
     undefined
   );
@@ -112,9 +108,7 @@ const CartDropdown = ({
                 <div className="no-scrollbar grid max-h-[402px] grid-cols-1 gap-y-8 overflow-y-scroll p-px px-4">
                   {cartState.items
                     .sort((a, b) => {
-                      return (a.created_at ?? '') > (b.created_at ?? '')
-                        ? -1
-                        : 1;
+                      return (a.createdAt ?? '') > (b.createdAt ?? '') ? -1 : 1;
                     })
                     .map((item) => (
                       <div
@@ -123,7 +117,7 @@ const CartDropdown = ({
                         data-testid="cart-item"
                       >
                         <LocalizedClientLink
-                          href={`/products/${item.product_handle}`}
+                          href={`/products/${item.productHandle}`}
                           className="w-24"
                         >
                           <Thumbnail
@@ -138,7 +132,7 @@ const CartDropdown = ({
                               <div className="mr-4 flex w-[180px] flex-col overflow-ellipsis whitespace-nowrap">
                                 <h3 className="text-base-regular overflow-hidden text-ellipsis">
                                   <LocalizedClientLink
-                                    href={`/products/${item.product_handle}`}
+                                    href={`/products/${item.productHandle}`}
                                     data-testid="product-link"
                                   >
                                     {item.title}
@@ -160,7 +154,7 @@ const CartDropdown = ({
                                 <LineItemPrice
                                   item={item}
                                   style="tight"
-                                  currencyCode={cartState.currency_code}
+                                  currencyCode={cartState.currencyCode}
                                 />
                               </div>
                             </div>
@@ -189,7 +183,7 @@ const CartDropdown = ({
                     >
                       {convertToLocale({
                         amount: subtotal,
-                        currency_code: cartState.currency_code,
+                        currency_code: cartState.currencyCode,
                       })}
                     </span>
                   </div>

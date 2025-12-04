@@ -14,8 +14,8 @@ import {
   Transition,
 } from '@headlessui/react';
 import { updateRegion } from '@lib/data/cart';
+import { Region } from '@lib/gql/generated-types/graphql';
 import { StateType } from '@lib/hooks/use-toggle-state';
-import { HttpTypes } from '@medusajs/types';
 
 type CountryOption = {
   country: string;
@@ -25,7 +25,7 @@ type CountryOption = {
 
 type CountrySelectProps = {
   toggleState: StateType;
-  regions: HttpTypes.StoreRegion[];
+  regions: Region[];
 };
 
 const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
@@ -35,17 +35,17 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
   >(undefined);
 
   const { countryCode } = useParams();
-  const currentPath = usePathname().split(`/${countryCode}`)[1];
+  const currentPath = usePathname().split(`/${countryCode}`)[1] ?? 'gb';
 
   const { state, close } = toggleState;
 
   const options = useMemo(() => {
     return regions
-      ?.map((r) => {
+      .map((r) => {
         return r.countries?.map((c) => ({
-          country: c.iso_2,
+          country: c?.iso2 ?? undefined,
           region: r.id,
-          label: c.display_name,
+          label: c?.name ?? undefined,
         }));
       })
       .flat()
@@ -71,7 +71,9 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
         onChange={handleChange}
         defaultValue={
           countryCode
-            ? options?.find((o) => o?.country === countryCode)
+            ? options?.find(
+                (o): o is CountryOption => o?.country === countryCode
+              )
             : undefined
         }
       >

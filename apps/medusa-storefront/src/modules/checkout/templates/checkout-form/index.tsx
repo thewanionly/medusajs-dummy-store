@@ -1,7 +1,7 @@
 import { listCartShippingMethods } from '@lib/data/fulfillment';
 import { listCartPaymentMethods } from '@lib/data/payment';
 import { Customer } from '@lib/gql/generated-types/graphql';
-import { HttpTypes } from '@medusajs/types';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import Addresses from '@modules/checkout/components/addresses';
 import Payment from '@modules/checkout/components/payment';
 import Review from '@modules/checkout/components/review';
@@ -11,7 +11,7 @@ export default async function CheckoutForm({
   cart,
   customer,
 }: {
-  cart: HttpTypes.StoreCart | null;
+  cart: Cart;
   customer: Customer | null;
 }) {
   if (!cart) {
@@ -28,11 +28,8 @@ export default async function CheckoutForm({
   return (
     <div className="grid w-full grid-cols-1 gap-y-8">
       <Addresses cart={cart} customer={customer} />
-
       <Shipping cart={cart} availableShippingMethods={shippingMethods} />
-
       <Payment cart={cart} availablePaymentMethods={paymentMethods} />
-
       <Review cart={cart} />
     </div>
   );

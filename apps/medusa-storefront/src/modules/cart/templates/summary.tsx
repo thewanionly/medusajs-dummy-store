@@ -1,6 +1,6 @@
 'use client';
 
-import { HttpTypes } from '@medusajs/types';
+import { Cart } from '@lib/gql/generated-types/graphql';
 import { Button, Heading } from '@medusajs/ui';
 import DiscountCode from '@modules/checkout/components/discount-code';
 import CartTotals from '@modules/common/components/cart-totals';
@@ -8,15 +8,13 @@ import Divider from '@modules/common/components/divider';
 import LocalizedClientLink from '@modules/common/components/localized-client-link';
 
 type SummaryProps = {
-  cart: HttpTypes.StoreCart & {
-    promotions: HttpTypes.StorePromotion[];
-  };
+  cart: Cart;
 };
 
-function getCheckoutStep(cart: HttpTypes.StoreCart) {
-  if (!cart?.shipping_address?.address_1 || !cart.email) {
+function getCheckoutStep(cart: Cart) {
+  if (!cart?.shippingAddress?.address1 || !cart.email) {
     return 'address';
-  } else if (cart?.shipping_methods?.length === 0) {
+  } else if (cart?.shippingMethods?.length === 0) {
     return 'delivery';
   } else {
     return 'payment';

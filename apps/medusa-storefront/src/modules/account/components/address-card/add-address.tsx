@@ -3,10 +3,13 @@
 import { useActionState, useEffect, useState } from 'react';
 
 import { addCustomerAddress } from '@lib/data/customer';
-import { CustomerAddress, Maybe } from '@lib/gql/generated-types/graphql';
+import {
+  CustomerAddress,
+  Maybe,
+  Region,
+} from '@lib/gql/generated-types/graphql';
 import useToggleState from '@lib/hooks/use-toggle-state';
 import { Plus } from '@medusajs/icons';
-import { HttpTypes } from '@medusajs/types';
 import { Button, Heading } from '@medusajs/ui';
 import CountrySelect from '@modules/checkout/components/country-select';
 import { SubmitButton } from '@modules/checkout/components/submit-button';
@@ -17,7 +20,7 @@ const AddAddress = ({
   region,
   addresses,
 }: {
-  region: HttpTypes.StoreRegion;
+  region: Region;
   addresses?: Maybe<Maybe<CustomerAddress>[]> | null;
 }) => {
   const [successState, setSuccessState] = useState(false);
